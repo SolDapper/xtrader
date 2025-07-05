@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>xTrader</title>
+    <!-- <link rel="manifest" href="../manifest.json" /> -->
+    <meta name="color-scheme" content="dark"/>
+    <meta name="theme-color" content="#111">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="xStocks Trader" />
+    <!-- <link rel="apple-touch-icon" href="favicon-127.png" type="image/png" />
+    <meta property="og:image" content="./favicon-127.png" />
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+    <meta property="og:title" content="LitterBox Kiosk" />
+    <meta property="og:description" content="Scoop it up!" />
+    <meta property="og:url" content="https://www.litterbox.xyz" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="https://www.litterbox.xyz" />
+    <meta name="twitter:creator" content="@LitterBoxGame" />
+    <meta name="twitter:title" content="LitterBox Kiosk" />
+    <meta name="twitter:description" content="Scoop it up!" />
+    <meta name="twitter:image" content="https://5i63gba2drfmanrdjeugybm7scnwzuualmcmh5t3pablzjwgjihq.arweave.net/6j2zBBocSsA2I0kobAWfkJts0oBbBMP2e3gCvKbGSg8" /> -->
+</head>
+<body>
+    <div id="vanta"></div>
+    <div id="nav"><button class="view" id="create">Create</button><button class="view" id="received">Received</button><button class="view" id="sent">Sent</button><button class="view" id="market">Market</button><button class="view" id="about">About</button><button id="connect" class="mcswap_connect_button">Connect</button><button id="disconnect" class="mcswap_disconnect_button">Disconnect</button></div>
+    <main>
+        <div id="views">
+            <div class="views" id="home-view">
+                <img id="logo-home" class="animate__animated animate__zoomIn" src="./img/logo.png" />
+            </div>
+            <div class="views" id="create-view"><h1>Create</h1><h2>Create a new escrow</h2><div id="create-panel" class="panel"><div class="panel-box">
+                <form id="create-form">
+                    <div class="row"><span class="label-category">Sell</span></div>
+                    <div class="row"><label for="creator-wallet">Wallet</label><input disabled id="creator-wallet" form="create-form" type="text" /></div>
+                    <div class="row"><label for="creator-asset">Asset</label><button id="creator-asset" form="create-form">Choose</button></div>
+                    <div class="row"><label for="creator-amount">Amount</label><input id="creator-amount" form="create-form" type="text"></button></div>
+                    <br /><br />
+                    <div class="row"><span class="label-category">For</span></div>
+                    <div class="row"><label for="buyer-asset">Asset</label><button id="buyer-asset" form="create-form">Choose</button></div>
+                    <div class="row"><label for="buyer-amount">Amount</label><input id="buyer-amount" form="create-form" type="text"></button></div>
+                    <div class="row"><label for="buyer-type">Escrow Type</label><select id="buyer-type" form="create-form">
+                        <option>Peer-to-Peer</option>
+                        <option>Public Market</option>
+                    </select></div>
+                    <div class="row"><label for="buyer-wallet">Buyer</label><input disabled id="buyer-wallet" form="create-form" type="text" /></div>
+                </form>
+            </div></div></div>
+            <div class="views" id="received-view"><h1>Received</h1><h2>Manage received escrows</h2><div class="panel"></div><div class="panel-box"></div></div>
+            <div class="views" id="sent-view"><h1>Sent</h1><h2>Manage sent escrows</h2><div class="panel"></div><div class="panel-box"></div></div>
+            <div class="views" id="market-view"><h1>Market</h1><h2>Public market listings</h2><div class="panel"></div><div class="panel-box"></div></div>
+            <div class="views" id="about-view"><h1>About</h1><h2>About xTrader</h2><div class="panel"></div><div class="panel-box"></div></div>
+        </div>
+        <a href="https://x.com/SolDapper" target="_blank"><img id="x-logo" src="./img/x-logo.png" /></a>
+    </main>
+    <script src="./js/three.min.js"></script>
+    <script src="./js/vanta.cells.min.js"></script>
+    <script type="module" src="./main.js"></script>
+</body>
+</html>
