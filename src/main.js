@@ -193,6 +193,16 @@ emitter.on('mcswap_disconnected',async()=>{
 
 
 // amounts and values
+$("#payment-pay").on("click", function(){
+
+    
+
+
+
+
+
+
+});
 function commas(_amount_){
     return _amount_.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
 }
@@ -208,6 +218,17 @@ async function getValue(ele,gecko,amount,currency){
     if(gecko=="false"){return;}
     if(ele=="creator-amount" && $("#creator-asset").html()=="Choose"){return;}
     else if(ele=="buyer-amount" && $("#buyer-asset").html()=="Choose"){return;}
+    if(gecko=="usdc" || gecko == "tether"){
+        amount = parseFloat(amount).toFixed(2);
+        if(isNaN(amount)){amount="0.00";}
+        if(ele=="creator-amount"){
+            $("#creator-value").html("$"+commas(amount));
+        }
+        else if(ele=="buyer-amount"){
+            $("#buyer-value").html("$"+commas(amount));
+        }
+        return;
+    }
     const coinId = gecko;
     const vsCurrency = currency;
     const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=${vsCurrency}`; // 1.2.2, 1.3.2, 1.4.2
@@ -285,17 +306,15 @@ $(document).delegate("#asset-list ul", "click", function(){
         $("#creator-mint").val(mint);
         $("#creator-asset").html(symbol);
         $("#creator-icon").attr("src",img).show();
-        $("#creator-amount").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
-        const current = $("#creator-amount").val();
-        if(countDecimals(current)>decimals){$("#creator-amount").val(parseFloat(current).toFixed(decimals));}
+        $("#creator-value").html("$0.00");
+        $("#creator-amount").val("").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
     }
     else if(id=="buyer-asset"){
         $("#buyer-mint").val(mint);
         $("#buyer-asset").html(symbol);
         $("#buyer-icon").attr("src",img).show();
-        $("#buyer-amount").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
-        const current = $("#buyer-amount").val();
-        if(countDecimals(current)>decimals){$("#buyer-amount").val(parseFloat(current).toFixed(decimals));}
+        $("#buyer-value").html("$0.00");
+        $("#buyer-amount").val("").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
     }
 });
 // load the asset list
@@ -385,7 +404,7 @@ $("#nav .view").on("click", async function(){
     $(".views").hide();
     $("#"+id+"-view").show();
 });
-// select asset
+// validate wallet
 function isValidSolanaAddress(address){
   try {
     const publicKey = new PublicKey(address);

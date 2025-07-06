@@ -187,7 +187,7 @@ span#creator-value, span#buyer-value{
     outline: none;
     padding-left: 15px;
     padding-right: 15px;
-    width: 260px;
+    width: 364px;
     font-family: "Ubuntu";
     font-weight: bold;
     color: #fff;
@@ -198,7 +198,7 @@ span#creator-value, span#buyer-value{
     outline: none;
     line-height: 40px;
     height: 40px;
-    width: 290px;
+    width: 394px;
     font-family: "Ubuntu";
     font-weight: bold;
     color: #9945ff;
@@ -229,7 +229,7 @@ span#creator-value, span#buyer-value{
     border-radius: 26px;
     font-size: 16px;
     height: 48px;
-    margin: 18px auto 8px auto;
+    margin: 38px 0 28px 174px;
     width: 200px;
 }
 #create-form button.submit:hover{
@@ -255,7 +255,7 @@ span#creator-value, span#buyer-value{
     left: 0;
     top: 0;
     background: #090909f5;
-    width: 280px;
+    width: 320px;
     z-index: 1;
     height: 100%;
     overflow-x: hidden;
@@ -285,11 +285,13 @@ span#creator-value, span#buyer-value{
     clear: both;
 }
 #asset-list ul{
+    display: block;
     list-style-type: none;
     margin: 0;
     padding: 0;
     border-bottom: 1px solid #111111;
     cursor: pointer;
+    height: 81px;
 }
 #asset-list ul:hover{
     background: #111;
@@ -325,13 +327,13 @@ span#creator-value, span#buyer-value{
     vertical-align: top;
     height: 60px;
     width: calc(100% - 82px);
-    font-size: 24px;
+    font-size: 25px;
     font-weight: normal;
 }
 #asset-list ul li.list-name{
-    width: calc(100% - 80px);
+    width: calc(100% - 83px);
     color: #fff;
-    margin-left: 80px;
-    margin-top: -35px;
-    margin-bottom: 30px;
+    margin-left: 83px;
+    margin-top: -36px;
+    margin-bottom: 18px;
 }
