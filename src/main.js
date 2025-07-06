@@ -1,3 +1,4 @@
+// imports
 import {Connection,PublicKey,Keypair} from "@solana/web3.js"
 import 'dotenv/config';
 import { createQR } from '@solana/pay';
@@ -13,6 +14,8 @@ import EventEmitter from 'events';
 import mcswapConnector from "mcswap-connector";
 import "mcswap-connector/src/colors/solana-connector.css";
 import "./css/style.css";
+
+
 // asset list
 const token_list = [
     {
@@ -192,10 +195,76 @@ emitter.on('mcswap_disconnected',async()=>{
 });
 
 
-// amounts and values
-$("#payment-pay").on("click", function(){
 
-    
+
+// get balance
+async function balance(_rpc_,_wallet_,_mint_,_decimals_){
+    try{
+        const connection = new Connection(_rpc_,'confirmed');
+        const response = await connection.getParsedTokenAccountsByOwner(new PublicKey(_wallet_),{mint:new PublicKey(_mint_)}).catch(function(err){return;});
+        let amount = 0;
+        if(response != null && response.value.length > 0){amount = response.value[0].account.data.parsed.info.tokenAmount.amount;}
+        let multiplier = 1;
+        for (let i = 0; i < _decimals_; i++) {multiplier = multiplier * 10;} 
+        let amount_ = amount / multiplier;
+        amount_ = parseFloat(amount_).toFixed(_decimals_);
+        const ui_split = amount_.split(".");
+        const formatted_a = commas(ui_split[0]);
+        const formatted = formatted_a + "." + ui_split[1];
+        return formatted;
+    }
+    catch(err){
+        console.log("err", err);
+        return;
+    }
+}
+
+
+
+// amounts and values
+$("#payment-pay").on("click", async function(){
+    $("label").removeClass("form-error");
+    if($("#creator-asset").html()=="Choose"){
+        toast("Choose Asset",2000);
+        $("#creator-asset").prev().addClass("form-error");
+        return;
+    }
+    if($("#creator-amount").val()<=0){
+        toast("Define Amount",2000);
+        $("#creator-amount").prev().addClass("form-error");
+        return;
+    }
+    if($("#buyer-asset").html()=="Choose"){
+        toast("Choose Asset",2000);
+        $("#buyer-asset").prev().addClass("form-error");
+        return;
+    }
+    if($("#buyer-amount").val()<=0){
+        toast("Define Amount",2000);
+        $("#buyer-amount").prev().addClass("form-error");
+        return;
+    }
+    if($("#buyer-type").val()=="Private Trade" && !isValidSolanaAddress($("#buyer-wallet").val().trim())){
+        toast("Recipient Wallet",2000);
+        $("#buyer-wallet").prev().addClass("form-error");
+        return;
+    }
+    if(!window.mcswap || !window.mcswap.publicKey){
+        toast("Connect Wallet",2000);
+        return;
+    }
+    console.log("rpc", process.env.RPC);
+    const amount = await balance(process.env.RPC,window.mcswap.publicKey.toString(),$("#creator-mint").val(),$("#creator-amount").attr("data-decimals"));
+    console.log("amount", amount);    
+
+    // if(balance(rpc,window.mcswap.publicKey.toString()) < $("#creator-amount").val()){
+    //     toast("Not enough "+$("#creator-asset").html());
+    //     $("#creator-amount").prev().addClass("form-error");
+    //     return;
+    // }
+
+
+
 
 
 

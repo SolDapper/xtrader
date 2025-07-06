@@ -175,7 +175,11 @@ span#creator-value, span#buyer-value{
     font-size: 12px;
     margin-left: 5px;
 }
+
 /* form */
+label.form-error{
+    color: #e47f40;
+}
 #create-form{
     display: block;
 }
