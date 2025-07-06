@@ -1,3 +1,6 @@
+html{
+    background: #111;
+}
 html, body{
     margin: 0;
     padding: 0;
@@ -17,7 +20,7 @@ img, input, select, button, div{
 }
 .toastify{
     box-shadow: none;
-    border-radius: 15px;
+    border-radius: 20px;
     font-size: 16px;
     padding: 10px 15px;
     font-family: "Ubuntu";
@@ -42,6 +45,7 @@ main{
     margin: 0 auto 20px auto;
 }
 #x-logo{
+    transition: .3s;
     width: 20px;
     height: 20px;
     position: fixed;
@@ -49,13 +53,16 @@ main{
     bottom: 13px;
     left: 12px;
 }
+#x-logo:hover{
+    opacity: 0.5;
+}
 #logo-home{
     width: 400px;
     display: block;
     position: fixed;
     float: left;
     left: calc(50% - 200px);
-    top: calc(50% - 75px);
+    top: calc(50% - 70px);
 }
 button{
     cursor: pointer;
@@ -88,6 +95,7 @@ button{
     float: right;
     margin-right: 10px;
     color: #fff;
+    background: #090909f5;
 }
 #nav button#connect:hover, #nav button#disconnect:hover{
     color: #14f195;
@@ -98,11 +106,6 @@ button{
 #nav .mcswap_connect_button, #nav .mcswap_disconnect_button {
     width: auto;
     height: auto;
-}
-#mcswap_chooser button.mcswap_choice span {
-    vertical-align: top;
-    text-shadow: 0 0 5px #9945FF;
-    color: #9945FF;
 }
 
 #nav button.active-view{
@@ -130,13 +133,14 @@ h2{
     display: none;
     transition: 0.3s;
     margin: 13px 20px;
+    transition: .3s;
 }
 #home-view{
     display: block;
 }
 .panel{
     background: #00000047;
-    min-height: 800px;
+    /* min-height: 800px; */
     border-radius: 10px;
     margin-top: 18px;
     padding: 12px 17px;
@@ -146,25 +150,188 @@ h2{
 }
 .row{
     display: block;
+    padding: 5px;
+    border-bottom: 1px solid #11111182;
 }
 label{
     display: inline-block;
     color: #fff;
     font-weight: bold;
     font-size: 14px;
-    width: 100px;
+    width: 80px;
+    line-height: 40px;
+    height: 40px;
 }
 span.label-category{
     display: inline-block;
     font-weight: normal;
-    font-size: 20px;
+    font-size: 19px;
     color: #14F195;
-    margin-bottom: 10px;
+    line-height: 40px;
+    height: 40px;
+    width: 80px;
 }
-/* create */
-
-
+span#creator-value, span#buyer-value{
+    font-size: 12px;
+    margin-left: 5px;
+}
+/* form */
 #create-form{
     display: block;
 }
+#create-form input{
+    line-height: 40px;
+    height: 40px;
+    background: #111;
+    border: 0;
+    outline: none;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 260px;
+    font-family: "Ubuntu";
+    font-weight: bold;
+    color: #fff;
+}
+#create-form button, #create-form select{
+    background: #111;
+    border: 0;
+    outline: none;
+    line-height: 40px;
+    height: 40px;
+    width: 290px;
+    font-family: "Ubuntu";
+    font-weight: bold;
+    color: #9945ff;
+    transition: .3s;
+}
+#create-form select{
+    text-align: center;
+    cursor: pointer;
+}
+#create-form select:focus {
+  outline: none;
+}
+#create-form select option{
+    border: 0;
+    outline: none;
+}
+#create-form button:hover, #create-form select:hover{
+    color: #14f195;
+}
+#create-form .row:first-of-type{
+    border-top: 1px solid #11111182;
+}
+#create-form input#payment-tax{
+    background: none;
+}
+#create-form button.submit{
+    display: block;
+    border-radius: 26px;
+    font-size: 16px;
+    height: 48px;
+    margin: 18px auto 8px auto;
+    width: 200px;
+}
+#create-form button.submit:hover{
+    background: #1b1b1b66;
+}
 
+/* asset list */
+.little-icon{
+    display: inline-block;
+    margin: 0 0 -10px -15px;
+    background: #000;
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    outline: none;
+    border: 0;
+    display: none;
+}
+#asset-list-box{
+    display: none;
+    position: fixed;
+    float: left;
+    left: 0;
+    top: 0;
+    background: #090909f5;
+    width: 280px;
+    z-index: 1;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+#asset-list-close{
+    width: 25px;
+    height: 25px;
+    float: right;
+    background: none;
+    margin-right: 13px;
+    margin-top: 8px;
+}
+#asset-list-close img{
+    width: 25px;
+    height: 25px;
+    transition: .3s;
+}
+#asset-list-close:hover img{
+    opacity: 0.5;
+}
+#asset-list{
+    margin-top: 44px;
+}
+.list-clear{
+    display: block;
+    clear: both;
+}
+#asset-list ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid #111111;
+    cursor: pointer;
+}
+#asset-list ul:hover{
+    background: #111;
+}
+#asset-list ul:first-of-type {
+    border-top: 1px solid #111111;
+}
+#asset-list ul:nth-child(3){
+    border-bottom: 0;
+}
+#asset-list ul:nth-child(4){
+    border-top: 1px solid #111111;
+}
+#asset-list ul li.list-icon{
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    width: 80px;
+    height: 80px;
+    vertical-align: top;
+}
+#asset-list ul li.list-icon img{
+    margin: 10px 10px;
+    padding: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+}
+#asset-list ul li.list-symbol{
+    display: inline-block;
+    margin: 0;
+    padding: 10px 0 0 2px;
+    vertical-align: top;
+    height: 60px;
+    width: calc(100% - 82px);
+    font-size: 24px;
+    font-weight: normal;
+}
+#asset-list ul li.list-name{
+    width: calc(100% - 80px);
+    color: #fff;
+    margin-left: 80px;
+    margin-top: -35px;
+    margin-bottom: 30px;
+}
