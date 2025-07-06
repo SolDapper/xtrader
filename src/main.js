@@ -14,6 +14,7 @@ import EventEmitter from 'events';
 import mcswapConnector from "mcswap-connector";
 import "mcswap-connector/src/colors/solana-connector.css";
 import "./css/style.css";
+const rpc = process.env.RPC;
 
 
 // asset list
@@ -253,10 +254,9 @@ $("#payment-pay").on("click", async function(){
         toast("Connect Wallet",2000);
         return;
     }
-    console.log("rpc", process.env.RPC);
-    const amount = await balance(process.env.RPC,window.mcswap.publicKey.toString(),$("#creator-mint").val(),$("#creator-amount").attr("data-decimals"));
+    const amount = await balance(rpc,window.mcswap.publicKey.toString(),$("#creator-mint").val(),$("#creator-amount").attr("data-decimals"));
     console.log("amount", amount);    
-
+    
     // if(balance(rpc,window.mcswap.publicKey.toString()) < $("#creator-amount").val()){
     //     toast("Not enough "+$("#creator-asset").html());
     //     $("#creator-amount").prev().addClass("form-error");
