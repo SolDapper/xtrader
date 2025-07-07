@@ -3,16 +3,17 @@ import {Connection,PublicKey,Keypair} from "@solana/web3.js"
 import 'dotenv/config';
 import { createQR } from '@solana/pay';
 import bs58 from 'bs58';
-import $, { css } from "jquery";
+import $, { css, trim } from "jquery";
 import "jquery.nicescroll";
 import 'animate.css';
 import Toastify from 'toastify-js';
 import "toastify-js/src/toastify.css";
 import "@fontsource/ubuntu";
+import mcswap from 'mcswap-sdk';
 import {transact} from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
 import EventEmitter from 'events';
 import mcswapConnector from "mcswap-connector";
-import "mcswap-connector/src/colors/solana-connector.css";
+import "mcswap-connector/src/colors/xtrader-connector.css";
 import "./css/style.css";
 const rpc = process.env.RPC;
 
@@ -22,7 +23,7 @@ const token_list = [
     {
         name: "Solana",
         symbol: "SOL",
-        mint: "So11111111111111111111111111111111111111111",
+        mint: "So11111111111111111111111111111111111111112",
         icon: "https://image-cdn.solana.fm/images/?imageUrl=https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
         pdf: "",
         decimals: 9,
@@ -54,8 +55,7 @@ const asset_list = [
         mint: "XsHtf5RpxsQ7jeJ9ivNewouZKJHbPxhPoEy6yYvULr7",
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf6359f8fa1d916afe97b_Ticker%3DABT%2C%20Company%20Name%3DAbbot%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-ABTx.pdf",
-        decimals: 8,
-        gecko: "abbott-xstock"
+        decimals: 8
     },
     {
         name: "AbbVie xStock",
@@ -176,6 +176,366 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684beb344604b4f162f66f93_Ticker%3DCOKE%2C%20Company%20Name%3DCokeCola%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-KOx.pdf",
         decimals: 8
+    },
+    {
+        name: "Coinbase xStock",
+        symbol: "COINx",
+        mint: "Xs7ZdzSHLU9ftNJsii5fCeJhoRWSC32SQGzGQtePxNu",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c131b2d6d8cbe9e61a3dc_Ticker%3DCOIN%2C%20Company%20Name%3DCoinbase%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-COINx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Comcast xStock",
+        symbol: "CMCSAx",
+        mint: "XsvKCaNsxg2GN8jjUmq71qukMJr7Q1c5R2Mk9P8kcS8",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bfbe3db57e5f5f6b277aa_Ticker%3DCMCSA%2C%20Company%20Name%3DComcast%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-CMCSAx.pdf",
+        decimals: 8
+    },
+    {
+        name: "CrowdStrike xStock",
+        symbol: "CRWDx",
+        mint: "Xs7xXqkcK7K8urEqGg52SECi79dRp2cEKKuYjUePYDw",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c10fbaf9d90e3d974ae23_Ticker%3DCRWD%2C%20Company%20Name%3DCrowdstrike%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-CRWDx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Danaher xStock",
+        symbol: "DHRx",
+        mint: "Xseo8tgCZfkHxWS9xbFYeKFyMSbWEvZGFV1Gh53GtCV",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bfa59ce8102ff96cee2fe_Ticker%3DDHR%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-DHRx.pdf",
+        decimals: 8
+    },
+    {
+        name: "DFDV xStock",
+        symbol: "DFDVx",
+        mint: "Xs2yquAgsHByNzx68WJC55WHjHBvG9JsMB7CWjTLyPy",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/6861b8b7beb9cf856e2332d5_DFDVx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-DFDVx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Eli Lilly xStock",
+        symbol: "LLYx",
+        mint: "Xsnuv4omNoHozR6EEW5mXkw8Nrny5rB3jVfLqi6gKMH",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684ad0eaa9a1efe9b1b7155a_Ticker%3DLLY%2C%20Company%20Name%3DLilly%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-LLYx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Exxon Mobil xStock",
+        symbol: "XOMx",
+        mint: "XsaHND8sHyfMfsWPj6kSdd5VwvCayZvjYgKmmcNL5qh",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684abe960ee12e238c0a1f0b_Ticker%3DXOM%2C%20Company%20Name%3DExxonMobil%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-XOMx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Gamestop xStock",
+        symbol: "GMEx",
+        mint: "Xsf9mBktVB9BSU5kf4nHxPq5hCBJ2j2ui3ecFGxPRGc",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c125f1c48a3dab4c66137_Ticker%3DGME%2C%20Company%20Name%3Dgamestop%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-GMEx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Gold xStock",
+        symbol: "GLDx",
+        mint: "Xsv9hRk1z5ystj9MhnA7Lq4vjSsLwzL2nxrwmwtD3re",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/685123a7747987b071b10d47_Ticker%3DGLD%2C%20Company%20Name%3DGold%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-GSx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Goldman Sachs xStock",
+        symbol: "GSx",
+        mint: "XsgaUyp4jd1fNBCxgtTKkW64xnnhQcvgaxzsbAq5ZD1",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c114972ed2d868a1b3f95_Ticker%3DGS%2C%20Company%20Name%3DGoldman%20Sachs%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-GSx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Home Depot xStock",
+        symbol: "HDx",
+        mint: "XszjVtyhowGjSC5odCqBpW1CtXXwXjYokymrk7fGKD3",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684be484171c0a11201e098d_Ticker%3DHD%2C%20Company%20Name%3DHome%20Depot%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-HDx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Honeywell xStock",
+        symbol: "HONx",
+        mint: "XsRbLZthfABAPAfumWNEJhPyiKDW6TvDVeAeW7oKqA2",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c08d12385ea1da806a5bb_Ticker%3DHON%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-HONx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Intel xStock",
+        symbol: "INTCx",
+        mint: "XshPgPdXFRWB8tP1j82rebb2Q9rPgGX37RuqzohmArM",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0a334cac334b4a41651b_Ticker%3DINTC%2C%20Company%20Name%3DIntel%20Corp%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-INTCx.pdf",
+        decimals: 8
+    },
+    {
+        name: "International Business Machines",
+        symbol: "IBMx",
+        mint: "XspwhyYPdWVM8XBHZnpS9hgyag9MKjLRyE3tVfmCbSr",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bfb32f7000e98d733283f_Ticker%3DIBM%2C%20Company%20Name%3DIBM%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-IBMx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Johnson & Johnson xStock",
+        symbol: "JNJx",
+        mint: "XsGVi5eo1Dh2zUpic4qACcjuWGjNv8GCt3dm5XcX6Dn",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684ace98941130a24503a315_Ticker%3DJNJ%2C%20Company%20Name%3Djohnson-johnson%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-JNJx.pdf",
+        decimals: 8
+    },
+    {
+        name: "JPMorgan Chase xStock",
+        symbol: "JPMx",
+        mint: "XsMAqkcKsUewDrzVkait4e5u4y8REgtyS7jWgCpLV2C",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684acf34c10a7e0add155c61_Ticker%3DJPM%2C%20Company%20Name%3DJPMorganChase%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-JPMx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Linde xStock",
+        symbol: "LINx",
+        mint: "XsSr8anD1hkvNMu8XQiVcmiaTP7XGvYu7Q58LdmtE8Z",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf2b1132313f4529a3160_Ticker%3DLIN%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-LINx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Marvell xStock",
+        symbol: "MRVLx",
+        mint: "XsuxRGDzbLjnJ72v74b7p9VY6N66uYgTCyfwwRjVCJA",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0eb412d3850c2c01cd29_Ticker%3DMRVL%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-MRVLx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Mastercard xStock",
+        symbol: "MAx",
+        mint: "XsApJFV9MAktqnAc6jqzsHVujxkGm9xcSUffaBoYLKC",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684ad1ca13c7aaa9ece4cbbf_Ticker%3DMA%2C%20Company%20Name%3DMastercard%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-MAx.pdf",
+        decimals: 8
+    },
+    {
+        name: "McDonald's xStock",
+        symbol: "MCDx",
+        mint: "XsqE9cRRpzxcGKDXj1BJ7Xmg4GRhZoyY1KpmGSxAWT2",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf77838b45bb94ff32be7_Ticker%3DMCD%2C%20Company%20Name%3DMcDonalds%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-MCDx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Medtronic xStock",
+        symbol: "MDTx",
+        mint: "XsDgw22qRLTv5Uwuzn6T63cW69exG41T6gwQhEK22u2",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bfc99a86580de629510e9_Ticker%3DMDT%2C%20Company%20Name%3DMedtronic%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-MDTx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Merck xStock",
+        symbol: "MRKx",
+        mint: "XsnQnU7AdbRZYe2akqqpibDdXjkieGFfSkbkjX1Sd1X",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684be6ff5bd0a5643adf85ec_Ticker%3DMRK%2C%20Company%20Name%3DMerck%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-MRKx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Meta xStock",
+        symbol: "METAx",
+        mint: "Xsa62P5mvPszXL1krVUnU5ar38bBSVcWAB6fmPCo5Zu",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/68497dee3db1bae97b91ac05_Ticker%3DMETA%2C%20Company%20Name%3DMeta%20Platforms%20Inc.%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-METAx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Microsoft xStock",
+        symbol: "MSFTx",
+        mint: "XspzcW1PRtgf6Wj92HCiZdjzKCyFekVD8P5Ueh3dRMX",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/68497bdc918924ea97fd8211_Ticker%3DMSFT%2C%20Company%20Name%3DMicrosoft%20Inc.%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-MSFTx.pdf",
+        decimals: 8
+    },
+    {
+        name: "MicroStrategy xStock",
+        symbol: "MSTRx",
+        mint: "XsP7xzNPvEHS1m6qfanPUGjNmdnmsLKEoNAnHjdxxyZ",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0d47eee3a9c3fa12475a_Ticker%3DMSTR%2C%20Company%20Name%3DMicroStrategy%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-MSTRx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Nasdaq xStock",
+        symbol: "QQQx",
+        mint: "Xs8S1uUs1zvS2p7iwtsG3b6fkhpvmwz4GYU3gWAmWHZ",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/68511cb6e367f19f06664527_QQQx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-QQQx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Netflix xStock",
+        symbol: "NFLXx",
+        mint: "XsEH7wWfJJu2ZT3UCFeVfALnVA6CP5ur7Ee11KmzVpL",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf6c149d917d503f6cda6_Ticker%3DNFLX%2C%20Company%20Name%3DNetflix%20Inc.%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-NFLXx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Novo Nordisk xStock",
+        symbol: "NVOx",
+        mint: "XsfAzPzYrYjd4Dpa9BU3cusBsvWfVB9gBcyGC87S57n",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf139788d618501b65727_Ticker%3DNOVO_B%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-NVOx.pdf",
+        decimals: 8
+    },
+    {
+        name: "NVIDIA xStock",
+        symbol: "NVDAx",
+        mint: "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684961bfb45e3c4d777b9997_Ticker%3DNVDA%2C%20Company%20Name%3DNVIDIA%20Corp%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-NVDAx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Oracle xStock",
+        symbol: "ORCLx",
+        mint: "XsjFwUPiLofddX5cWFHW35GCbXcSu1BCUGfxoQAQjeL",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf1ecae4eb4a817da9941_Ticker%3DORCL%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-ORCLx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Palantir xStock",
+        symbol: "PLTRx",
+        mint: "XsoBhf2ufR8fTyNSjqfU71DYGaE6Z3SUGAidpzriAA4",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0c4c0e5466272c52958b_Ticker%3DPLTR%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-PLTRx.pdf",
+        decimals: 8
+    },
+    {
+        name: "PepsiCo xStock",
+        symbol: "PEPx",
+        mint: "Xsv99frTRUeornyvCfvhnDesQDWuvns1M852Pez91vF",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684be8662b90a208c5d5b8e5_Ticker%3DPEP%2C%20Company%20Name%3DPepsico%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-PEPx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Pfizer xStock",
+        symbol: "PFEx",
+        mint: "XsAtbqkAP1HJxy7hFDeq7ok6yM43DQ9mQ1Rh861X8rw",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684be5e3c54ff3f5c6c9b36f_Ticker%3DPFE%2C%20Company%20Name%3Dpfizer%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-PFEx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Philip Morris xStock",
+        symbol: "PMx",
+        mint: "Xsba6tUnSjDae2VcopDB6FGGDaxRrewFCDa5hKn5vT3",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0981cbec78a581a6bfe7_Ticker%3DPM%2C%20Company%20Name%3Dphilip%20morris%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-PMx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Procter & Gamble xStock",
+        symbol: "PGx",
+        mint: "XsYdjDjNUygZ7yGKfQaB6TxLh2gC6RRjzLtLAGJrhzV",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684be3c6fa6a62fb260a51e3_Ticker%3DPG%2C%20Company%20Name%3DProctor%20%26%20Gamble%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-PGx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Robinhood xStock",
+        symbol: "HOODx",
+        mint: "XsvNBAYkrDRNhA7wPHQfX3ZUXZyZLdnCQDfHZ56bzpg",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0f39cede10b9afa4852f_Ticker%3DHOOD%2C%20Company%20Name%3DRobinhood%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-HOODx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Salesforce xStock",
+        symbol: "CRMx",
+        mint: "XsczbcQ3zfcgAEt9qHQES8pxKAVG5rujPSHQEXi4kaN",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf3670e24ef4c92a6a7fc_Ticker%3DCRM%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-CRMx.pdf",
+        decimals: 8
+    },
+    {
+        name: "SP500 xStock",
+        symbol: "SPYx",
+        mint: "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/685116624ae31d5ceb724895_Ticker%3DSPX%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-SPYx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Tesla xStock",
+        symbol: "TSLAx",
+        mint: "XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684aaf9559b2312c162731f5_Ticker%3DTSLA%2C%20Company%20Name%3DTesla%20Inc.%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-TSLAx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Thermo Fisher xStock",
+        symbol: "TMOx",
+        mint: "Xs8drBWy3Sd5QY3aifG9kt9KFs2K3PGZmx7jWrsrk57",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf4d930b0fdc50503056d_Ticker%3DTMO%2C%20Company%20Name%3DThermo_Fisher_Scientific%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-TMOx.pdf",
+        decimals: 8
+    },
+    {
+        name: "TQQQ xStock",
+        symbol: "TQQQx",
+        mint: "XsjQP3iMAaQ3kQScQKthQpx9ALRbjKAjQtHg6TFomoc",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/685125548a5829b9b59a6156_TQQQx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-TQQQx.pdf",
+        decimals: 8
+    },
+    {
+        name: "UnitedHealth xStock",
+        symbol: "UNHx",
+        mint: "XszvaiXGPwvk2nwb3o9C1CX4K6zH8sez11E6uyup6fe",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684abb4c69185d8a871e2ab5_Ticker%3DUNH%2C%20Company%20Name%3DUnited%20Health%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-UNHx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Vanguard xStock",
+        symbol: "VTIx",
+        mint: "XsssYEQjzxBCFgvYFFNuhJFBeHNdLWYeUSP8F45cDr9",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/68511e335ee1314f602d9a7c_Ticker%3DVTI%2C%20Company%20Name%3DVanguard%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-VTIx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Visa xStock",
+        symbol: "Vx",
+        mint: "XsqgsbXwWogGJsNcVZ3TyVouy2MbTkfCFhCGGGcQZ2p",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684acfd76eb8395c6d1d2210_Ticker%3DV%2C%20Company%20Name%3DVisa%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-Vx.pdf",
+        decimals: 8
+    },
+    {
+        name: "Walmart xStock",
+        symbol: "WMTx",
+        mint: "Xs151QeqTCiuKtinzfRATnUESM2xTU6V9Wy8Vy538ci",
+        icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bebd366d5089b2da3cf7e_Ticker%3DWMT%2C%20Company%20Name%3DWalmart%2C%20size%3D256x256.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-WMTx.pdf",
+        decimals: 8
     }
 ];
 
@@ -194,8 +554,6 @@ emitter.on('mcswap_disconnected',async()=>{
     $(".views").hide();
     $("#home-view").show();
 });
-
-
 
 
 // get balance
@@ -219,7 +577,6 @@ async function balance(_rpc_,_wallet_,_mint_,_decimals_){
         return;
     }
 }
-
 
 
 // amounts and values
@@ -246,31 +603,97 @@ $("#payment-pay").on("click", async function(){
         return;
     }
     if($("#buyer-type").val()=="Private Trade" && !isValidSolanaAddress($("#buyer-wallet").val().trim())){
-        toast("Recipient Wallet",2000);
+        toast("Invlid Buyer Wallet",2000);
         $("#buyer-wallet").prev().addClass("form-error");
         return;
     }
     if(!window.mcswap || !window.mcswap.publicKey){
         toast("Connect Wallet",2000);
+        $("#connect").click();
         return;
     }
-    const amount = await balance(rpc,window.mcswap.publicKey.toString(),$("#creator-mint").val(),$("#creator-amount").attr("data-decimals"));
-    console.log("amount", amount);    
-    
-    // if(balance(rpc,window.mcswap.publicKey.toString()) < $("#creator-amount").val()){
-    //     toast("Not enough "+$("#creator-asset").html());
-    //     $("#creator-amount").prev().addClass("form-error");
-    //     return;
-    // }
-
-
-
-
-
-
-
-
-
+    $("#mcswap_cover").fadeIn(300);
+    $("#mcswap_message").html("Preparing Transaction...");
+    const amount = await balance(rpc,window.mcswap.publicKey.toString(),$("#creator-mint").val(),$("#creator-amount").attr("data-decimals"));    
+    if(amount < $("#creator-amount").val()){
+        $("#mcswap_cover").fadeOut(300);
+        toast("Insufficient "+$("#creator-asset").html());
+        $("#creator-amount").prev().addClass("form-error");
+        return;
+    }
+    const seller = window.mcswap.publicKey.toString();
+    const seller_mint = $("#creator-mint").val().trim();
+    const seller_amount = $("#creator-amount").val().trim();
+    const buyer = $("#buyer-wallet").val().trim();
+    if(buyer=="Any"){buyer=false;}
+    const buyer_mint = $("#buyer-mint").val().trim();
+    const buyer_amount = $("#buyer-amount").val().trim();
+    const priority = $("#payment-priority").val().trim();
+    const affiliateWallet = false;
+    const affiliateFee = 0;
+    const config = {
+        "rpc": rpc,
+        "blink": false,
+        "builder": true,
+        "convert": true,
+        "tolerance": "1.2",
+        "priority": priority,
+        "affiliateWallet": affiliateWallet,
+        "affiliateFee": affiliateFee,
+        "seller": seller,
+        "token1Mint": seller_mint,
+        "token1Amount": seller_amount,
+        "token2Mint": false,
+        "token2Amount": false,
+        "buyer": buyer,
+        "token3Mint": buyer_mint,
+        "token3Amount": buyer_amount,
+        "token4Mint": false,
+        "token4Amount": false,
+        "sellerEmail": false
+    }
+    const tx = await mcswap.splCreate(config);
+    if(tx.tx){
+        try{
+            $("#mcswap_message").html("Requesting Approval...");
+            const signed = await window.mcswap.signTransaction(tx.tx).catch(async function(err){
+                $("#mcswap_message").html("");
+                $("#mcswap_cover").fadeOut(300);
+                toast("Canceled",2000);
+            });
+            if(!signed){return;}
+            $("#mcswap_message").html("Creating Escrow...");
+            console.log("debug");
+            const signature = await mcswap.send(rpc,signed);
+            console.log("signature", signature);
+            console.log("awaiting status...");
+            const status = await mcswap.status(rpc,signature);
+            if(status!="finalized"){
+                $("#mcswap_message").html("");
+                $("#mcswap_cover").fadeOut(300);
+                toast("Transaction Failed",2000);
+            }
+            else{
+               $("#mcswap_message").html("");
+                $("#mcswap_cover").fadeOut(300);
+                toast("Escrow Created",4000);
+                if(buyer==false){$("#market").click();}
+                else{$("#sent").click();}
+            }
+        }
+        catch(err){
+            $("#mcswap_message").html("");
+            $("#mcswap_cover").fadeOut(300);
+            toast("Canceled",2000);
+            console.log(tx);
+        }
+    }
+    else{
+        $("#mcswap_message").html("");
+        $("#mcswap_cover").fadeOut(300);
+        toast("Canceled",2000);
+        console.log(tx);
+    }
 });
 function commas(_amount_){
     return _amount_.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
@@ -410,6 +833,7 @@ $(window).on("load", async function(){
         i++;
     }
     i=0;
+    asset_list.sort((a,b) => (a.symbol > b.symbol) ? 1 : ((b.symbol > a.symbol) ? -1 : 0));
     while (i < asset_list.length) {
         const asset = asset_list[i];
         if(!asset.gecko){asset.gecko="false";}
@@ -440,12 +864,14 @@ $("button#asset-list-close").on("click", function(){
 // choose asset 1
 $("button#creator-asset").on("click", function(e){
     e.preventDefault();
+    $("#asset-list-box").scrollTop(0);
     $("#asset-list ul:lt(3)").hide();
     $("#asset-list-box").attr("data-chooser","creator-asset").removeClass("animate__slideOutLeft").addClass("animate__slideInLeft").show();
 });
 // choose asset 2
 $("button#buyer-asset").on("click", function(e){
     e.preventDefault();
+    $("#asset-list-box").scrollTop(0);
     $("#asset-list ul:lt(3)").show();
     $("#asset-list-box").attr("data-chooser","buyer-asset").removeClass("animate__slideOutLeft").addClass("animate__slideInLeft").show();
 });

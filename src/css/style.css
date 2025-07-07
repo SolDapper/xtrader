@@ -61,7 +61,7 @@ main{
     display: block;
     position: fixed;
     float: left;
-    left: calc(50% - 200px);
+    left: calc(50% - 192px);
     top: calc(50% - 70px);
 }
 button{
@@ -83,12 +83,16 @@ button{
     font-weight: bold;
     font-size: 16px;
     transition: .3s;
-    color: #9945FF;
+    color: #2a71f8;
     text-shadow: 1px 1px 1px #010101;
+}
+#nav #nav-contain{
+    max-width: 1390px;
+    margin: 0 auto;
 }
 #nav button:hover{
     background: #1b1b1b66;
-    color: #14F195;
+    color: #1dd2bd;
     box-shadow: none;
 }
 #nav button#connect, #nav button#disconnect{
@@ -98,7 +102,7 @@ button{
     background: #090909f5;
 }
 #nav button#connect:hover, #nav button#disconnect:hover{
-    color: #14f195;
+    color: #1dd2bd;
 }
 #nav button#disconnect{
     display: none;
@@ -110,7 +114,7 @@ button{
 
 #nav button.active-view{
     background: #1b1b1b66;
-    color: #14F195; 
+    color: #1dd2bd; 
 }
 #nav button:disabled{
     background: #1b1b1b;
@@ -166,7 +170,7 @@ span.label-category{
     display: inline-block;
     font-weight: normal;
     font-size: 19px;
-    color: #14F195;
+    color: #1dd2bd;
     line-height: 40px;
     height: 40px;
     width: 80px;
@@ -178,7 +182,7 @@ span#creator-value, span#buyer-value{
 
 /* form */
 label.form-error{
-    color: #e47f40;
+    color: #fb721d;
 }
 #create-form{
     display: block;
@@ -205,7 +209,7 @@ label.form-error{
     width: 394px;
     font-family: "Ubuntu";
     font-weight: bold;
-    color: #9945ff;
+    color: #2a71f8;
     transition: .3s;
 }
 #create-form select{
@@ -220,7 +224,7 @@ label.form-error{
     outline: none;
 }
 #create-form button:hover, #create-form select:hover{
-    color: #14f195;
+    color: #1dd2bd;
 }
 #create-form .row:first-of-type{
     border-top: 1px solid #11111182;
@@ -238,6 +242,11 @@ label.form-error{
 }
 #create-form button.submit:hover{
     background: #1b1b1b66;
+}
+#mcswap_message {
+    top: 45%;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 /* asset list */
@@ -259,7 +268,7 @@ label.form-error{
     left: 0;
     top: 0;
     background: #090909f5;
-    width: 320px;
+    width: 350px;
     z-index: 1;
     height: 100%;
     overflow-x: hidden;
