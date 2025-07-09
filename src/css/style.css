@@ -27,7 +27,7 @@ img, input, select, button, div{
     font-weight: bold;
     background: #fff;
     color: #000;
-    width: 150px;
+    max-width: 300px;
     text-align: center;
 }
 #vanta{
@@ -85,6 +85,7 @@ button{
     transition: .3s;
     color: #2a71f8;
     text-shadow: 1px 1px 1px #010101;
+    min-width: 118px;
 }
 #nav #nav-contain{
     max-width: 1390px;
@@ -147,7 +148,8 @@ h2{
     /* min-height: 800px; */
     border-radius: 10px;
     margin-top: 18px;
-    padding: 12px 17px;
+    padding: 12px 12px;
+    min-height: 800px;
 }
 .panel-box{
     display: block;
@@ -179,6 +181,12 @@ span#creator-value, span#buyer-value{
     font-size: 12px;
     margin-left: 5px;
 }
+.estimated-value{
+    font-size: 12px;
+    margin-left: 10px;
+    color: #4d4d4d;
+}
+
 
 /* form */
 label.form-error{
@@ -305,6 +313,7 @@ label.form-error{
     border-bottom: 1px solid #111111;
     cursor: pointer;
     height: 81px;
+    transition: .3s;
 }
 #asset-list ul:hover{
     background: #111;
@@ -342,11 +351,269 @@ label.form-error{
     width: calc(100% - 82px);
     font-size: 25px;
     font-weight: normal;
+    color: #dfdfdf;
+    transition: .3s;
 }
 #asset-list ul li.list-name{
     width: calc(100% - 83px);
-    color: #fff;
+    color: #2a71f8;
     margin-left: 83px;
     margin-top: -36px;
     margin-bottom: 18px;
+    transition: .3s;
+}
+#asset-list ul:hover .list-symbol{
+    color: #1dd2bd;
+}
+#asset-list ul:hover .list-name{
+    color: #fff;
+}
+
+select#sent-filter, 
+select#sent-buyers, 
+select#received-filter, 
+select#received-sellers, 
+select#market-filter, 
+select#market-sellers{
+    background: #111;
+    border: 0;
+    outline: none;
+    line-height: 40px;
+    height: 40px;
+    width: 275px;
+    font-family: "Ubuntu";
+    font-weight: bold;
+    color: #2a71f8;
+    transition: .3s;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 6px;
+}
+/* select#sent-filter:focus {
+    outline: none;
+}
+select#sent-filter option{
+    border: 0;
+    outline: none;
+} */
+select#received-filter:hover,
+select#received-sellers:hover,
+select#sent-filter:hover,
+select#market-filter:hover,
+select#market-sellers:hover,
+select#sent-buyers:hover
+{
+    color: #1dd2bd;
+}
+
+select#market-sellers,
+select#received-sellers,
+select#sent-buyers{
+    margin-left: 11px;
+}
+
+.panel-list{
+    border-top: 1px solid #11111182;
+    margin-top: 12px;
+}
+
+.panel-list ul li:first-of-type{
+    margin-left: 12px;
+}
+
+.panel-list ul.row{
+    margin: 0;
+    padding: 12px 0 12px 0;
+    list-style-type: none;
+    transition: .3s;
+}
+.panel-list ul.row:hover{
+    background: #000;
+}
+.panel-list ul.row li{
+    display: inline-block;
+    vertical-align: top;
+}
+.panel-list ul.row li.item-details{
+    background: #111;
+    height: 32px;
+    border-radius: 6px;
+    margin-left: 12px;
+    padding: 9px;
+    width: 140px;
+    cursor: pointer;
+    overflow: hidden;
+}
+.panel-list ul.row li.item-details .item-symbol{
+    transition: .3s;
+}
+.panel-list ul.row li.item-details .item-name{
+    color: #2a71f8;
+    font-size: 12px;
+    transition: .3s;
+    overflow: hidden;
+}
+.panel-list ul.row li.item-details:hover .item-symbol{
+    color: #1dd2bd;
+}
+.panel-list ul.row li.item-details:hover .item-name{
+    color: #fff;
+}
+.panel-list ul.row li.item-buyer{
+    color: #2a71f8;
+    background: #111;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 50px;
+    height: 50px;
+    border-radius: 6px;
+    margin-left: 12px;
+    margin-right: 12px;
+    width: 145px;
+    text-align: center;
+    transition: .3s;
+    cursor: pointer;
+}
+.panel-list ul.row li.item-buyer:hover{
+    color: #1dd2bd;
+}
+.item-amount{
+    color: #1dd2bd;
+    background: #111;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 50px;
+    height: 50px;
+    border-radius: 6px;
+    margin-left: 12px;
+    width: 160px;
+    text-align: center;
+    transition: .3s;
+    overflow: hidden;
+    cursor: pointer;
+}
+.item-amount:hover{
+    color: #fff;
+}
+.item-img{
+    width: 50px;
+    height: 50px;
+    display: block;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: .3s;
+}
+.item-img:hover{
+    filter: none;
+    -webkit-filter: grayscale(100%);
+    -moz-filter:    grayscale(100%);
+    -ms-filter:     grayscale(100%);
+    -o-filter:      grayscale(100%);
+    opacity: 0.25;
+}
+.item-time{
+    color: #fff;
+    background: #111;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 50px;
+    height: 50px;
+    border-radius: 6px;
+    margin-left: 12px;
+    width: 190px;
+    text-align: center;
+    transition: .3s;
+    overflow: hidden;
+    cursor: pointer;
+    transition: .3s;
+    font-size: 13px;
+}
+.item-time:hover{
+    color: #6b6b6b;
+}
+.item-action{
+    background: none;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 50px;
+    height: 50px;
+    border-radius: 6px;
+    margin-left: 12px;
+}
+button.item-cancel, button.item-authorize, button.item-public-authorize{
+    color: #2a71f8;
+    background: #090909f5;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 50px;
+    height: 50px;
+    border-radius: 6px;
+    margin: 0;
+    width: 145px;
+    text-align: center;
+    transition: .3s;
+    overflow: hidden;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 30px;
+}
+button.item-cancel:hover, button.item-authorize:hover, button.item-public-authorize:hover{
+    color: #1dd2bd;
+}
+.preload{
+    width: 1px;
+    height: 1px;
+    display: block;
+    position: fixed;
+    float: left;
+    bottom: 0;
+    left: 0;
+    z-index: -2;
+}
+.arrow{
+    width: 20px;
+    height: 20px;
+    margin: 13px -6px 0 -14px;
+    background: none;
+}
+.arrow_up{
+    margin: 15px 6px 0 -26px;
+}
+.arrow_down{
+    margin: 15px 6px 0 -26px;
+}
+.arrow img{
+    width: 20px;
+    height: 20px;
+}
+
+
+/* refresh */
+#received-refresh, #sent-refresh, #market-refresh{
+    float: right;
+    width: 25px;
+    height: 25px;
+    margin: 0;
+    padding: 0;
+    background: none;
+}
+#received-refresh img, #sent-refresh img, #market-refresh img{
+    width: 25px;
+    height: 25px;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+.spin{
+  -webkit-animation: spin 1s ease-in-out infinite;
+  animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

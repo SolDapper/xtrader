@@ -3,7 +3,7 @@ import {Connection,PublicKey,Keypair} from "@solana/web3.js"
 import 'dotenv/config';
 import { createQR } from '@solana/pay';
 import bs58 from 'bs58';
-import $, { css, trim } from "jquery";
+import $, { css } from "jquery";
 import "jquery.nicescroll";
 import 'animate.css';
 import Toastify from 'toastify-js';
@@ -538,82 +538,544 @@ const asset_list = [
         decimals: 8
     }
 ];
-
+const asset_mints = [];
+async function asset_map(_tokens_,mint=false){
+  if(mint!=false){
+    for (let i = 0; i < _tokens_.length; i++) {
+      if(_tokens_[i].mint==mint){
+        return _tokens_[i];
+      }
+    }
+  }
+  else{
+    return _tokens_;
+  }
+}
 
 // connection events
 const emitter = new EventEmitter();
 new mcswapConnector(["phantom","solflare","backpack"],emitter).init();
 emitter.on('mcswap_connected',async()=>{
+    $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
     $("#mcswap_cover, #mcswap_chooser").fadeOut(300);
     toast("Connected!",2000);
-    $("#compose").click();
+    if($("#home-view").is(":visible")){$("#received").click();}
+    $(".refresher").addClass("spin");
+    await load_sent();
+    await load_received();
+    await load_public();
 });
 emitter.on('mcswap_disconnected',async()=>{
+    $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
     toast("Disconnected!",2000);
     $("#nav .view").removeClass("active-view");
     $(".views").hide();
     $("#home-view").show();
 });
 
-
-// get balance
-async function balance(_rpc_,_wallet_,_mint_,_decimals_){
-    try{
-        const connection = new Connection(_rpc_,'confirmed');
-        const response = await connection.getParsedTokenAccountsByOwner(new PublicKey(_wallet_),{mint:new PublicKey(_mint_)}).catch(function(err){return;});
-        let amount = 0;
-        if(response != null && response.value.length > 0){amount = response.value[0].account.data.parsed.info.tokenAmount.amount;}
-        let multiplier = 1;
-        for (let i = 0; i < _decimals_; i++) {multiplier = multiplier * 10;} 
-        let amount_ = amount / multiplier;
-        amount_ = parseFloat(amount_).toFixed(_decimals_);
-        const ui_split = amount_.split(".");
-        const formatted_a = commas(ui_split[0]);
-        const formatted = formatted_a + "." + ui_split[1];
-        return formatted;
+// backchecking displayed escrows
+async function backcheck(ele,array){
+    const list = $("#"+ele+"-view .panel-list").find("ul");
+    const count = list.length;
+    if(count > 0){
+        let i = 0;
+        list.each(function(){
+            const item = $(this);
+            const id = item.attr("id").replace(ele+"-","");
+            if(!array.includes(id)){
+                $("#"+ele+"-"+id).remove();
+            }
+            i++;
+            if(i==count){
+                return;
+            }
+        });
     }
-    catch(err){
-        console.log("err", err);
+    else{
         return;
     }
 }
 
+// load sent
+async function load_sent(){
+    try{
+        if(!window.mcswap || !window.mcswap.publicKey){
+            toast("Connect Wallet",2000);
+            return;
+        }
+        $("#sent-refresh").addClass("spin");
+        const splSent = await mcswap.splSent({
+            rpc: rpc,
+            display: true,
+            private: true,
+            wallet: window.mcswap.publicKey.toString()
+        });
+        let i = 0;
+        splSent.data.sort((a,b) => (a.utime > b.utime) ? 1 : ((b.utime > a.utime) ? -1 : 0));
+        if(!splSent || !splSent.data || splSent.data.length==0){
+            $("#sent-refresh").removeClass("spin");
+        }
+        const displayed = [];
+        while(i < splSent.data.length){
+            const asset = splSent.data[i];
+            if(asset_mints.includes(asset.token_1_mint)){
+                if(!$('#sent-'+asset.acct).length){
+                    asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
+                    const merged = token_list.concat(asset_list);
+                    asset.token_3_details = await asset_map(merged,asset.token_3_mint);
+                    let ele = '<ul id="sent-'+asset.acct+'" class="row">';
+                    ele += '<li><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
+                    ele += '<li data-mint="'+asset.token_1_mint+'" class="item-details"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
+                    ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
+                    ele += '<li class="arrow arrow_up"><img src="./up.72e2edee.png" /></li>';
+                    const first_part = asset.buyer.slice(0,5);
+                    const last_part = asset.buyer.slice(-5);
+                    ele += '<li data-wallet="'+asset.buyer+'" class="item-buyer">'+first_part+'...'+last_part+'</li>';
+                    let has_pdf = "";
+                    if(asset.token_3_details.pdf!=""){has_pdf=' data-pdf="'+asset.token_3_details.pdf+'"'; }
+                    ele += '<li><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
+                    ele += '<li data-mint="'+asset.token_3_mint+'" class="item-details"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
+                    ele += '<li class="item-amount buyer-amount">'+asset.token_3_amount+'</li>';
+                    ele += '<li class="arrow arrow_down"><img src="./down.8b892579.png" /></li>';
+                    const time = asset.utime*1000;
+                    const date = new Date(time);
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const year = date.getFullYear();
+                    let hours = date.getHours();
+                    const minutes = date.getMinutes();
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12; // the hour '0' should be '12'
+                    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+                    const display_time = hours + ':' + minutesStr + ' ' + ampm + ' ' + month + '/' + day + '/' + year;
+                    ele += '<li class="item-time">'+display_time+'</li>';
+                    ele += '<li class="item-action"><button class="item-action item-cancel">Cancel</button></li>';
+                    ele += '</ul>';
+                    $("#sent-view .panel-list").prepend(ele);
+                }
+                displayed.push(asset.acct);
+            }
+            i++;
+            if(i==splSent.data.length){
+                await backcheck("sent",displayed);
+                $("#sent-refresh").removeClass("spin");
+            }
+        }
+    }
+    catch(err){
+        $("#sent-refresh").removeClass("spin");
+    }
+}
+// load received
+async function load_received(){
+    try{
+        if(!window.mcswap || !window.mcswap.publicKey){
+            toast("Connect Wallet",2000);
+            return;
+        }
+        $("#received-refresh").addClass("spin");
+        const splReceived = await mcswap.splReceived({
+            rpc: rpc,
+            display: true,
+            private: true,
+            wallet: window.mcswap.publicKey.toString()
+        });
+        let i = 0;
+        splReceived.data.sort((a,b) => (a.utime > b.utime) ? 1 : ((b.utime > a.utime) ? -1 : 0));
+        if(!splReceived || !splReceived.data || splReceived.data.length==0){
+            $("#received-refresh").removeClass("spin");
+        }
+        const displayed = [];
+        while(i < splReceived.data.length){
+            const asset = splReceived.data[i];
+            if(asset_mints.includes(asset.token_1_mint)){
+                if(!$('#received-'+asset.acct).length){
+                    asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
+                    const merged = token_list.concat(asset_list);
+                    asset.token_3_details = await asset_map(merged,asset.token_3_mint);
+                    let ele = '<ul id="received-'+asset.acct+'" class="row">';
+                    ele += '<li><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
+                    ele += '<li data-mint="'+asset.token_1_mint+'" class="item-details"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
+                    ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
+                    ele += '<li class="arrow arrow_down"><img src="./down.8b892579.png" /></li>';
+                    const first_part = asset.seller.slice(0,5);
+                    const last_part = asset.seller.slice(-5);
+                    ele += '<li data-wallet="'+asset.seller+'" class="item-buyer">'+first_part+'...'+last_part+'</li>';
+                    let has_pdf = "";
+                    if(asset.token_3_details.pdf!=""){has_pdf=' data-pdf="'+asset.token_3_details.pdf+'"'; }
+                    ele += '<li><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
+                    ele += '<li data-mint="'+asset.token_3_mint+'" class="item-details"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
+                    ele += '<li class="item-amount buyer-amount">'+asset.token_3_amount+'</li>';
+                    ele += '<li class="arrow arrow_up"><img src="./up.72e2edee.png" /></li>';
+                    const time = asset.utime*1000;
+                    const date = new Date(time);
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const year = date.getFullYear();
+                    let hours = date.getHours();
+                    const minutes = date.getMinutes();
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12; // the hour '0' should be '12'
+                    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+                    const display_time = hours + ':' + minutesStr + ' ' + ampm + ' ' + month + '/' + day + '/' + year;
+                    ele += '<li class="item-time">'+display_time+'</li>';
+                    ele += '<li class="item-action"><button class="item-action item-authorize">Authorize</button></li>';
+                    ele += '</ul>';
+                    $("#received-view .panel-list").prepend(ele);
+                }
+                displayed.push(asset.acct);
+            }
+            i++;
+            if(i==splReceived.data.length){
+                await backcheck("received",displayed);
+                $("#received-refresh").removeClass("spin");
+                return;
+            }
+        }
+    }
+    catch(err){
+        $("#received-refresh").removeClass("spin");
+    }
+}
+// load received
+async function load_public(){
+    try{
+        if(!window.mcswap || !window.mcswap.publicKey){
+            toast("Connect Wallet",2000);
+            return;
+        }
+        $("#market-refresh").addClass("spin");
+        const user = window.mcswap.publicKey.toString();
+        const splSent = await mcswap.splSent({
+            rpc: rpc,
+            display: true,
+            private: false,
+            wallet: false
+        });
+        if(!splSent || !splSent.data || splSent.data.length==0){
+            $("#market-refresh").removeClass("spin");
+        }
+        splSent.data.sort((a,b) => (a.utime > b.utime) ? 1 : ((b.utime > a.utime) ? -1 : 0));
+        const displayed = [];
+        if(splSent.data.length==0){
+            await backcheck("market",displayed);
+            $("#market-refresh").removeClass("spin");
+            return;
+        }
+        let i = 0;
+        while(i < splSent.data.length){
+            const asset = splSent.data[i];
+            if(asset_mints.includes(asset.token_1_mint)){
+                if(!$('#market-'+asset.acct).length){
+                    asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
+                    const merged = token_list.concat(asset_list);
+                    asset.token_3_details = await asset_map(merged,asset.token_3_mint);
+                    let ele = '<ul id="market-'+asset.acct+'" class="row">';
+                    ele += '<li><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
+                    ele += '<li data-mint="'+asset.token_1_mint+'" class="item-details"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
+                    ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
+                    ele += '<li class="arrow arrow_down"><img src="./down.8b892579.png" /></li>';
+                    const first_part = asset.seller.slice(0,5);
+                    const last_part = asset.seller.slice(-5);
+                    ele += '<li data-wallet="'+asset.seller+'" class="item-buyer">'+first_part+'...'+last_part+'</li>';
+                    let has_pdf = "";
+                    if(asset.token_3_details.pdf!=""){has_pdf=' data-pdf="'+asset.token_3_details.pdf+'"'; }
+                    ele += '<li><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
+                    ele += '<li data-mint="'+asset.token_3_mint+'" class="item-details"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
+                    ele += '<li class="item-amount buyer-amount">'+asset.token_3_amount+'</li>';
+                    ele += '<li class="arrow arrow_up"><img src="./up.72e2edee.png" /></li>';
+                    const time = asset.utime*1000;
+                    const date = new Date(time);
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const year = date.getFullYear();
+                    let hours = date.getHours();
+                    const minutes = date.getMinutes();
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12; // the hour '0' should be '12'
+                    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+                    const display_time = hours + ':' + minutesStr + ' ' + ampm + ' ' + month + '/' + day + '/' + year;
+                    ele += '<li class="item-time">'+display_time+'</li>';
+                    if(user==asset.seller){
+                        ele += '<li class="item-action"><button class="item-action item-cancel">Cancel</button></li>';
+                    }
+                    else{
+                        ele += '<li class="item-action"><button class="item-action item-public-authorize">Authorize</button></li>';
+                    }
+                    ele += '</ul>';
+                    $("#market-view .panel-list").prepend(ele);
+                }
+                displayed.push(asset.acct);
+            }
+            i++;
+            if(i==splSent.data.length){
+                await backcheck("market",displayed);
+                $("#market-refresh").removeClass("spin");
+                return;
+            }
+        }
+    }
+    catch(err){
+        $("#market-refresh").removeClass("spin");
+    }
+}
+
+// refresh clicks
+$("#market-refresh, #sent-refresh, #received-refresh").on("click", async function(){
+    if(!window.mcswap || !window.mcswap.publicKey){
+        toast("Connect Wallet",2000);
+        return;
+    }
+    try{
+        const id = $(this).attr("id");
+        if($(this).hasClass("spin")){
+            toast("Please wait...", 2000);
+            return;
+        }
+        toast("Refreshing...",2000);
+        if(id=="market-refresh"){
+            await load_public();
+        }
+        else if(id=="sent-refresh"){
+            await load_sent();
+        }
+        else if(id=="received-refresh"){
+            await load_received();
+        }
+    }
+    catch(err){
+        toast("Refresh error", 2000);
+    }
+});
+
+// line items clicks
+$(document).delegate("img.item-img", "click", async function(){
+    const item = $(this).parent().parent().attr("id");
+    const parts = item.split("-");
+    const view = parts[0];
+    const id = parts[1];
+    const pdf = $(this).attr("data-pdf");
+    if(!pdf){
+        toast("No docs available",3000);
+    }
+    else{
+        toast("Copied docs link",3000);
+        copy(pdf);
+        if(!isMobile()){window.open(pdf,'_blank');}
+    }
+});
+$(document).delegate(".item-details", "click", async function(){
+    const mint = $(this).attr("data-mint");
+    toast("Copied Chart Link",3000);
+    const href = "https://jup.ag/tokens/"+mint;
+    copy(href);
+    if(!isMobile()){window.open(href,'_blank');}
+});
+$(document).delegate(".item-amount", "click", async function(){
+    const item = $(this).parent().attr("id");
+    const parts = item.split("-");
+    const view = parts[0];
+    const id = parts[1];
+    const amount = $(this).html();
+    const symbol = $(this).prev().find(".item-symbol").html();
+    if(view=="market"){
+        if($(this).hasClass("seller-amount")){
+            toast("Buyer receives: "+amount+" "+symbol, 3000);
+        }
+        else if($(this).hasClass("buyer-amount")){
+            toast("Buyer sends: "+amount+" "+symbol, 3000);
+        }
+        copy(amount);
+    }
+    else if(view=="sent"){
+        if($(this).hasClass("seller-amount")){
+            toast("You're selling: "+amount+" "+symbol, 3000);
+        }
+        else if($(this).hasClass("buyer-amount")){
+            toast("Buyer sends: "+amount+" "+symbol, 3000);
+        }
+        copy(amount);
+    }
+    else if(view=="received"){
+        if($(this).hasClass("seller-amount")){
+            toast("You receive: "+amount+" "+symbol, 3000);
+        }
+        else if($(this).hasClass("buyer-amount")){
+            toast("You send: "+amount+" "+symbol, 3000);
+        }
+        copy(amount);
+    }
+});
+$(document).delegate(".item-buyer", "click", async function(){
+    const item = $(this).parent().attr("id");
+    const parts = item.split("-");
+    const view = parts[0];
+    const id = parts[1];
+    const symbol = $(this).prev().prev().find(".item-symbol").html();
+    const wallet = $(this).attr("data-wallet");
+    const first_part = wallet.slice(0,5);
+    const last_part = wallet.slice(-5);
+    if(view=="market"){
+        toast("Seller: "+first_part+"..."+last_part, 3000);
+        copy(wallet);
+    }
+    else if(view=="sent"){
+        toast("Buyer: "+first_part+"..."+last_part, 3000);
+        copy(wallet);
+    }
+    else if(view=="received"){
+        toast("Seller: "+first_part+"..."+last_part, 3000);
+        copy(wallet);
+    }
+});
+$(document).delegate(".item-time", "click", async function(){
+    const time = $(this).html();
+    toast("Created: "+time, 3000);
+    copy(time);
+});
+$(document).delegate(".item-cancel", "click", async function(){
+    const item = $(this).parent().parent().attr("id");
+    const parts = item.split("-");
+    const view = parts[0];
+    const escrow = parts[1];
+    const seller = window.mcswap.publicKey.toString();
+    $("#mcswap_cover").fadeIn(300);
+    $("#mcswap_message").html("Preparing transaction...");
+    const tx = await mcswap.splCancel({
+        "rpc": rpc,
+        "blink": false,
+        "seller": seller,
+        "escrow": escrow,
+    });
+    if(tx){
+        try{
+            $("#mcswap_message").html("Requesting approval...");
+            const signed = await window.mcswap.signTransaction(tx).catch(async function(err){
+                $("#mcswap_message").html("");
+                $("#mcswap_cover").fadeOut(300);
+                toast("Transaction canceled",2000);
+            });
+            if(!signed){return;}
+            $("#mcswap_message").html("Closing escrow...");
+            const signature = await mcswap.send(rpc,signed);
+            console.log("signature", signature);
+            console.log("awaiting status...");
+            const status = await mcswap.status(rpc,signature);
+            if(status!="finalized"){
+                $("#mcswap_message").html("");
+                $("#mcswap_cover").fadeOut(300);
+                toast("Transaction failed",2000);
+            }
+            else{
+                $("#mcswap_message").html("");
+                $("#mcswap_cover").fadeOut(300);
+                toast("Escrow closed",4000);
+                $("#"+view+"-"+escrow).remove();
+            }
+        }
+        catch(err){
+            $("#mcswap_message").html("");
+            $("#mcswap_cover").fadeOut(300);
+            toast("Transaction error",2000);
+        }
+    }
+    else{
+        $("#mcswap_message").html("");
+        $("#mcswap_cover").fadeOut(300);
+        toast("Transaction canceled",2000);
+    }
+});
+$(document).delegate(".item-public-authorize, .item-authorize", "click", async function(){
+    const item = $(this).parent().parent().attr("id");
+    const parts = item.split("-");
+    const view = parts[0];
+    const escrow = parts[1];
+    const buyer = window.mcswap.publicKey.toString();
+    $("#mcswap_cover").fadeIn(300);
+    $("#mcswap_message").html("Preparing transaction...");
+    const tx = await mcswap.splExecute({
+        "rpc": rpc,
+        "blink": false,
+        "buyer": buyer,
+        "escrow": escrow
+    });
+    if(tx.tx){
+        try{
+            $("#mcswap_message").html("Requesting approval...");
+            const signed = await window.mcswap.signTransaction(tx.tx).catch(async function(err){
+                $("#mcswap_message").html("");
+                $("#mcswap_cover").fadeOut(300);
+                toast("Transaction canceled",2000);
+            });
+            if(!signed){return;}
+            $("#mcswap_message").html("Procesing trade...");
+            const signature = await mcswap.send(rpc,signed);
+            console.log("signature", signature);
+            console.log("awaiting status...");
+            const status = await mcswap.status(rpc,signature);
+            if(status!="finalized"){
+                $("#mcswap_message").html("");
+                $("#mcswap_cover").fadeOut(300);
+                toast("Transaction failed",2000);
+            }
+            else{
+                $("#mcswap_message").html("");
+                $("#mcswap_cover").fadeOut(300);
+                toast("Transaction complete",4000);
+                $("#"+view+"-"+escrow).remove();
+            }
+        }
+        catch(err){
+            $("#mcswap_message").html("");
+            $("#mcswap_cover").fadeOut(300);
+            toast("Transaction error",2000);
+        }
+    }
+    else{
+        $("#mcswap_message").html("");
+        $("#mcswap_cover").fadeOut(300);
+        toast("Transaction canceled",2000);
+    }
+});
 
 // amounts and values
 $("#payment-pay").on("click", async function(){
     $("label").removeClass("form-error");
     if($("#creator-asset").html()=="Choose"){
-        toast("Choose Asset",2000);
+        toast("Choose asset",2000);
         $("#creator-asset").prev().addClass("form-error");
         return;
     }
     if($("#creator-amount").val()<=0){
-        toast("Define Amount",2000);
+        toast("Define amount",2000);
         $("#creator-amount").prev().addClass("form-error");
         return;
     }
     if($("#buyer-asset").html()=="Choose"){
-        toast("Choose Asset",2000);
+        toast("Choose asset",2000);
         $("#buyer-asset").prev().addClass("form-error");
         return;
     }
     if($("#buyer-amount").val()<=0){
-        toast("Define Amount",2000);
+        toast("Define amount",2000);
         $("#buyer-amount").prev().addClass("form-error");
         return;
     }
-    if($("#buyer-type").val()=="Private Trade" && !isValidSolanaAddress($("#buyer-wallet").val().trim())){
-        toast("Invlid Buyer Wallet",2000);
+    if($("#buyer-type").val()=="Wallet Address" && !isValidSolanaAddress($("#buyer-wallet").val().trim())){
+        toast("Invlid buyer wallet",2000);
         $("#buyer-wallet").prev().addClass("form-error");
         return;
     }
     if(!window.mcswap || !window.mcswap.publicKey){
-        toast("Connect Wallet",2000);
+        toast("Connect wallet",2000);
         $("#connect").click();
         return;
     }
     $("#mcswap_cover").fadeIn(300);
-    $("#mcswap_message").html("Preparing Transaction...");
+    $("#mcswap_message").html("Preparing transaction...");
     const amount = await balance(rpc,window.mcswap.publicKey.toString(),$("#creator-mint").val(),$("#creator-amount").attr("data-decimals"));    
     if(amount < $("#creator-amount").val()){
         $("#mcswap_cover").fadeOut(300);
@@ -624,7 +1086,7 @@ $("#payment-pay").on("click", async function(){
     const seller = window.mcswap.publicKey.toString();
     const seller_mint = $("#creator-mint").val().trim();
     const seller_amount = $("#creator-amount").val().trim();
-    const buyer = $("#buyer-wallet").val().trim();
+    let buyer = $("#buyer-wallet").val().trim();
     if(buyer=="Any"){buyer=false;}
     const buyer_mint = $("#buyer-mint").val().trim();
     const buyer_amount = $("#buyer-amount").val().trim();
@@ -655,14 +1117,14 @@ $("#payment-pay").on("click", async function(){
     const tx = await mcswap.splCreate(config);
     if(tx.tx){
         try{
-            $("#mcswap_message").html("Requesting Approval...");
+            $("#mcswap_message").html("Requesting approval...");
             const signed = await window.mcswap.signTransaction(tx.tx).catch(async function(err){
                 $("#mcswap_message").html("");
                 $("#mcswap_cover").fadeOut(300);
-                toast("Canceled",2000);
+                toast("Transaction canceled",2000);
             });
             if(!signed){return;}
-            $("#mcswap_message").html("Creating Escrow...");
+            $("#mcswap_message").html("Creating escrow...");
             console.log("debug");
             const signature = await mcswap.send(rpc,signed);
             console.log("signature", signature);
@@ -671,12 +1133,12 @@ $("#payment-pay").on("click", async function(){
             if(status!="finalized"){
                 $("#mcswap_message").html("");
                 $("#mcswap_cover").fadeOut(300);
-                toast("Transaction Failed",2000);
+                toast("Transaction failed",2000);
             }
             else{
                $("#mcswap_message").html("");
                 $("#mcswap_cover").fadeOut(300);
-                toast("Escrow Created",4000);
+                toast("Escrow created",4000);
                 if(buyer==false){$("#market").click();}
                 else{$("#sent").click();}
             }
@@ -684,15 +1146,13 @@ $("#payment-pay").on("click", async function(){
         catch(err){
             $("#mcswap_message").html("");
             $("#mcswap_cover").fadeOut(300);
-            toast("Canceled",2000);
-            console.log(tx);
+            toast("Transaction error",2000);
         }
     }
     else{
         $("#mcswap_message").html("");
         $("#mcswap_cover").fadeOut(300);
-        toast("Canceled",2000);
-        console.log(tx);
+        toast("Transaction canceled",2000);
     }
 });
 function commas(_amount_){
@@ -826,7 +1286,6 @@ $(window).on("load", async function(){
         item += '</li>';
         item += '<li class="list-clear"></li>';
         item += '<li class="list-pdf">';
-        
         item += '</li>';
         item += '</ul>';
         $("#asset-list").append(item);
@@ -848,10 +1307,18 @@ $(window).on("load", async function(){
         item += '</li>';
         item += '<li class="list-clear"></li>';
         item += '<li class="list-pdf">';
-        
         item += '</li>';
         item += '</ul>';
         $("#asset-list").append(item);
+        i++;
+    }
+    i=0;
+    while (i < asset_list.length) {
+        const asset = asset_list[i];
+        const item = '<option value="'+asset.mint+'">'+asset.symbol+'</option>';
+        $("#sent-filter").append(item);
+        $("#received-filter").append(item);
+        asset_mints.push(asset.mint);
         i++;
     }
 });
@@ -877,7 +1344,7 @@ $("button#buyer-asset").on("click", function(e){
 });
 // escrow type
 $("#buyer-type").on("change",function(){
-    if($(this).val()=="Public Market"){
+    if($(this).val()=="Public Listing"){
         $("#buyer-wallet").val("Any").prop("disabled",true);
         $("#payment-priority").focus();
     }
@@ -899,6 +1366,27 @@ $("#nav .view").on("click", async function(){
     $(".views").hide();
     $("#"+id+"-view").show();
 });
+// get balance
+async function balance(_rpc_,_wallet_,_mint_,_decimals_){
+    try{
+        const connection = new Connection(_rpc_,'confirmed');
+        const response = await connection.getParsedTokenAccountsByOwner(new PublicKey(_wallet_),{mint:new PublicKey(_mint_)}).catch(function(err){return;});
+        let amount = 0;
+        if(response != null && response.value.length > 0){amount = response.value[0].account.data.parsed.info.tokenAmount.amount;}
+        let multiplier = 1;
+        for (let i = 0; i < _decimals_; i++) {multiplier = multiplier * 10;} 
+        let amount_ = amount / multiplier;
+        amount_ = parseFloat(amount_).toFixed(_decimals_);
+        const ui_split = amount_.split(".");
+        const formatted_a = commas(ui_split[0]);
+        const formatted = formatted_a + "." + ui_split[1];
+        return formatted;
+    }
+    catch(err){
+        console.log("err", err);
+        return;
+    }
+}
 // validate wallet
 function isValidSolanaAddress(address){
   try {
@@ -907,6 +1395,18 @@ function isValidSolanaAddress(address){
   } catch (error) {
     return false;
   }
+}
+// copy to clipboard
+function copy(string){
+    let textArea = document.createElement('textarea');
+    textArea.setAttribute('style', 'width:1px;border:0;opacity:0;');
+    textArea.setAttribute('id', 'temp_copy');
+    document.body.appendChild(textArea);
+    textArea.value = string;
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    return;
 }
 // toast
 async function toast(message,wait,error=false){
@@ -920,6 +1420,10 @@ async function toast(message,wait,error=false){
         stopOnFocus: true, // Prevents dismissing of toast on hover
         onClick: function(){} // Callback after click
     }).showToast();
+}
+// mobile check
+function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 // vanta background
 VANTA.CELLS({

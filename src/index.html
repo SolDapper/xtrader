@@ -1,48 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>xTrader</title>
+    <title>xTrader (alpha)</title>
     <!-- <link rel="manifest" href="../manifest.json" /> -->
     <meta name="color-scheme" content="dark"/>
     <meta name="theme-color" content="#111">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="description" content="xStocks Trader" />
-    <!-- <link rel="apple-touch-icon" href="favicon-127.png" type="image/png" />
-    <meta property="og:image" content="./favicon-127.png" />
-    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
-    <meta property="og:title" content="LitterBox Kiosk" />
-    <meta property="og:description" content="Scoop it up!" />
-    <meta property="og:url" content="https://www.litterbox.xyz" />
+    <meta name="description" content="Peer-to-Peer xStocks Trader" />
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png" type="image/png" />
+    <meta property="og:image" content="img/apple-touch-icon.png" />
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+    <meta property="og:title" content="xTrader" />
+    <meta property="og:description" content="Peer-to-Peer xStocks" />
+    <meta property="og:url" content="https://www.xtrader.me" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="https://www.litterbox.xyz" />
-    <meta name="twitter:creator" content="@LitterBoxGame" />
-    <meta name="twitter:title" content="LitterBox Kiosk" />
-    <meta name="twitter:description" content="Scoop it up!" />
-    <meta name="twitter:image" content="https://5i63gba2drfmanrdjeugybm7scnwzuualmcmh5t3pablzjwgjihq.arweave.net/6j2zBBocSsA2I0kobAWfkJts0oBbBMP2e3gCvKbGSg8" /> -->
+    <meta name="twitter:site" content="https://www.xtrader.me" />
+    <meta name="twitter:creator" content="@xtraderme" />
+    <meta name="twitter:title" content="xTrader" />
+    <meta name="twitter:description" content="Peer-to-Peer xStocks" />
+    <meta name="twitter:image" content="https://tqiklroomboehk2oupqthm3ijdansohq6ulanmdub2xzw7p6yiwa.arweave.net/nBClxc5gXEOrTqPhM7NoSMDZOPD1FgawdA6vm33-wiw" />
 </head>
 <body>
     <div id="vanta"></div>
-    <div id="nav"><div id="nav-contain"><button class="view" id="compose">Compose</button><button class="view" id="received">Inbox</button><button class="view" id="sent">Sent</button><button class="view" id="market">Market</button><button id="connect" class="mcswap_connect_button">Connect</button><button id="disconnect" class="mcswap_disconnect_button">Disconnect</button></div></div>
+    <div id="nav"><div id="nav-contain"><button class="view" id="market">Market</button><button class="view" id="received">Inbox</button><button class="view" id="sent">Sent</button><button class="view" id="compose">Compose</button><button id="connect" class="mcswap_connect_button">Connect</button><button id="disconnect" class="mcswap_disconnect_button">Disconnect</button></div></div>
     <main>
         <div id="views">
             <div class="views" id="home-view">
                 <img id="logo-home" class="animate__animated animate__zoomInDown" src="./img/logo.png" />
             </div>
-            <div class="views" id="compose-view"><h1>Create</h1><h2>Create a new escrow</h2><div id="compose-panel" class="panel"><div class="panel-box">
+            <div class="views" id="compose-view"><h1>Create</h1><h2>Create New Escrow</h2><div id="compose-panel" class="panel"><div class="panel-box">
                 <div id="create-form">
-                    <div class="row"><span class="label-category">Sell</span><span id="creator-value">$0.00</span></div>
+                    <div class="row"><span class="label-category">Sell</span><span id="creator-value">$0.00</span><span class="estimated-value">(estimated value)</span></div>
                     <input disabled id="creator-wallet" form="create-form" type="hidden" />
                     <div class="row"><label for="creator-asset">Asset</label><button id="creator-asset">Choose</button><img id="creator-icon" class="little-icon" src="#" /><input required id="creator-mint" form="create-form" type="hidden" /></div>
                     <div class="row"><label for="creator-amount">Amount</label><input disabled required placeholder="0.00000" id="creator-amount" type="text" /></div>
-                    <div class="row"><span class="label-category">For</span><span id="buyer-value">$0.00</span></div>
+                    <div class="row"><span class="label-category">For</span><span id="buyer-value">$0.00</span><span class="estimated-value">(estimated value)</span></div>
                     <div class="row"><label for="buyer-asset">Asset</label><button id="buyer-asset">Choose</button><img id="buyer-icon" class="little-icon" src="#" /><input required id="buyer-mint" form="create-form" type="hidden" /></div>
                     <div class="row"><label for="buyer-amount">Amount</label><input disabled required placeholder="0.00000" id="buyer-amount" type="text" /></div>
                     <div class="row"><span class="label-category">Buyer</span></div>
                     <div class="row"><label for="buyer-type">Type</label><select id="buyer-type" form="create-form">
-                        <option>Private Trade</option>
-                        <option>Public Market</option>
+                        <option>Wallet Address</option>
+                        <option>Public Listing</option>
                     </select></div>
                     <div class="row"><label for="buyer-wallet">Wallet</label><input required placeholder="Address" id="buyer-wallet" form="create-form" type="text" /></div>
                     <div class="row"><span class="label-category">Create</span></div>
@@ -53,43 +52,32 @@
                         <option value="High">High</option>
                         <option value="VeryHigh">Extreme</option>
                     </select></div>
-                    <button id="payment-pay" class="submit" form="create-form">Continue</button>
+                    <button id="payment-pay" class="submit" form="create-form">Send</button>
                 </div>
             </div></div></div>
-            <div class="views" id="received-view"><h1>Received</h1><h2>Manage received escrows</h2><div class="panel"><div class="panel-box">
-                <div class="row"></div>
-                <div class="row"></div>
-                <div class="row"></div>
-                <div class="row"></div>
-                <div class="row"></div>
+            <div class="views" id="received-view"><h1>Received</h1><h2>Manage Received Escrows</h2><div class="panel"><div class="panel-box">
+                <button id="received-refresh" class="refresher"><img src="./img/refresh.png" /></button>
+                <div class="panel-options"><select id="received-filter"><option>All xStocks</option></select><select id="received-sellers"><option>All Sellers</option></select></div>
+                <div class="panel-list"></div>
             </div></div></div>
-            <div class="views" id="sent-view"><h1>Sent</h1><h2>Manage sent escrows</h2><div class="panel"><div class="panel-box">
-                <div class="row"></div>
-                <div class="row"></div>
-                <div class="row"></div>
-                <div class="row"></div>
-                <div class="row"></div>
+            <div class="views" id="sent-view"><h1>Sent</h1><h2>Manage Sent Escrows</h2><div class="panel"><div class="panel-box">
+                <button id="sent-refresh" class="refresher"><img src="./img/refresh.png" /></button>
+                <div class="panel-options"><select id="sent-filter"><option>All xStocks</option></select><select id="sent-buyers"><option>All Buyers</option></select></div>
+                <div class="panel-list"></div>
             </div></div></div>
-            <div class="views" id="market-view"><h1>Market</h1><h2>Public market listings</h2><div class="panel"><div class="panel-box">
-                <div class="row"></div>
-                <div class="row"></div>
-                <div class="row"></div>
-                <div class="row"></div>
-                <div class="row"></div>
-            </div></div></div>
-            <div class="views" id="about-view"><h1>About</h1><h2>About xTrader</h2><div class="panel"><div class="panel-box">
-                <div class="row"></div>
-                <div class="row"></div>
-                <div class="row"></div>
-                <div class="row"></div>
-                <div class="row"></div>
+            <div class="views" id="market-view"><h1>Market</h1><h2>Browse Public Escrows</h2><div class="panel"><div class="panel-box">
+                <button id="market-refresh" class="refresher"><img src="./img/refresh.png" /></button>
+                <div class="panel-options"><select id="market-filter"><option>All xStocks</option></select><select id="market-sellers"><option>All Sellers</option></select></div>
+                <div class="panel-list"></div>
             </div></div></div>
         </div>
-        <a href="https://x.com/SolDapper" target="_blank"><img id="x-logo" src="./img/x-logo.png" /></a>
+        <a href="https://x.com/xtraderme" target="_blank"><img id="x-logo" src="./img/x-logo.png" /></a>
     </main>
     <div id="asset-list-box" class="animate__animated"><button id="asset-list-close"><img src="./img/close.png" /></button>
         <div id="asset-list"></div>
     </div>
+    <img class="preload" src="./img/up.png" />
+    <img class="preload" src="./img/down.png" />
     <script src="./js/three.min.js"></script>
     <script src="./js/vanta.cells.min.js"></script>
     <script type="module" src="./main.js"></script>
