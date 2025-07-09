@@ -17,6 +17,18 @@ import "mcswap-connector/src/colors/xtrader-connector.css";
 import "./css/style.css";
 const rpc = process.env.RPC;
 
+// serviceWorker
+if ('serviceWorker' in navigator) {
+  try {
+    navigator.serviceWorker.register(
+      new URL('../service-worker.js', import.meta.url),
+      {type: 'module'}
+    );
+    console.log('Service Worker Registered');
+  } catch (error) {
+    console.log('Service Worker Register Failed');
+  }
+}
 
 // asset list
 const token_list = [
