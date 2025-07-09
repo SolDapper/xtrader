@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "me.xtrader.www.twa",
+        "sha256_cert_fingerprints": ["C0:4D:B1:69:2D:FB:E4:B3:50:1D:34:FD:D6:A7:E6:8C:FC:F4:26:11:7A:21:3E:E4:F8:D8:96:D6:39:0F:0B:C1"]
+      }
+    }]
