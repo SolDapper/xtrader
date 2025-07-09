@@ -612,7 +612,7 @@ async function backcheck(ele,array){
 async function load_sent(){
     try{
         if(!window.mcswap || !window.mcswap.publicKey){
-            toast("Connect Wallet",2000);
+            toast("Connect wallet",2000);
             return;
         }
         $("#sent-refresh").addClass("spin");
@@ -683,7 +683,7 @@ async function load_sent(){
 async function load_received(){
     try{
         if(!window.mcswap || !window.mcswap.publicKey){
-            toast("Connect Wallet",2000);
+            toast("Connect wallet",2000);
             return;
         }
         $("#received-refresh").addClass("spin");
@@ -755,7 +755,7 @@ async function load_received(){
 async function load_public(){
     try{
         if(!window.mcswap || !window.mcswap.publicKey){
-            toast("Connect Wallet",2000);
+            toast("Connect wallet",2000);
             return;
         }
         $("#market-refresh").addClass("spin");
@@ -838,7 +838,7 @@ async function load_public(){
 // refresh clicks
 $("#market-refresh, #sent-refresh, #received-refresh").on("click", async function(){
     if(!window.mcswap || !window.mcswap.publicKey){
-        toast("Connect Wallet",2000);
+        toast("Connect wallet",2000);
         return;
     }
     try{
