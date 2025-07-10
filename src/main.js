@@ -596,7 +596,7 @@ async function isDisconnected(){
     $("#home-view").show();
 }
 // mcswap wallet adapter
-if(!isMobile()){
+if(!isMobile() || await inAppBrowse()===true){
     const emitter = new EventEmitter();
     new mcswapConnector(["phantom","solflare","backpack"],emitter).init();
     emitter.on('mcswap_connected',async()=>{isConnected();});
