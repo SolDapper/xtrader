@@ -571,7 +571,8 @@ async function asset_map(_tokens_,mint=false){
 
 // connection events
 async function isConnected(){
-    if(isMobile()){
+    const inWalletApp = await inAppBrowse();
+    if(isMobile() && inWalletApp==false){
       $(".mobile_connect_button").hide();
       $('.mobile_disconnect_button').show();
     }
@@ -585,7 +586,8 @@ async function isConnected(){
     await load_public();
 }
 async function isDisconnected(){
-    if(isMobile()){
+    const inWalletApp = await inAppBrowse();
+    if(isMobile() && inWalletApp==false){
       $('.mobile_disconnect_button').hide();
       $(".mobile_connect_button").show();
     }
@@ -609,7 +611,7 @@ async function isDisconnected(){
 
 // mcswap wallet adapter
 let timeoutId;
-const timeoutDuration = 1 * 60 * 1000;
+const timeoutDuration = 5 * 60 * 1000;
 function resetTimeout() {
 $("#nav, #x-logo").css({"visibility":"visible"});
   clearTimeout(timeoutId);
@@ -1560,8 +1562,6 @@ $(window).on("load", async function(){
         });
     }
     const inWalletApp = await inAppBrowse();
-    // toast("isMobile(): "+isMobile(), 2000);
-    // toast("inWalletApp: "+inWalletApp, 2000);
     if(isMobile() && inWalletApp==false){
         $(".mcswap_connect_button").removeClass().addClass("mobile_connect_button");
         $(".mcswap_disconnect_button").removeClass().addClass("mobile_disconnect_button");
