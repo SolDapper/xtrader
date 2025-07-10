@@ -14,6 +14,12 @@
     }
 }
 @media only screen and (max-width: 450px) {
+    .toastify{
+        font-size: 12px;
+        padding: 10px 15px;
+        font-weight: bold;
+        max-width: 200px;
+    }
     #logo-home{
         width: 260px;
         left: calc(50% - 130px);
