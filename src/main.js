@@ -719,6 +719,10 @@ async function load_sent(){
         }
         const displayed = [];
         while(i < splSent.data.length){
+            if(!window.mcswap || !window.mcswap.publicKey){
+                $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
+                return;
+            }
             const asset = splSent.data[i];
             if(asset_mints.includes(asset.token_1_mint)){
                 if(!$('#sent-'+asset.acct).length){
@@ -729,7 +733,7 @@ async function load_sent(){
                     ele += '<li><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
                     ele += '<li data-mint="'+asset.token_1_mint+'" class="item-details"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
                     ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
-                    ele += '<li class="arrow arrow_up"><img src="./up.72e2edee.png" /></li>';
+                    ele += '<li class="arrow arrow_up"><img src="'+arrow_up+'" /></li>';
                     const first_part = asset.buyer.slice(0,5);
                     const last_part = asset.buyer.slice(-5);
                     ele += '<li data-wallet="'+asset.buyer+'" class="item-buyer">'+first_part+'...'+last_part+'</li>';
@@ -738,7 +742,7 @@ async function load_sent(){
                     ele += '<li><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
                     ele += '<li data-mint="'+asset.token_3_mint+'" class="item-details"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
                     ele += '<li class="item-amount buyer-amount">'+asset.token_3_amount+'</li>';
-                    ele += '<li class="arrow arrow_down"><img src="./down.8b892579.png" /></li>';
+                    ele += '<li class="arrow arrow_down"><img src="'+arrow_down+'" /></li>';
                     const time = asset.utime*1000;
                     const date = new Date(time);
                     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -790,6 +794,10 @@ async function load_received(){
         }
         const displayed = [];
         while(i < splReceived.data.length){
+            if(!window.mcswap || !window.mcswap.publicKey){
+                $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
+                return;
+            }
             const asset = splReceived.data[i];
             if(asset_mints.includes(asset.token_1_mint)){
                 if(!$('#received-'+asset.acct).length){
@@ -800,7 +808,7 @@ async function load_received(){
                     ele += '<li><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
                     ele += '<li data-mint="'+asset.token_1_mint+'" class="item-details"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
                     ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
-                    ele += '<li class="arrow arrow_down"><img src="./down.8b892579.png" /></li>';
+                    ele += '<li class="arrow arrow_down"><img src="'+arrow_down+'" /></li>';
                     const first_part = asset.seller.slice(0,5);
                     const last_part = asset.seller.slice(-5);
                     ele += '<li data-wallet="'+asset.seller+'" class="item-buyer">'+first_part+'...'+last_part+'</li>';
@@ -809,7 +817,7 @@ async function load_received(){
                     ele += '<li><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
                     ele += '<li data-mint="'+asset.token_3_mint+'" class="item-details"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
                     ele += '<li class="item-amount buyer-amount">'+asset.token_3_amount+'</li>';
-                    ele += '<li class="arrow arrow_up"><img src="./up.72e2edee.png" /></li>';
+                    ele += '<li class="arrow arrow_up"><img src="'+arrow_up+'" /></li>';
                     const time = asset.utime*1000;
                     const date = new Date(time);
                     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -868,6 +876,10 @@ async function load_public(){
         }
         let i = 0;
         while(i < splSent.data.length){
+            if(!window.mcswap || !window.mcswap.publicKey){
+                $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
+                return;
+            }
             const asset = splSent.data[i];
             if(asset_mints.includes(asset.token_1_mint)){
                 if(!$('#market-'+asset.acct).length){
@@ -878,7 +890,7 @@ async function load_public(){
                     ele += '<li><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
                     ele += '<li data-mint="'+asset.token_1_mint+'" class="item-details"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
                     ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
-                    ele += '<li class="arrow arrow_down"><img src="./down.8b892579.png" /></li>';
+                    ele += '<li class="arrow arrow_down"><img src="'+arrow_down+'" /></li>';
                     const first_part = asset.seller.slice(0,5);
                     const last_part = asset.seller.slice(-5);
                     ele += '<li data-wallet="'+asset.seller+'" class="item-buyer">'+first_part+'...'+last_part+'</li>';
@@ -887,7 +899,7 @@ async function load_public(){
                     ele += '<li><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
                     ele += '<li data-mint="'+asset.token_3_mint+'" class="item-details"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
                     ele += '<li class="item-amount buyer-amount">'+asset.token_3_amount+'</li>';
-                    ele += '<li class="arrow arrow_up"><img src="./up.72e2edee.png" /></li>';
+                    ele += '<li class="arrow arrow_up"><img src="'+arrow_up+'" /></li>';
                     const time = asset.utime*1000;
                     const date = new Date(time);
                     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -1508,8 +1520,6 @@ $(window).on("load", async function(){
     if(isMobile() && inWalletApp==false){
         $(".mcswap_connect_button").removeClass().addClass("mobile_connect_button");
         $(".mcswap_disconnect_button").removeClass().addClass("mobile_disconnect_button");
-        // const authToken = localStorage.getItem('authToken');
-        // if(authToken){$(".mobile_connect_button").click();}
     }
     let i=0;
     while (i < token_list.length) {
@@ -1562,3 +1572,5 @@ $(window).on("load", async function(){
         i++;
     }
 });
+const arrow_up = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFzGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgOS4xLWMwMDIgNzkuYTZhNjM5NiwgMjAyNC8wMy8xMi0wNzo0ODoyMyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDI1LjExIChXaW5kb3dzKSIgeG1wOkNyZWF0ZURhdGU9IjIwMjUtMDctMDhUMDE6Mjc6MzktMDQ6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDI1LTA3LTA4VDAxOjMwOjMxLTA0OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDI1LTA3LTA4VDAxOjMwOjMxLTA0OjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo3MzgyZTdjZC1jNzczLWJlNDktOGI0My1lMDhhMzJiOGUzNzYiIHhtcE1NOkRvY3VtZW50SUQ9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";
+const arrow_down = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFzGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgOS4xLWMwMDIgNzkuYTZhNjM5NiwgMjAyNC8wMy8xMi0wNzo0ODoyMyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDI1LjExIChXaW5kb3dzKSIgeG1wOkNyZWF0ZURhdGU9IjIwMjUtMDctMDhUMDE6Mjc6MzktMDQ6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDI1LTA3LTA4VDAxOjMwOjU1LTA0OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDI1LTA3LTA4VDAxOjMwOjU1LTA0OjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoyNzY0NDk2Yi03YWI4LWMwNGEtYWQ2ZC04Yjc1OTljZDRlNGIiIHhtcE1NOkRvY3VtZW50SUQ9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";
