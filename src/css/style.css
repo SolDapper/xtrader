@@ -111,6 +111,28 @@ button{
     display: none;
 }
 
+#nav button#cog{
+    display: block;
+    background: none;
+    border-radius: 21px;
+    margin: 15px 6px 0 0;
+    padding: 0;
+    transition: .3s;
+    float: right;
+    min-width: auto;
+    width: 32px;
+    height: 32px;
+    opacity: 0.25;
+    cursor: not-allowed;
+}
+#nav button#cog img{
+    width: 32px;
+    height: 32px;
+}
+#nav button#cog:hover{
+    opacity: 0.25;
+}
+
 
 #nav button.active-view{
     background: #1b1b1b66;

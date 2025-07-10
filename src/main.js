@@ -15,6 +15,7 @@ import EventEmitter from 'events';
 import mcswapConnector from "mcswap-connector";
 import "mcswap-connector/src/colors/xtrader-connector.css";
 import "./css/style.css";
+import "./css/mobile.css";
 const rpc = process.env.RPC;
 const mode = window.location.pathname;
 const APP_IDENTITY = {name:'xTrader',uri:'https://www.xtrader.me/',icon:'special_icon.png',};
@@ -1429,6 +1430,9 @@ $("#payment-priority").on("change",function(){
     $("#payment-pay").focus();
 });
 
+$("#cog").on("click", async function(){
+    toast("Unavailable",2000);
+});
 
 // main navigation
 $("#nav .view").on("click", async function(){
