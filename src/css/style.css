@@ -61,7 +61,7 @@ main{
     display: block;
     position: fixed;
     float: left;
-    left: calc(50% - 150px);
+    left: calc(50% - 180px);
     top: calc(50% - 75px);
 }
 button{
