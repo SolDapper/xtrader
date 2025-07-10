@@ -73,6 +73,7 @@ button{
     display: block;
     margin: 0;
     background: #00000047;
+    transition: .3s;
 }
 #nav button{
     display: inline-block;
