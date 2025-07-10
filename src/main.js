@@ -602,6 +602,9 @@ if(!isMobile()){
     emitter.on('mcswap_connected',async()=>{isConnected();});
     emitter.on('mcswap_disconnected',async()=>{isDisconnected();});
 }
+else{
+    toast("is mobile",3000);
+}
 // mobile wallet adapter
 async function startMWA(){
     try {
@@ -648,6 +651,7 @@ async function startMWA(){
     }
 }
 $(".mobile_connect_button").on("click", async function(){
+    toast("trying",3000);
     $("#mcswap_cover").fadeIn(400);
     $("#mcswap_message").html("Requesting connection...");
     const result = startMWA();
