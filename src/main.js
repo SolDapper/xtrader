@@ -602,9 +602,8 @@ if(!isMobile()){
     emitter.on('mcswap_connected',async()=>{isConnected();});
     emitter.on('mcswap_disconnected',async()=>{isDisconnected();});
 }
-else{
-    toast("is mobile",3000);
-}
+
+
 // mobile wallet adapter
 async function startMWA(){
     try {
@@ -650,7 +649,7 @@ async function startMWA(){
         return null;
     }
 }
-$(".mobile_connect_button").on("click", async function(){
+$(document).delegate(".mobile_connect_button", "click", async function(){
     toast("trying",3000);
     $("#mcswap_cover").fadeIn(400);
     $("#mcswap_message").html("Requesting connection...");
@@ -663,7 +662,7 @@ $(".mobile_connect_button").on("click", async function(){
         $("#mcswap_cover").fadeOut(400);
     }
 });
-$(".mobile_disconnect_button").on("click", async function(){
+$(document).delegate(".mobile_disconnect_button", "click", async function(){
     const isAuthToken = localStorage.getItem('authToken');
     if(isAuthToken){
         const result = await transact(async(wallet)=>{return await wallet.deauthorize({auth_token: isAuthToken});});
