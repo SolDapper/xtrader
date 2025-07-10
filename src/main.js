@@ -570,8 +570,8 @@ async function asset_map(_tokens_,mint=false){
 
 
 // connection events
-async function isConnected(MWA=false){
-    if(isMobile() && MWA!=false){
+async function isConnected(){
+    if(isMobile()){
       $(".mobile_connect_button").hide();
       $('.mobile_disconnect_button').show();
     }
@@ -635,7 +635,7 @@ async function startMWA(){
       if(publicKey){
         window.mcswap = {};
         window.mcswap.publicKey = new PublicKey(publicKey);
-        isConnected();
+        return publicKey;
       }
       else{
         toast("Canceled",2000);
@@ -651,7 +651,10 @@ $(".mobile_connect_button").on("click", async function(){
     $("#mcswap_cover").fadeIn(400);
     $("#mcswap_message").html("Requesting connection...");
     const result = startMWA();
-    if(!result){
+    if(result){
+        isConnected();
+    }
+    else{
         $("#mcswap_message").html("");
         $("#mcswap_cover").fadeOut(400);
     }
@@ -662,7 +665,6 @@ $(".mobile_disconnect_button").on("click", async function(){
         const result = await transact(async(wallet)=>{return await wallet.deauthorize({auth_token: isAuthToken});});
         localStorage.removeItem('authToken');
     }
-    localStorage.removeItem('authToken');
     window.mcswap = false;
     await isDisconnected(true);
 });
