@@ -611,7 +611,7 @@ async function isDisconnected(){
 
 // mcswap wallet adapter
 let timeoutId;
-const timeoutDuration = 5 * 60 * 1000;
+const timeoutDuration = 1 * 30 * 1000;
 function resetTimeout() {
 $("#nav, #x-logo").css({"visibility":"visible"});
   clearTimeout(timeoutId);
