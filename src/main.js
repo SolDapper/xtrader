@@ -21,7 +21,7 @@ const APP_IDENTITY = {name:'xTrader',uri:'https://www.xtrader.me/',icon:'special
 
 
 // serviceWorker
-if ('serviceWorker' in navigator) {
+if('serviceWorker' in navigator){
   try {
     navigator.serviceWorker.register(
       new URL('../service-worker.js', import.meta.url),
