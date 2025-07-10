@@ -57,12 +57,12 @@ main{
     opacity: 0.5;
 }
 #logo-home{
-    width: 400px;
+    width: 300px;
     display: block;
     position: fixed;
     float: left;
-    left: calc(50% - 192px);
-    top: calc(50% - 70px);
+    left: calc(50% - 150px);
+    top: calc(50% - 54px);
 }
 button{
     cursor: pointer;

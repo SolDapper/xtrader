@@ -1119,13 +1119,26 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
     if(tx.tx){
         try{
             $("#mcswap_message").html("Requesting approval...");
-            const signed = await window.mcswap.signTransaction(tx.tx).catch(async function(err){
+            let signed=null;
+            const inWalletApp = await inAppBrowse();
+            if(isMobile() && inWalletApp==false){
+                signed = await transact(async(wallet)=>{
+                    const authToken = localStorage.getItem('authToken');
+                    const authorizationResult = await wallet.authorize({chain:"solana:mainnet-beta",identity:APP_IDENTITY,auth_token:authToken});
+                    const _signedTxs_ = await wallet.signTransactions({transactions:[tx.tx],auth_token:authorizationResult.auth_token});
+                    return _signedTxs_[0];
+                });
+            }
+            else{
+                signed = await window.mcswap.signTransaction(tx.tx).catch(async function(err){});
+            }
+            if(!signed){
                 $("#mcswap_message").html("");
                 $("#mcswap_cover").fadeOut(300);
                 toast("Transaction canceled",2000);
-            });
-            if(!signed){return;}
-            $("#mcswap_message").html("Procesing trade...");
+                return;
+            }
+            $("#mcswap_message").html("Processing...");
             const signature = await mcswap.send(rpc,signed);
             console.log("signature", signature);
             console.log("awaiting status...");
