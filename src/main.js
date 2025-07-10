@@ -654,7 +654,7 @@ $(".mobile_connect_button").on("click", async function(){
     toast("trying",3000);
     $("#mcswap_cover").fadeIn(400);
     $("#mcswap_message").html("Requesting connection...");
-    const result = startMWA();
+    const result = await startMWA();
     if(result){
         isConnected();
     }
