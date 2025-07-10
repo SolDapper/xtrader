@@ -1484,9 +1484,24 @@ $(document).delegate("#asset-list ul", "click", function(){
         $("#buyer-amount").val("").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
     }
 });
+// in wallet browser detection
+async function inAppBrowse(){
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  const Phantom = /Phantom/i.test(userAgent);
+  const Solflare = /Solflare/i.test(userAgent);
+  const Backpack = / wv/i.test(userAgent);
+  if(Phantom || Solflare || Backpack){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
 // load the asset list
 $(window).on("load", async function(){
-    if(isMobile()){
+    const inWalletApp = await inAppBrowse();
+    toast("result: "+inWalletApp, 2000);
+    if(isMobile() && !inAppBrowse()){
         $(".mcswap_connect_button").removeClass().addClass("mobile_connect_button");
         $(".mcswap_disconnect_button").removeClass().addClass("mobile_disconnect_button");
         const authToken = localStorage.getItem('authToken');
