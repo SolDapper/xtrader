@@ -9,13 +9,16 @@ import 'animate.css';
 import Toastify from 'toastify-js';
 import "toastify-js/src/toastify.css";
 import "@fontsource/ubuntu";
-import mcswap from 'mcswap-sdk';
 import {transact} from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
+import mcswap from 'mcswap-sdk';
 import EventEmitter from 'events';
 import mcswapConnector from "mcswap-connector";
 import "mcswap-connector/src/colors/xtrader-connector.css";
 import "./css/style.css";
 const rpc = process.env.RPC;
+const mode = window.location.pathname;
+const APP_IDENTITY = {name:'xTrader',uri:'https://www.xtrader.me/',icon:'special_icon.png',};
+
 
 // serviceWorker
 if ('serviceWorker' in navigator) {
@@ -29,6 +32,7 @@ if ('serviceWorker' in navigator) {
     console.log('Service Worker Register Failed');
   }
 }
+
 
 // asset list
 const token_list = [
@@ -564,10 +568,13 @@ async function asset_map(_tokens_,mint=false){
   }
 }
 
+
 // connection events
-const emitter = new EventEmitter();
-new mcswapConnector(["phantom","solflare","backpack"],emitter).init();
-emitter.on('mcswap_connected',async()=>{
+async function isConnected(MWA=false){
+    if(isMobile() && MWA!=false){
+      $(".mobile_connect_button").hide();
+      $('.mobile_disconnect_button').show();
+    }
     $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
     $("#mcswap_cover, #mcswap_chooser").fadeOut(300);
     toast("Connected!",2000);
@@ -576,14 +583,86 @@ emitter.on('mcswap_connected',async()=>{
     await load_sent();
     await load_received();
     await load_public();
-});
-emitter.on('mcswap_disconnected',async()=>{
+}
+async function isDisconnected(){
+    if(isMobile()){
+      $('.mobile_disconnect_button').hide();
+      $(".mobile_connect_button").show();
+    }
     $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
     toast("Disconnected!",2000);
     $("#nav .view").removeClass("active-view");
     $(".views").hide();
     $("#home-view").show();
+}
+// mcswap wallet adapter
+if(!isMobile()){
+    const emitter = new EventEmitter();
+    new mcswapConnector(["phantom","solflare","backpack"],emitter).init();
+    emitter.on('mcswap_connected',async()=>{isConnected();});
+    emitter.on('mcswap_disconnected',async()=>{isDisconnected();});
+}
+// mobile wallet adapter
+async function startMWA(){
+    try {
+      const publicKey = await transact(async(wallet)=>{
+            let authResult;
+            try {
+                const authToken = localStorage.getItem('authToken');
+                if (authToken) {
+                  authResult = await wallet.reauthorize({ auth_token: authToken });
+                } 
+                else {
+                  authResult = await wallet.authorize({
+                    chain: 'solana:mainnet-beta',
+                    identity: APP_IDENTITY,
+                  });
+                }
+            } 
+            catch(error){return null;}
+            if(authResult.accounts && authResult.accounts.length > 0 && authResult.accounts[0].address){
+              localStorage.setItem('authToken', authResult.auth_token);
+              const base64Address = authResult.accounts[0].address;
+              const binaryData = Buffer.from(base64Address, 'base64');
+              const base58Address = bs58.encode(binaryData);
+              return base58Address;
+            }
+            else{
+              toast("No account found",2000);
+              return null;
+            }
+      });
+      if(publicKey){
+        window.mcswap = {};
+        window.mcswap.publicKey = new PublicKey(publicKey);
+        isConnected();
+      }
+      else{
+        toast("Canceled",2000);
+        return null;
+      }
+    } 
+    catch(error){
+        toast("MWA error",2000);
+        return null;
+    }
+}
+$(".mobile_connect_button").on("click", async function(){
+    $("#mcswap_cover").fadeIn(400);
+    $("#mcswap_message").html("Requesting connection...");
+    startMWA();
 });
+$(".mobile_disconnect_button").on("click", async function(){
+    const isAuthToken = localStorage.getItem('authToken');
+    if(isAuthToken){
+        const result = await transact(async(wallet)=>{return await wallet.deauthorize({auth_token: isAuthToken});});
+        localStorage.removeItem('authToken');
+    }
+    localStorage.removeItem('authToken');
+    window.mcswap = false;
+    await isDisconnected(true);
+});
+
 
 // backchecking displayed escrows
 async function backcheck(ele,array){
@@ -607,7 +686,6 @@ async function backcheck(ele,array){
         return;
     }
 }
-
 // load sent
 async function load_sent(){
     try{
@@ -834,7 +912,6 @@ async function load_public(){
         $("#market-refresh").removeClass("spin");
     }
 }
-
 // refresh clicks
 $("#market-refresh, #sent-refresh, #received-refresh").on("click", async function(){
     if(!window.mcswap || !window.mcswap.publicKey){
@@ -862,6 +939,7 @@ $("#market-refresh, #sent-refresh, #received-refresh").on("click", async functio
         toast("Refresh error", 2000);
     }
 });
+
 
 // line items clicks
 $(document).delegate("img.item-img", "click", async function(){
@@ -1052,6 +1130,7 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
         toast("Transaction canceled",2000);
     }
 });
+
 
 // amounts and values
 $("#payment-pay").on("click", async function(){
@@ -1257,85 +1336,6 @@ $("#creator-amount, #buyer-amount").on("keyup change input",function(e){
 });
 
 
-// select asset
-$(document).delegate("#asset-list ul", "click", function(){
-    const id = $(this).parent().parent().attr("data-chooser");
-    const mint = $(this).attr("id");
-    const decimals = $(this).attr("data-decimals");
-    const gecko = $(this).attr("data-gecko");
-    const symbol = $(this).find(".list-symbol").html();
-    const img = $(this).find(".list-icon img").attr("src");
-    $("#asset-list-close").click();
-    if(id=="creator-asset"){
-        $("#creator-mint").val(mint);
-        $("#creator-asset").html(symbol);
-        $("#creator-icon").attr("src",img).show();
-        $("#creator-value").html("$0.00");
-        $("#creator-amount").val("").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
-    }
-    else if(id=="buyer-asset"){
-        $("#buyer-mint").val(mint);
-        $("#buyer-asset").html(symbol);
-        $("#buyer-icon").attr("src",img).show();
-        $("#buyer-value").html("$0.00");
-        $("#buyer-amount").val("").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
-    }
-});
-// load the asset list
-$(window).on("load", async function(){
-    let i=0;
-    while (i < token_list.length) {
-        const asset = token_list[i];
-        if(!asset.gecko){asset.gecko="false";}
-        let item = '<ul data-gecko="'+asset.gecko+'" data-decimals="'+asset.decimals+'" id="'+asset.mint+'">';
-        item += '<li class="list-icon">';
-        item += '<img src="'+asset.icon+'" />';
-        item += '</li><li class="list-symbol">';
-        item += asset.symbol;
-        item += '</li>';
-        item += '<li class="list-name">';
-        item += asset.name;
-        item += '</li>';
-        item += '<li class="list-clear"></li>';
-        item += '<li class="list-pdf">';
-        item += '</li>';
-        item += '</ul>';
-        $("#asset-list").append(item);
-        i++;
-    }
-    i=0;
-    asset_list.sort((a,b) => (a.symbol > b.symbol) ? 1 : ((b.symbol > a.symbol) ? -1 : 0));
-    while (i < asset_list.length) {
-        const asset = asset_list[i];
-        if(!asset.gecko){asset.gecko="false";}
-        let item = '<ul data-gecko="'+asset.gecko+'" data-decimals="'+asset.decimals+'" id="'+asset.mint+'">';
-        item += '<li class="list-icon">';
-        item += '<img src="'+asset.icon+'" />';
-        item += '</li><li class="list-symbol">';
-        item += asset.symbol;
-        item += '</li>';
-        item += '<li class="list-name">';
-        item += asset.name;
-        item += '</li>';
-        item += '<li class="list-clear"></li>';
-        item += '<li class="list-pdf">';
-        item += '</li>';
-        item += '</ul>';
-        $("#asset-list").append(item);
-        i++;
-    }
-    i=0;
-    while (i < asset_list.length) {
-        const asset = asset_list[i];
-        const item = '<option value="'+asset.mint+'">'+asset.symbol+'</option>';
-        $("#sent-filter").append(item);
-        $("#received-filter").append(item);
-        asset_mints.push(asset.mint);
-        i++;
-    }
-});
-
-
 // close asset list
 $("button#asset-list-close").on("click", function(){
     $("#asset-list-box").attr("data-chooser",null).removeClass("animate__slideInLeft").addClass("animate__slideOutLeft");
@@ -1450,4 +1450,85 @@ VANTA.CELLS({
   color2: "#161616",
   size: 5.00,
   speed: 0.40
+});
+// select asset
+$(document).delegate("#asset-list ul", "click", function(){
+    const id = $(this).parent().parent().attr("data-chooser");
+    const mint = $(this).attr("id");
+    const decimals = $(this).attr("data-decimals");
+    const gecko = $(this).attr("data-gecko");
+    const symbol = $(this).find(".list-symbol").html();
+    const img = $(this).find(".list-icon img").attr("src");
+    $("#asset-list-close").click();
+    if(id=="creator-asset"){
+        $("#creator-mint").val(mint);
+        $("#creator-asset").html(symbol);
+        $("#creator-icon").attr("src",img).show();
+        $("#creator-value").html("$0.00");
+        $("#creator-amount").val("").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
+    }
+    else if(id=="buyer-asset"){
+        $("#buyer-mint").val(mint);
+        $("#buyer-asset").html(symbol);
+        $("#buyer-icon").attr("src",img).show();
+        $("#buyer-value").html("$0.00");
+        $("#buyer-amount").val("").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
+    }
+});
+// load the asset list
+$(window).on("load", async function(){
+    if(isMobile()){
+        $(".mcswap_connect_button").removeClass().addClass("mobile_connect_button");
+        $(".mcswap_disconnect_button").removeClass().addClass("mobile_disconnect_button");
+    }
+    let i=0;
+    while (i < token_list.length) {
+        const asset = token_list[i];
+        if(!asset.gecko){asset.gecko="false";}
+        let item = '<ul data-gecko="'+asset.gecko+'" data-decimals="'+asset.decimals+'" id="'+asset.mint+'">';
+        item += '<li class="list-icon">';
+        item += '<img src="'+asset.icon+'" />';
+        item += '</li><li class="list-symbol">';
+        item += asset.symbol;
+        item += '</li>';
+        item += '<li class="list-name">';
+        item += asset.name;
+        item += '</li>';
+        item += '<li class="list-clear"></li>';
+        item += '<li class="list-pdf">';
+        item += '</li>';
+        item += '</ul>';
+        $("#asset-list").append(item);
+        i++;
+    }
+    i=0;
+    asset_list.sort((a,b) => (a.symbol > b.symbol) ? 1 : ((b.symbol > a.symbol) ? -1 : 0));
+    while (i < asset_list.length) {
+        const asset = asset_list[i];
+        if(!asset.gecko){asset.gecko="false";}
+        let item = '<ul data-gecko="'+asset.gecko+'" data-decimals="'+asset.decimals+'" id="'+asset.mint+'">';
+        item += '<li class="list-icon">';
+        item += '<img src="'+asset.icon+'" />';
+        item += '</li><li class="list-symbol">';
+        item += asset.symbol;
+        item += '</li>';
+        item += '<li class="list-name">';
+        item += asset.name;
+        item += '</li>';
+        item += '<li class="list-clear"></li>';
+        item += '<li class="list-pdf">';
+        item += '</li>';
+        item += '</ul>';
+        $("#asset-list").append(item);
+        i++;
+    }
+    i=0;
+    while (i < asset_list.length) {
+        const asset = asset_list[i];
+        const item = '<option value="'+asset.mint+'">'+asset.symbol+'</option>';
+        $("#sent-filter").append(item);
+        $("#received-filter").append(item);
+        asset_mints.push(asset.mint);
+        i++;
+    }
 });

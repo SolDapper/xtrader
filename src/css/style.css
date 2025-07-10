@@ -96,21 +96,19 @@ button{
     color: #1dd2bd;
     box-shadow: none;
 }
-#nav button#connect, #nav button#disconnect{
+#nav button#connect, #nav button#disconnect, #nav .mobile_connect_button, #nav .mobile_disconnect_button{
     float: right;
     margin-right: 10px;
     color: #fff;
     background: #090909f5;
-}
-#nav button#connect:hover, #nav button#disconnect:hover{
-    color: #1dd2bd;
-}
-#nav button#disconnect{
-    display: none;
-}
-#nav .mcswap_connect_button, #nav .mcswap_disconnect_button {
     width: auto;
     height: auto;
+}
+#nav button#connect:hover, #nav button#disconnect:hover, #nav .mobile_connect_button:hover, #nav .mobile_disconnect_button:hover{
+    color: #1dd2bd;
+}
+#nav button#disconnect, #nav .mobile_disconnect_button{
+    display: none;
 }
 
 #nav button.active-view{
