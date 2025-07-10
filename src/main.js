@@ -596,12 +596,15 @@ async function isDisconnected(){
     $("#home-view").show();
 }
 // mcswap wallet adapter
-if(!isMobile() || await inAppBrowse()===true){
-    const emitter = new EventEmitter();
-    new mcswapConnector(["phantom","solflare","backpack"],emitter).init();
-    emitter.on('mcswap_connected',async()=>{isConnected();});
-    emitter.on('mcswap_disconnected',async()=>{isDisconnected();});
-}
+(async function(){
+    const inWalletApp = await inAppBrowse();
+    if(!isMobile() || inWalletApp===true){
+        const emitter = new EventEmitter();
+        new mcswapConnector(["phantom","solflare","backpack"],emitter).init();
+        emitter.on('mcswap_connected',async()=>{isConnected();});
+        emitter.on('mcswap_disconnected',async()=>{isDisconnected();});
+    }
+})();
 
 
 // mobile wallet adapter
@@ -968,7 +971,7 @@ $(document).delegate("img.item-img", "click", async function(){
 });
 $(document).delegate(".item-details", "click", async function(){
     const mint = $(this).attr("data-mint");
-    toast("Copied Chart Link",3000);
+    toast("Copied chart link",3000);
     const href = "https://jup.ag/tokens/"+mint;
     copy(href);
     if(!isMobile()){window.open(href,'_blank');}
@@ -1500,8 +1503,8 @@ async function inAppBrowse(){
 // load the asset list
 $(window).on("load", async function(){
     const inWalletApp = await inAppBrowse();
-    toast("isMobile(): "+isMobile(), 2000);
-    toast("inWalletApp: "+inWalletApp, 2000);
+    // toast("isMobile(): "+isMobile(), 2000);
+    // toast("inWalletApp: "+inWalletApp, 2000);
     if(isMobile() && inWalletApp==false){
         $(".mcswap_connect_button").removeClass().addClass("mobile_connect_button");
         $(".mcswap_disconnect_button").removeClass().addClass("mobile_disconnect_button");
