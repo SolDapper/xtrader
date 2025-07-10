@@ -12,12 +12,16 @@
     #nav #nav-contain button#cog{
         margin: 11px 9px 0 0;
     }
+    .toastify{
+        font-size: 13px;
+        padding: 10px 15px;
+        max-width: 230px;
+    }
 }
 @media only screen and (max-width: 450px) {
     .toastify{
         font-size: 12px;
         padding: 10px 15px;
-        font-weight: bold;
         max-width: 200px;
     }
     #logo-home{
