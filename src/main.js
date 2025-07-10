@@ -650,7 +650,11 @@ async function startMWA(){
 $(".mobile_connect_button").on("click", async function(){
     $("#mcswap_cover").fadeIn(400);
     $("#mcswap_message").html("Requesting connection...");
-    startMWA();
+    const result = startMWA();
+    if(!result){
+        $("#mcswap_message").html("");
+        $("#mcswap_cover").fadeOut(400);
+    }
 });
 $(".mobile_disconnect_button").on("click", async function(){
     const isAuthToken = localStorage.getItem('authToken');
