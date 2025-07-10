@@ -1500,7 +1500,8 @@ async function inAppBrowse(){
 // load the asset list
 $(window).on("load", async function(){
     const inWalletApp = await inAppBrowse();
-    if(isMobile() && inAppBrowse()==false){
+    toast("result: "+inWalletApp, 2000);
+    if(isMobile() && inWalletApp==false){
         $(".mcswap_connect_button").removeClass().addClass("mobile_connect_button");
         $(".mcswap_disconnect_button").removeClass().addClass("mobile_disconnect_button");
         const authToken = localStorage.getItem('authToken');
