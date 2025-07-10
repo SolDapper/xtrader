@@ -607,6 +607,27 @@ async function isDisconnected(){
 })();
 
 
+// mcswap wallet adapter
+let timeoutId;
+const timeoutDuration = 1 * 60 * 1000;
+function resetTimeout() {
+$("#nav").css({"visibility":"visible"});
+  clearTimeout(timeoutId);
+  timeoutId = setTimeout(resetUI, timeoutDuration);
+}
+function resetUI() {
+    if($("#disconnect").is(":visible")){
+        $("#disconnect").click();
+    }
+    $("#nav").css({"visibility":"hidden"});
+}
+window.addEventListener("mousemove", resetTimeout);
+window.addEventListener("keypress", resetTimeout);
+window.addEventListener("scroll", resetTimeout);
+window.addEventListener("click", resetTimeout);
+resetTimeout();
+
+
 // mobile wallet adapter
 async function startMWA(){
     try {
