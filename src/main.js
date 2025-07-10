@@ -1489,6 +1489,8 @@ $(window).on("load", async function(){
     if(isMobile()){
         $(".mcswap_connect_button").removeClass().addClass("mobile_connect_button");
         $(".mcswap_disconnect_button").removeClass().addClass("mobile_disconnect_button");
+        const authToken = localStorage.getItem('authToken');
+        if(authToken){$(".mobile_connect_button").click();}
     }
     let i=0;
     while (i < token_list.length) {
