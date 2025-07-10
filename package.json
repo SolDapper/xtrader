@@ -38,5 +38,9 @@
     "staticFiles": {
         "staticPath": ".well-known",
         "staticOutPath": ".well-known"
+    },
+    "devDependencies": {
+        "punycode": "^2.3.1",
+        "url": "^0.11.4"
     }
 }
