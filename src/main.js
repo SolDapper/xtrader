@@ -611,7 +611,7 @@ async function isDisconnected(){
 let timeoutId;
 const timeoutDuration = 1 * 60 * 1000;
 function resetTimeout() {
-$("#nav").css({"visibility":"visible"});
+$("#nav, #x-logo").css({"visibility":"visible"});
   clearTimeout(timeoutId);
   timeoutId = setTimeout(resetUI, timeoutDuration);
 }
@@ -619,7 +619,7 @@ function resetUI() {
     if($("#disconnect").is(":visible")){
         $("#disconnect").click();
     }
-    $("#nav").css({"visibility":"hidden"});
+    $("#nav, #x-logo").css({"visibility":"hidden"});
 }
 window.addEventListener("mousemove", resetTimeout);
 window.addEventListener("keypress", resetTimeout);
@@ -1548,6 +1548,17 @@ async function inAppBrowse(){
 }
 // load the asset list
 $(window).on("load", async function(){
+    let wakeLock = null;
+    if("wakeLock" in navigator){
+        try{
+            wakeLock = await navigator.wakeLock.request("screen");
+        }catch(err){}
+        document.addEventListener("visibilitychange",async()=>{
+        if (wakeLock!==null && document.visibilityState==="visible"){
+            wakeLock = await navigator.wakeLock.request("screen");
+        }
+        });
+    }
     const inWalletApp = await inAppBrowse();
     // toast("isMobile(): "+isMobile(), 2000);
     // toast("inWalletApp: "+inWalletApp, 2000);
