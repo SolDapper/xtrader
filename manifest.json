@@ -481,5 +481,11 @@
     "social",
     "utilities"
   ],
-"prefer_related_applications": false
+"prefer_related_applications": true,
+"related_applications": [
+    {
+      "platform": "play",
+      "id": "me.xtrader.www.twa"
+    }
+  ]
 }
