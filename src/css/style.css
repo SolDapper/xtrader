@@ -111,13 +111,6 @@ button{
     display: none;
 }
 
-.mobile_connect_button{
-    background: #ccc;
-}
-
-
-
-
 
 #nav button.active-view{
     background: #1b1b1b66;
