@@ -619,9 +619,9 @@ $("#nav, #x-logo").css({"visibility":"visible"});
   timeoutId = setTimeout(resetUI, timeoutDuration);
 }
 function resetUI() {
-    if($("#disconnect").is(":visible")){
-        $("#disconnect").click();
-    }
+    $("#nav .view").removeClass("active-view");
+    $(".views").hide();
+    $("#home-view").show();
     $("#nav, #x-logo").css({"visibility":"hidden"});
 }
 window.addEventListener("mousemove", resetTimeout);
@@ -1429,9 +1429,9 @@ $("#buyer-type").on("change",function(){
 $("#payment-priority").on("change",function(){
     $("#payment-pay").focus();
 });
-
+// settings
 $("#cog").on("click", async function(){
-    toast("Unavailable",2000);
+    toast("Settings unavailable",2000);
 });
 
 // main navigation

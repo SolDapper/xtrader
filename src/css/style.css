@@ -85,7 +85,6 @@ button{
     transition: .3s;
     color: #2a71f8;
     text-shadow: 1px 1px 1px #010101;
-    min-width: 118px;
 }
 #nav #nav-contain{
     max-width: 1390px;
@@ -122,7 +121,7 @@ button{
     min-width: auto;
     width: 32px;
     height: 32px;
-    opacity: 0.25;
+    opacity: 0.1;
     cursor: not-allowed;
 }
 #nav button#cog img{
@@ -130,7 +129,7 @@ button{
     height: 32px;
 }
 #nav button#cog:hover{
-    opacity: 0.25;
+    opacity: 0.1;
 }
 
 

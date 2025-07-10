@@ -1,0 +1,41 @@
+@media only screen and (max-width: 750px) {
+    #nav #nav-contain button.view, #nav #nav-contain button#connect, #nav #nav-contain button#disconnect{
+        width: calc(25% - 13px);
+        font-size: 13px;
+        padding: 10px 10px;
+    }
+    #nav #nav-contain button#connect, #nav #nav-contain button#disconnect{
+        margin: 9px 12px 0 0;
+        font-size: 13px;
+        font-weight: bold;
+    }
+    #nav #nav-contain button#cog{
+        margin: 11px 9px 0 0;
+    }
+}
+@media only screen and (max-width: 450px) {
+    #logo-home{
+        width: 260px;
+        left: calc(50% - 130px);
+    }
+    #nav #nav-contain button{
+        font-size: 12px;
+    }
+    #nav #nav-contain button#connect, #nav #nav-contain button#disconnect{
+        font-size: 11px;
+        font-weight: normal;
+        min-width: 78px;
+    }
+    #nav #nav-contain button#cog{
+        margin: 12px 6px 0 0;
+        width: 27px;
+        height: 27px;
+    }
+    #nav #nav-contain button#cog img{
+        width: 27px;
+        height: 27px;
+    }
+    #nav #nav-contain button.view{
+        font-size: 11px;
+    }
+}
