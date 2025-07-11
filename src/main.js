@@ -1183,6 +1183,7 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
     const escrow = parts[1];
     const buyer = window.mcswap.publicKey.toString();
     const priority = $("#settings-priority").val();
+    const symbol = $(this).parent().prev().prev().prev().prev().find(".item-symbol").html();
     $("#mcswap_cover").fadeIn(300);
     $("#mcswap_message").html("Preparing transaction...");
     const tx = await mcswap.splExecute({
@@ -1192,6 +1193,7 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
         "escrow": escrow,
         "priority": priority
     });
+    console.log(tx);
     if(tx.tx){
         try{
             $("#mcswap_message").html("Requesting approval...");
@@ -1240,7 +1242,12 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
     else{
         $("#mcswap_message").html("");
         $("#mcswap_cover").fadeOut(300);
-        toast("Transaction stopped",2000);
+        if(tx.logs && tx.logs.includes("Program log: CERROR: Invalid token 3 ata")){
+            toast("Insufficient "+symbol, 2000);
+        }
+        else{
+            toast("Transaction stopped", 2000);
+        }
     }
 });
 
