@@ -570,6 +570,31 @@ async function asset_map(_tokens_,mint=false){
 }
 
 
+// screensaver
+let timeoutId;
+function resetTimeout() {
+    let timeoutDuration = 1 * 30 * 1000;
+    let screensaver = parseInt($("#settings-screensaver").val().trim());
+    if(screensaver > 30){
+        timeoutDuration = 1 * screensaver * 1000;
+    }
+    $("#nav, #x-logo").css({"visibility":"visible"});
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(resetUI, timeoutDuration);
+}
+function resetUI() {
+    $("#nav .view, #nav #cog").removeClass("active-view").removeClass("active-cog");
+    $(".views").hide();
+    $("#home-view").show();
+    $("#nav, #x-logo").css({"visibility":"hidden"});
+}
+window.addEventListener("mousemove", resetTimeout);
+window.addEventListener("keypress", resetTimeout);
+window.addEventListener("scroll", resetTimeout);
+window.addEventListener("click", resetTimeout);
+resetTimeout();
+
+
 // connection events
 async function isConnected(){
     const inWalletApp = await inAppBrowse();
@@ -594,7 +619,7 @@ async function isDisconnected(){
     }
     $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
     toast("Disconnected!",2000);
-    $("#nav .view").removeClass("active-view");
+    $("#nav .view, #nav #cog").removeClass("active-view").removeClass("active-cog");
     $(".views").hide();
     $("#home-view").show();
 }
@@ -608,29 +633,6 @@ async function isDisconnected(){
         emitter.on('mcswap_disconnected',async()=>{isDisconnected();});
     }
 })();
-
-
-// mcswap wallet adapter
-let timeoutId;
-const timeoutDuration = 1 * 30 * 1000;
-function resetTimeout() {
-$("#nav, #x-logo").css({"visibility":"visible"});
-  clearTimeout(timeoutId);
-  timeoutId = setTimeout(resetUI, timeoutDuration);
-}
-function resetUI() {
-    $("#nav .view").removeClass("active-view");
-    $(".views").hide();
-    $("#home-view").show();
-    $("#nav, #x-logo").css({"visibility":"hidden"});
-}
-window.addEventListener("mousemove", resetTimeout);
-window.addEventListener("keypress", resetTimeout);
-window.addEventListener("scroll", resetTimeout);
-window.addEventListener("click", resetTimeout);
-resetTimeout();
-
-
 // mobile wallet adapter
 async function startMWA(){
     try {
@@ -700,6 +702,33 @@ $(document).delegate(".mobile_disconnect_button", "click", async function(){
 });
 
 
+// notifications
+function noti(){
+  if (!("Notification" in window)) {
+    // Check if the browser supports notifications
+    alert("This browser does not support desktop notification");
+  } 
+  else if (Notification.permission === "granted") {
+    // Check whether notification permissions have already been granted;
+    // if so, create a notification
+    const notification = new Notification("Hi there!");
+    // …
+  } 
+  else if (Notification.permission !== "denied") {
+    // We need to ask the user for permission
+    Notification.requestPermission().then((permission) => {
+      // If the user accepts, let's create a notification
+      if (permission === "granted") {
+        const notification = new Notification("Hi there!");
+        
+
+
+      }
+    });
+  }
+}
+
+
 // backchecking displayed escrows
 async function backcheck(ele,array){
     const list = $("#"+ele+"-view .panel-list").find("ul");
@@ -730,8 +759,10 @@ async function load_sent(){
             return;
         }
         $("#sent-refresh").addClass("spin");
+        let _rpc_ = $("#settings-rpc").val().trim();
+        if(_rpc_==""){_rpc_=rpc;}
         const splSent = await mcswap.splSent({
-            rpc: rpc,
+            rpc: _rpc_,
             display: true,
             private: true,
             wallet: window.mcswap.publicKey.toString()
@@ -805,8 +836,10 @@ async function load_received(){
             return;
         }
         $("#received-refresh").addClass("spin");
+        let _rpc_ = $("#settings-rpc").val().trim();
+        if(_rpc_==""){_rpc_=rpc;}
         const splReceived = await mcswap.splReceived({
-            rpc: rpc,
+            rpc: _rpc_,
             display: true,
             private: true,
             wallet: window.mcswap.publicKey.toString()
@@ -881,9 +914,11 @@ async function load_public(){
             return;
         }
         $("#market-refresh").addClass("spin");
+        let _rpc_ = $("#settings-rpc").val().trim();
+        if(_rpc_==""){_rpc_=rpc;}
         const user = window.mcswap.publicKey.toString();
         const splSent = await mcswap.splSent({
-            rpc: rpc,
+            rpc: _rpc_,
             display: true,
             private: false,
             wallet: false
@@ -1080,6 +1115,7 @@ $(document).delegate(".item-cancel", "click", async function(){
     const view = parts[0];
     const escrow = parts[1];
     const seller = window.mcswap.publicKey.toString();
+    const priority = $("#settings-priority").val();
     $("#mcswap_cover").fadeIn(300);
     $("#mcswap_message").html("Preparing transaction...");
     const tx = await mcswap.splCancel({
@@ -1087,16 +1123,30 @@ $(document).delegate(".item-cancel", "click", async function(){
         "blink": false,
         "seller": seller,
         "escrow": escrow,
+        "priority": priority
     });
     if(tx){
         try{
             $("#mcswap_message").html("Requesting approval...");
-            const signed = await window.mcswap.signTransaction(tx).catch(async function(err){
+            let signed=null;
+            const inWalletApp = await inAppBrowse();
+            if(isMobile() && inWalletApp==false){
+                signed = await transact(async(wallet)=>{
+                    const authToken = localStorage.getItem('authToken');
+                    const authorizationResult = await wallet.authorize({chain:"solana:mainnet-beta",identity:APP_IDENTITY,auth_token:authToken});
+                    const _signedTxs_ = await wallet.signTransactions({transactions:[tx],auth_token:authorizationResult.auth_token});
+                    return _signedTxs_[0];
+                });
+            }
+            else{
+                signed = await window.mcswap.signTransaction(tx).catch(async function(err){});
+            }
+            if(!signed){
                 $("#mcswap_message").html("");
                 $("#mcswap_cover").fadeOut(300);
                 toast("Transaction canceled",2000);
-            });
-            if(!signed){return;}
+                return;
+            }
             $("#mcswap_message").html("Closing escrow...");
             const signature = await mcswap.send(rpc,signed);
             console.log("signature", signature);
@@ -1132,13 +1182,15 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
     const view = parts[0];
     const escrow = parts[1];
     const buyer = window.mcswap.publicKey.toString();
+    const priority = $("#settings-priority").val();
     $("#mcswap_cover").fadeIn(300);
     $("#mcswap_message").html("Preparing transaction...");
     const tx = await mcswap.splExecute({
         "rpc": rpc,
         "blink": false,
         "buyer": buyer,
-        "escrow": escrow
+        "escrow": escrow,
+        "priority": priority
     });
     if(tx.tx){
         try{
@@ -1193,7 +1245,17 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
 });
 
 
-// amounts and values
+// settings
+async function save_settings(){
+    
+}
+$("#settings-priority").on("change", async function(){
+    await save_settings();
+    toast("Settings saved", 2000);
+});
+
+
+// create escrow
 $("#payment-pay").on("click", async function(){
     $("label").removeClass("form-error");
     if($("#creator-asset").html()=="Choose"){
@@ -1242,7 +1304,7 @@ $("#payment-pay").on("click", async function(){
     if(buyer=="Any"){buyer=false;}
     const buyer_mint = $("#buyer-mint").val().trim();
     const buyer_amount = $("#buyer-amount").val().trim();
-    const priority = $("#payment-priority").val().trim();
+    const priority = $("#settings-priority").val().trim();
     const affiliateWallet = false;
     const affiliateFee = 0;
     const config = {
@@ -1270,12 +1332,25 @@ $("#payment-pay").on("click", async function(){
     if(tx.tx){
         try{
             $("#mcswap_message").html("Requesting approval...");
-            const signed = await window.mcswap.signTransaction(tx.tx).catch(async function(err){
+            let signed=null;
+            const inWalletApp = await inAppBrowse();
+            if(isMobile() && inWalletApp==false){
+                signed = await transact(async(wallet)=>{
+                    const authToken = localStorage.getItem('authToken');
+                    const authorizationResult = await wallet.authorize({chain:"solana:mainnet-beta",identity:APP_IDENTITY,auth_token:authToken});
+                    const _signedTxs_ = await wallet.signTransactions({transactions:[tx.tx],auth_token:authorizationResult.auth_token});
+                    return _signedTxs_[0];
+                });
+            }
+            else{
+                signed = await window.mcswap.signTransaction(tx.tx).catch(async function(err){});
+            }
+            if(!signed){
                 $("#mcswap_message").html("");
                 $("#mcswap_cover").fadeOut(300);
                 toast("Transaction canceled",2000);
-            });
-            if(!signed){return;}
+                return;
+            }
             $("#mcswap_message").html("Creating escrow...");
             console.log("debug");
             const signature = await mcswap.send(rpc,signed);
@@ -1419,29 +1494,22 @@ $("button#buyer-asset").on("click", function(e){
 $("#buyer-type").on("change",function(){
     if($(this).val()=="Public Listing"){
         $("#buyer-wallet").val("Any").prop("disabled",true);
-        $("#payment-priority").focus();
     }
     else{
         $("#buyer-wallet").val("").prop("disabled",false).focus();
     }
 });
-// priority
-$("#payment-priority").on("change",function(){
-    $("#payment-pay").focus();
-});
-// settings
-$("#cog").on("click", async function(){
-    toast("Settings unavailable",2000);
-});
-
 // main navigation
-$("#nav .view").on("click", async function(){
-    $("#nav .view").removeClass("active-view");
+$("#nav #cog, #nav .view").on("click", async function(){
+    $("#nav #cog, #nav .view").removeClass("active-view").removeClass("active-cog");
     $(this).addClass("active-view");
-    const id = $(this).attr("id");
+    let id = $(this).attr("id");
+    if(id=="cog"){id="settings";$("#cog").addClass("active-cog");}
     $(".views").hide();
     $("#"+id+"-view").show();
 });
+
+
 // get balance
 async function balance(_rpc_,_wallet_,_mint_,_decimals_){
     try{

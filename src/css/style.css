@@ -110,7 +110,7 @@ button{
     display: none;
 }
 
-#nav button#cog{
+#nav button.cog{
     display: block;
     background: none;
     border-radius: 21px;
@@ -119,19 +119,18 @@ button{
     transition: .3s;
     float: right;
     min-width: auto;
-    width: 32px;
-    height: 32px;
+    width: 31px;
+    height: 31px;
+    opacity: 0.75;
+    cursor: pointer;
+}
+#nav button.cog img{
+    width: 31px;
+    height: 31px;
+}
+#nav button.active-cog{
     opacity: 0.1;
-    cursor: not-allowed;
 }
-#nav button#cog img{
-    width: 32px;
-    height: 32px;
-}
-#nav button#cog:hover{
-    opacity: 0.1;
-}
-
 
 #nav button.active-view{
     background: #1b1b1b66;
@@ -227,6 +226,10 @@ label.form-error{
     font-family: "Ubuntu";
     font-weight: bold;
     color: #fff;
+}
+#create-form input::placeholder {
+  color: #292929; /* or any other color like #ff0000, rgba(255, 0, 0, 0.5) */
+  opacity: 1; /* For Firefox, to ensure full color opacity, if needed */
 }
 #create-form button, #create-form select{
     background: #111;
@@ -637,3 +640,69 @@ button.item-cancel:hover, button.item-authorize:hover, button.item-public-author
     transform: rotate(360deg);
   }
 }
+
+
+#settings-view span.label-category{
+    width: 200px;
+}
+a.inline-link{
+    color: #2a71f8;
+    text-decoration: none;
+}
+a.inline-link:hover{
+    color: #1dd2bd;
+}
+#settings-view .row{
+    padding: 5px;
+}
+#settings-view .row:first-of-type{
+    border-top: 1px solid #11111182;
+}
+.settings-input{
+    color: #fff;
+    background: #111;
+    border: 0;
+    outline: none;
+    width: calc(100% - 20px);
+    height: 40px;
+    padding: 0 10px;
+    font-family: Ubuntu;
+    font-weight: bold;
+    line-height: 40px;
+}
+.settings-input::placeholder {
+  color: #292929; /* or any other color like #ff0000, rgba(255, 0, 0, 0.5) */
+  opacity: 1; /* For Firefox, to ensure full color opacity, if needed */
+}
+#settings-priority, #settings-refresh, #settings-notis{
+    color: #2a71f8;
+    background: #111;
+    border: 0;
+    outline: none;
+    width: 200px;
+    height: 40px;
+    font-family: Ubuntu;
+    font-weight: bold;
+    line-height: 40px;
+    transition: all .3s;
+    text-align: center;
+    cursor: pointer;
+}
+#settings-priority:hover, #settings-refresh:hover, #settings-notis:hover{
+    color: #1dd2bd;
+}
+#settings-screensaver, #settings-rate{
+    color: #2a71f8;
+    background: #111;
+    border: 0;
+    outline: none;
+    width: 80px;
+    height: 40px;
+    padding: 0 0 0 15px;
+    margin: 0 14px 0 0;
+    font-family: "Ubuntu";
+    font-weight: bold;
+    line-height: 40px;
+    text-align: center;
+}
+
