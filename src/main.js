@@ -703,7 +703,7 @@ $(document).delegate(".mobile_disconnect_button", "click", async function(){
 
 
 // notifications
-function noti(){
+function noti(auto=false){
   if (!("Notification" in window)) {
     // Check if the browser supports notifications
     alert("This browser does not support desktop notification");
@@ -1247,7 +1247,7 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
 
 // settings
 async function save_settings(){
-    
+
 }
 $("#settings-priority").on("change", async function(){
     await save_settings();
