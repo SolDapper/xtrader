@@ -1240,7 +1240,7 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
     else{
         $("#mcswap_message").html("");
         $("#mcswap_cover").fadeOut(300);
-        toast("Transaction canceled",2000);
+        toast("Transaction stopped",2000);
     }
 });
 
