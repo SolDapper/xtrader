@@ -629,6 +629,9 @@ async function isConnected(){
       $(".mobile_connect_button").hide();
       $('.mobile_disconnect_button').show();
     }
+    else if(!isMobile()){
+        noti();
+    }
     $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
     $("#mcswap_cover, #mcswap_chooser").fadeOut(300);
     toast("Connected!",2000);
@@ -637,7 +640,6 @@ async function isConnected(){
     await load_sent();
     await load_received();
     await load_public();
-    noti();
 }
 async function isDisconnected(){
     const inWalletApp = await inAppBrowse();
