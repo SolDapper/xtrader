@@ -1824,10 +1824,15 @@ let isDragging = false;
 let initialX;
 let initialLeft;
 $(document).delegate("ul.row", "touchstart", function(e){
-    touchEvent = new TouchEvent(e);
-    isDragging = true;
-    initialX = e.touches[0].clientX;
-    initialLeft = $(this).position().left;
+    if($(this).find("button.item-hide").is(":visible")){
+        touchEvent = new TouchEvent(e);
+        isDragging = true;
+        initialX = e.touches[0].clientX;
+        initialLeft = $(this).position().left;
+    }
+    else{
+      return;  
+    }
 });
 $(document).delegate("ul.row", "touchmove", function(e){
     if(!isDragging) return;
