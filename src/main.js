@@ -684,7 +684,6 @@ async function startMWA(){
               const base64Address = authResult.accounts[0].address;
               const binaryData = Buffer.from(base64Address, 'base64');
               const base58Address = bs58.encode(binaryData);
-              localStorage.setItem('authToken', base58Address);
               return base58Address;
             }
             else{
@@ -695,6 +694,7 @@ async function startMWA(){
       if(publicKey){
         window.mcswap = {};
         window.mcswap.publicKey = new PublicKey(publicKey);
+        localStorage.setItem('authToken', publicKey);
         return publicKey;
       }
       else{
