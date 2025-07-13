@@ -1,3 +1,5 @@
+localStorage.clear();
+
 // imports
 import {Connection,PublicKey,Keypair} from "@solana/web3.js"
 import 'dotenv/config';
