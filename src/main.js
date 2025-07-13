@@ -637,12 +637,12 @@ async function isConnected(){
     noti();
 }
 async function isDisconnected(){
+    const isAuthToken = localStorage.getItem('authToken');
+    if(isAuthToken){
+        localStorage.removeItem('authToken');
+    }
     const inWalletApp = await inAppBrowse();
     if(isMobile() && inWalletApp==false){
-        const isAuthToken = localStorage.getItem('authToken');
-        if(isAuthToken){
-            localStorage.removeItem('authToken');
-        }
         $('.mobile_disconnect_button').hide();
         $(".mobile_connect_button").show();
     }
