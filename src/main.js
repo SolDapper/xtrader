@@ -634,7 +634,7 @@ async function isConnected(){
     }
     $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
     $("#mcswap_cover, #mcswap_chooser").fadeOut(300);
-    toast("Connected!",2000);
+    toast(window.mcswap.publicKey.toString(),2000);
     if($("#home-view").is(":visible")){$("#received").click();}
     $(".refresher").addClass("spin");
     await load_sent();
@@ -681,7 +681,6 @@ async function startMWA(){
                 }
             } 
             catch(error){
-                alert(error);
                 return null;
             }
             if(authResult.accounts && authResult.accounts.length > 0 && authResult.accounts[0].address){
