@@ -621,6 +621,7 @@ $("body").on('scroll', function() {
 
 // connection events
 async function isConnected(){
+    noti();
     const inWalletApp = await inAppBrowse();
     if(isMobile() && inWalletApp==false){
       $(".mobile_connect_button").hide();
@@ -634,6 +635,7 @@ async function isConnected(){
     await load_sent();
     await load_received();
     await load_public();
+
 }
 async function isDisconnected(){
     const inWalletApp = await inAppBrowse();
@@ -1544,10 +1546,14 @@ $("#nav #cog, #nav .view").on("click", async function(){
 function noti(message=false){
     const title = "xTrader";
   if (!("Notification" in window)) {
-    alert("This browser does not support desktop notification");
+    alert("This browser does not support notification");
   } 
   else if (Notification.permission === "granted" && message) {
-    const notification = new Notification(message.text);
+    const options = {
+        body: "Welcome back!",
+        icon: "https://www.xtrader.me/special_icon.png",
+    }
+    const notification = new Notification(title, options);
   } 
   else if (Notification.permission !== "denied") {
     Notification.requestPermission().then((permission) => {
@@ -1684,7 +1690,6 @@ async function inAppBrowse(){
 }
 // load the asset list
 $(window).on("load", async function(){
-    noti();
     let wakeLock = null;
     if("wakeLock" in navigator){
         try{
