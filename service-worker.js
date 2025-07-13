@@ -92,18 +92,18 @@
     }
     })
 
-    self.addEventListener('push', event => {
-        const data = event.data.json();
-        const title = data.title || "xTrader";
-        const options = {
-            body: data.body || "You have a new message.",
-            icon: data.icon || "https://www.xtrader.me/special_icon.png" // Replace with your own icon
-        };
-        event.waitUntil(self.registration.showNotification(title, options));
-    });
-    // For handling notifications when the user is actively in your app, use the Notifications API directly in your main script
-    self.addEventListener('notificationclick', event => {
-        event.notification.close(); // Close the notification
-        // Open a specific URL when the notification is clicked
-        // event.waitUntil(clients.openWindow('https://www.example.com/message')); 
-    });
+    // self.addEventListener('push', event => {
+    //     const data = event.data.json();
+    //     const title = data.title || "xTrader";
+    //     const options = {
+    //         body: data.body || "You have a new message.",
+    //         icon: data.icon || "https://www.xtrader.me/special_icon.png" // Replace with your own icon
+    //     };
+    //     event.waitUntil(self.registration.showNotification(title, options));
+    // });
+    // // For handling notifications when the user is actively in your app, use the Notifications API directly in your main script
+    // self.addEventListener('notificationclick', event => {
+    //     event.notification.close(); // Close the notification
+    //     // Open a specific URL when the notification is clicked
+    //     // event.waitUntil(clients.openWindow('https://www.example.com/message')); 
+    // });
