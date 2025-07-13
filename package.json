@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "description": "xStocks Trader",
     "scripts": {
-        "build": "parcel build ./src/index.html && cp -r ./wallet_image.png ./dist/special_icon.png",
+        "build": "parcel build ./src/index.html && cp -r ./wallet_icon.png ./dist/wallet_icon.png",
         "start": "parcel ./src/index.html"
     },
     "dependencies": {
