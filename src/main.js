@@ -638,8 +638,12 @@ async function isConnected(){
 async function isDisconnected(){
     const inWalletApp = await inAppBrowse();
     if(isMobile() && inWalletApp==false){
-      $('.mobile_disconnect_button').hide();
-      $(".mobile_connect_button").show();
+        const isAuthToken = localStorage.getItem('authToken');
+        if(isAuthToken){
+            localStorage.removeItem('authToken');
+        }
+        $('.mobile_disconnect_button').hide();
+        $(".mobile_connect_button").show();
     }
     $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
     toast("Disconnected!",2000);
