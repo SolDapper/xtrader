@@ -1056,7 +1056,10 @@ $(document).delegate("img.item-img", "click", async function(){
     else{
         toast("Copied docs link",3000);
         copy(pdf);
-        if(!isMobile()){window.open(pdf,'_blank');}
+        const inWalletApp = await inAppBrowse();
+        if(!isMobile() || (isMobile() && inWalletApp==false)){
+            window.open(pdf,'_blank');
+        }
     }
 });
 $(document).delegate(".item-details", "click", async function(){
@@ -1064,7 +1067,10 @@ $(document).delegate(".item-details", "click", async function(){
     toast("Copied chart link",3000);
     const href = "https://jup.ag/tokens/"+mint;
     copy(href);
-    if(!isMobile()){window.open(href,'_blank');}
+    const inWalletApp = await inAppBrowse();
+    if(!isMobile() || (isMobile() && inWalletApp==false)){
+        window.open(href,'_blank');
+    }
 });
 $(document).delegate(".item-amount", "click", async function(){
     const item = $(this).parent().attr("id");
