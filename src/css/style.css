@@ -1,5 +1,6 @@
 html{
     background: #111;
+    overflow: hidden;
 }
 html, body{
     margin: 0;
@@ -46,12 +47,12 @@ main{
 }
 #x-logo{
     transition: .3s;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     position: fixed;
     float: left;
-    bottom: 13px;
-    left: 12px;
+    bottom: 10px;
+    left: 8px;
 }
 #x-logo:hover{
     opacity: 0.5;
@@ -114,7 +115,7 @@ button{
     display: block;
     background: none;
     border-radius: 21px;
-    margin: 15px 6px 0 0;
+    margin: 14px 6px 0 0;
     padding: 0;
     transition: .3s;
     float: right;
@@ -143,11 +144,11 @@ button{
     box-shadow: none;
 }
 h1, h2{
-    margin: 0;
+    margin: 0 0 0 5px;
 }
 h2{
     font-size: 14px;
-    margin: 7px 0 0 2px;
+    margin: 7px 0 0 7px;
 }
 #views{
     margin-top: 0;
@@ -163,27 +164,26 @@ h2{
     display: block;
 }
 .panel{
-    background: #00000047;
-    /* min-height: 800px; */
+    background: #0000006e;
     border-radius: 10px;
     margin-top: 18px;
-    padding: 12px 12px;
-    min-height: 800px;
+    padding: 13px 12px 13px 12px;
 }
 .panel-box{
     display: block;
+    margin: 0;
+    padding: 0;
 }
 .row{
     display: block;
     padding: 5px;
-    border-bottom: 1px solid #11111182;
 }
 label{
     display: inline-block;
     color: #fff;
     font-weight: bold;
     font-size: 14px;
-    width: 80px;
+    width: 64px;
     line-height: 40px;
     height: 40px;
 }
@@ -194,7 +194,7 @@ span.label-category{
     color: #1dd2bd;
     line-height: 40px;
     height: 40px;
-    width: 80px;
+    width: 61px;
 }
 span#creator-value, span#buyer-value{
     font-size: 12px;
@@ -215,6 +215,7 @@ label.form-error{
     display: block;
 }
 #create-form input{
+    transition: .3s;
     line-height: 40px;
     height: 40px;
     background: #111;
@@ -257,8 +258,8 @@ label.form-error{
 #create-form button:hover, #create-form select:hover{
     color: #1dd2bd;
 }
-#create-form .row:first-of-type{
-    border-top: 1px solid #11111182;
+#create-form ul.row:first-of-type{
+    border-top: 1px solid #1dd2bd1a;
 }
 #create-form input#payment-tax{
     background: none;
@@ -268,7 +269,7 @@ label.form-error{
     border-radius: 26px;
     font-size: 16px;
     height: 48px;
-    margin: 38px 0 28px 174px;
+    margin: 38px 0 28px 156px;
     width: 200px;
 }
 #create-form button.submit:hover{
@@ -282,15 +283,16 @@ label.form-error{
 
 /* asset list */
 .little-icon{
-    display: inline-block;
-    margin: 0 0 -10px -15px;
+    float: left;
     background: #000;
-    width: 30px;
-    height: 30px;
+    border: 0;
     border-radius: 100%;
     outline: none;
-    border: 0;
+    width: 40px;
+    height: 40px;
+    margin: 0 0 0 -11px;
     display: none;
+    position: absolute;
 }
 #asset-list-box{
     display: none;
@@ -379,14 +381,14 @@ label.form-error{
 }
 #asset-list ul li.list-name{
     width: calc(100% - 83px);
-    color: #2a71f8;
+    color: #1dd2bd;
     margin-left: 83px;
     margin-top: -36px;
     margin-bottom: 18px;
     transition: .3s;
 }
 #asset-list ul:hover .list-symbol{
-    color: #1dd2bd;
+    color: #2a71f8;
 }
 #asset-list ul:hover .list-name{
     color: #fff;
@@ -436,7 +438,7 @@ select#sent-buyers{
 }
 
 .panel-list{
-    border-top: 1px solid #11111182;
+    border-top: 1px solid #1dd2bd1a;
     margin-top: 12px;
 }
 
@@ -449,6 +451,8 @@ select#sent-buyers{
     padding: 12px 0 12px 0;
     list-style-type: none;
     transition: .3s;
+    border-bottom: 1px solid #1dd2bd1a;
+    display: none;
 }
 .panel-list ul.row:hover{
     background: #000;
@@ -466,6 +470,7 @@ select#sent-buyers{
     width: 140px;
     cursor: pointer;
     overflow: hidden;
+    transition: .3s;
 }
 .panel-list ul.row li.item-details .item-symbol{
     transition: .3s;
@@ -509,8 +514,9 @@ select#sent-buyers{
     height: 50px;
     border-radius: 6px;
     margin-left: 12px;
-    width: 160px;
-    text-align: center;
+    width: 145px;
+    text-align: left;
+    padding-left: 15px;
     transition: .3s;
     overflow: hidden;
     cursor: pointer;
@@ -562,6 +568,7 @@ select#sent-buyers{
     height: 50px;
     border-radius: 6px;
     margin-left: 12px;
+    transition: .3s;
 }
 button.item-cancel, button.item-authorize, button.item-public-authorize{
     color: #2a71f8;
@@ -642,6 +649,24 @@ button.item-cancel:hover, button.item-authorize:hover, button.item-public-author
 }
 
 
+.panel-list ul.row li button.item-hide {
+    position: absolute;
+    float: right;
+    background: #090909;
+    border-radius: 20px;
+    width: 70px;
+    font-size: 12px;
+    padding: 6px;
+    color: #2a71f8;
+    margin: -12px 0 0 -203px;
+    border-radius: 6px 6px 6px 0;
+    transition: .3s;
+}
+.panel-list ul.row li button.item-hide:hover {
+    color: #1dd2bd;
+}
+
+
 #settings-view span.label-category{
     width: 200px;
 }
@@ -654,6 +679,8 @@ a.inline-link:hover{
 }
 #settings-view .row{
     padding: 5px;
+    font-size: 14px;
+    font-weight: bold;
 }
 #settings-view .row:first-of-type{
     border-top: 1px solid #11111182;
@@ -673,6 +700,9 @@ a.inline-link:hover{
 .settings-input::placeholder {
   color: #292929; /* or any other color like #ff0000, rgba(255, 0, 0, 0.5) */
   opacity: 1; /* For Firefox, to ensure full color opacity, if needed */
+}
+#settings-rpc{
+    width: calc(50% - 30px);
 }
 #settings-priority, #settings-refresh, #settings-notis{
     color: #2a71f8;
@@ -705,4 +735,11 @@ a.inline-link:hover{
     line-height: 40px;
     text-align: center;
 }
+#settings-refresh:disabled, #settings-rate:disabled, #settings-notis:disabled{
+    background: #000000;
+    color: #282828;
+    opacity: 1.0;
+}
+
+
 

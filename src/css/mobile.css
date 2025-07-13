@@ -1,3 +1,72 @@
+@media only screen and (max-width: 1400px) {
+    #settings-rpc{
+        width: calc(100% - 20px);
+    }
+    .panel-list ul.row:last-of-type{
+        margin-bottom: 0;
+    }
+    .panel-list ul.row li.break{
+        display: block;
+        width: calc(100% - 175px);
+        margin: 12px 0 0 0;
+    }
+    .panel-list ul.row li.item-buyer{
+        width: 190px;
+    }
+    .img-2{
+        margin-left: 12px;
+    }
+    .panel-list{
+        border-top: 0;
+    }
+    .panel-list .drag-box{
+        height: 150px;
+        width: calc(100% - 40px);
+    }
+    .panel-list .drag-box:last-of-type{
+        height: 136px;
+    }
+    .panel-list ul.row {
+        margin: 0 0 15px 0;
+        border-radius: 8px;
+        background: #000000c7;
+        border: 0;
+        box-shadow: 0 0 3px #1dd2bd;
+        width: calc(100% - 64px);
+        float: left;
+        position: absolute;
+        left: 0;
+    }
+    .panel-list ul.row:hover {
+        box-shadow: 0 0 6px 3px #1dd2bd;
+    }
+    .item-action{
+        display: block;
+        float: right;
+        margin: -62px 11px 0 0;
+    }
+    .panel-list ul.row li.item-amount {
+        text-align: left;
+        padding-left: 15px;
+        font-size: 12px;
+    }
+    .panel-list ul.row li.item-time {
+        font-size: 12px;
+    }
+    .panel-list ul.row li.item-buyer {
+        font-size: 12px;
+    }
+    .panel-list ul.row li button.item-hide {
+        position: absolute;
+        float: right;
+        bottom: 12px;
+        right: 12px;
+        border-radius: 20px;
+        width: 70px;
+        font-size: 12px;
+        padding: 8px;
+    }
+}
 @media only screen and (max-width: 750px) {
     #nav #nav-contain button.view, #nav #nav-contain button#connect, #nav #nav-contain button#disconnect{
         width: calc(25% - 13px);
@@ -16,6 +85,88 @@
         font-size: 13px;
         padding: 10px 15px;
         max-width: 230px;
+    }
+}
+@media only screen and (max-width: 899px) {
+    .panel-list ul.row li.item-action{
+        display: block;
+        width: 100%;
+        margin: 20px auto 9px auto;
+        padding: 0;
+        float: none;
+    }
+    li.item-action, button.item-action{
+        float: none;
+        display: block;
+        margin: 0 auto;
+    }
+    .panel-list .drag-box{
+        height: 354px;
+    }
+    .panel-list .drag-box:last-of-type{
+        height: 341px;
+    }
+    .panel-options{
+        width: calc(100% - 36px);
+    }
+    select#sent-filter, 
+    select#sent-buyers, 
+    select#received-filter, 
+    select#received-sellers, 
+    select#market-filter, 
+    select#market-sellers {
+        width: calc(50% - 6px);
+    }
+    .panel-list ul.row{
+        padding-top: 13px;
+        display: block;
+    }
+    .panel-list ul.row li.mobile-break{
+        display: block;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 12px;
+    }
+    .panel-list ul.row li.item-details {
+        width: calc(100% - 103px);
+    }
+    .panel-list ul.row li.item-buyer, .panel-list ul.row li.item-time{
+        width: calc(50% - 14px);
+        margin-right: 0;
+        margin-left: 11px;
+    }
+    .panel-list ul.row li.item-amount {
+        width: calc(50% - 36px);
+        text-align: left;
+        padding-left: 15px;
+    }
+}
+@media only screen and (max-width: 696px) {
+    .panel-list ul.row li.item-amount, 
+    .panel-list ul.row li.item-buyer{
+        font-size: 12px;
+    }
+    .panel-list ul.row li.item-time {
+        font-size: 10px;
+    }
+}
+@media only screen and (max-width: 600px) {
+    #create-form #creator-asset,
+    #create-form #buyer-asset{
+        width: calc(100% - 64px);
+    }
+    #create-form #creator-amount,
+    #create-form #buyer-amount,
+    #create-form #buyer-wallet{
+        width: calc(100% - 94px);
+    }
+    #create-form #buyer-type{
+        width: calc(100% - 64px);
+    }
+    #create-form button.submit{
+        margin: 36px auto 28px auto;
+        width: 200px;
     }
 }
 @media only screen and (max-width: 450px) {
@@ -47,5 +198,15 @@
     }
     #nav #nav-contain button.view{
         font-size: 11px;
+    }
+    .arrow_up, .arrow_down{
+        margin: 0 0 0 -19px;
+    }
+}
+@media only screen and (max-width: 450px) {
+    button.item-action{
+        width: 110px;
+        float: left;
+        margin-left: 20px;
     }
 }

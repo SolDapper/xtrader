@@ -34,10 +34,10 @@
                 <div id="create-form">
                     <div class="row"><span class="label-category">Sell</span><span id="creator-value">$0.00</span><span class="estimated-value">(estimate)</span></div>
                     <input disabled id="creator-wallet" form="create-form" type="hidden" />
-                    <div class="row"><label for="creator-asset">Asset</label><button id="creator-asset">Choose</button><img id="creator-icon" class="little-icon" src="#" /><input required id="creator-mint" form="create-form" type="hidden" /></div>
+                    <div class="row"><label for="creator-asset">Asset</label><img id="creator-icon" class="little-icon" src="#" /><button id="creator-asset">Choose</button><input required id="creator-mint" form="create-form" type="hidden" /></div>
                     <div class="row"><label for="creator-amount">Amount</label><input disabled required placeholder="0.00000" id="creator-amount" type="text" /></div>
                     <div class="row"><span class="label-category">For</span><span id="buyer-value">$0.00</span><span class="estimated-value">(estimate)</span></div>
-                    <div class="row"><label for="buyer-asset">Asset</label><button id="buyer-asset">Choose</button><img id="buyer-icon" class="little-icon" src="#" /><input required id="buyer-mint" form="create-form" type="hidden" /></div>
+                    <div class="row"><label for="buyer-asset">Asset</label><img id="buyer-icon" class="little-icon" src="#" /><button id="buyer-asset">Choose</button><input required id="buyer-mint" form="create-form" type="hidden" /></div>
                     <div class="row"><label for="buyer-amount">Amount</label><input disabled required placeholder="0.00000" id="buyer-amount" type="text" /></div>
                     <div class="row"><span class="label-category">Buyer</span></div>
                     <div class="row"><label for="buyer-type">Type</label><select id="buyer-type" form="create-form">
@@ -61,8 +61,8 @@
             <div class="views" id="market-view"><h1>Market</h1><h2>Browse Public Escrows</h2><div class="panel"><div class="panel-box">
                 <button id="market-refresh" class="refresher"><img src="./img/refresh.png" /></button>
                 <div class="panel-options"><select id="market-filter"><option>All xStocks</option></select><select id="market-sellers"><option>All Sellers</option></select></div>
-                <div class="panel-list"></div>
-            </div></div></div>
+                <div class="panel-list"><div class="list-clear"></div></div>
+            </div><div class="list-clear"></div></div></div>
             <div class="views" id="settings-view"><h1>xTrader</h1><h2>Settings &amp; Preferences</h2><div class="panel"><div class="panel-box">
 
                 <div class="row"><span class="label-category">Priority</span></div>
@@ -80,9 +80,9 @@
                 <div class="row"><span class="label-category">Screensaver</span></div>
                 <div class="row">Timeout</div>
                 <div class="row">
-                    <input id="settings-screensaver" type="number" min="30" value="30" /> seconds
+                    <input id="settings-screensaver" type="number" min="60" value="60" /> seconds
                 </div>
-
+                
                 <div class="row"><span class="label-category">Endpoint</span></div>
                 <div class="row">Add a custom <a target="_blank" class="inline-link" href="https://www.helius.dev/solana-rpc-nodes">Helius</a> RPC endpoint to unlock more settings</div>
                 <div class="row">
@@ -105,7 +105,7 @@
                 </div>
 
                 <div class="row"><span class="label-category">Notifications</span></div>
-                <div class="row">New listing notifications</div>
+                <div class="row">Market &amp; Inbox</div>
                 <div class="row">
                     <select disabled id="settings-notis">
                         <option value="Yes">Yes</option>

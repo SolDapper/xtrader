@@ -588,11 +588,35 @@ function resetUI() {
     $("#home-view").show();
     $("#nav, #x-logo").css({"visibility":"hidden"});
 }
+async function positioner(){
+    const window_width = $(window).width();
+    const ele_width = $("#views").outerWidth();
+    const diff = window_width-ele_width;
+    const adj = diff+32;
+    if(window_width < 1400){
+        $("ul.row").css({"width":(ele_width-104)+"px","left":adj+"px","opacity":"1.0"});
+    }
+    else{
+        $("ul.row").css({"width":(ele_width-64)+"px","left":adj+"px","opacity":"1.0"});
+    }
+    $("ul.row").each(function(){
+        const id = $(this).attr("id");
+        const position = $(this).parent().position();
+        $(this).css({"top":position.top,"left":position.left}).show();
+    });
+}
+window.addEventListener("resize", function(){
+    resetTimeout();
+    positioner();
+});
 window.addEventListener("mousemove", resetTimeout);
 window.addEventListener("keypress", resetTimeout);
 window.addEventListener("scroll", resetTimeout);
 window.addEventListener("click", resetTimeout);
 resetTimeout();
+$("body").on('scroll', function() {
+    positioner();
+});
 
 
 // connection events
@@ -702,40 +726,13 @@ $(document).delegate(".mobile_disconnect_button", "click", async function(){
 });
 
 
-// notifications
-function noti(auto=false){
-  if (!("Notification" in window)) {
-    // Check if the browser supports notifications
-    alert("This browser does not support desktop notification");
-  } 
-  else if (Notification.permission === "granted") {
-    // Check whether notification permissions have already been granted;
-    // if so, create a notification
-    const notification = new Notification("Hi there!");
-    // …
-  } 
-  else if (Notification.permission !== "denied") {
-    // We need to ask the user for permission
-    Notification.requestPermission().then((permission) => {
-      // If the user accepts, let's create a notification
-      if (permission === "granted") {
-        const notification = new Notification("Hi there!");
-        
-
-
-      }
-    });
-  }
-}
-
-
 // backchecking displayed escrows
 async function backcheck(ele,array){
     const list = $("#"+ele+"-view .panel-list").find("ul");
     const count = list.length;
     if(count > 0){
         let i = 0;
-        list.each(function(){
+        list.each(async function(){
             const item = $(this);
             const id = item.attr("id").replace(ele+"-","");
             if(!array.includes(id)){
@@ -743,6 +740,7 @@ async function backcheck(ele,array){
             }
             i++;
             if(i==count){
+                positioner();
                 return;
             }
         });
@@ -752,6 +750,8 @@ async function backcheck(ele,array){
     }
 }
 // load sent
+const store_sent = [];
+let init_sent = false;
 async function load_sent(){
     try{
         if(!window.mcswap || !window.mcswap.publicKey){
@@ -776,6 +776,7 @@ async function load_sent(){
         while(i < splSent.data.length){
             if(!window.mcswap || !window.mcswap.publicKey){
                 $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
+                $(".refresher").removeClass("spin");
                 return;
             }
             const asset = splSent.data[i];
@@ -784,18 +785,21 @@ async function load_sent(){
                     asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
                     const merged = token_list.concat(asset_list);
                     asset.token_3_details = await asset_map(merged,asset.token_3_mint);
-                    let ele = '<ul id="sent-'+asset.acct+'" class="row">';
+                    let ele = '<div class="drag-box" id="box-sent-'+asset.acct+'"><ul id="sent-'+asset.acct+'" class="row">';
                     ele += '<li><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
                     ele += '<li data-mint="'+asset.token_1_mint+'" class="item-details"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
+                    ele += '<li class="mobile-break"></li>';
                     ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
                     ele += '<li class="arrow arrow_up"><img src="'+arrow_up+'" /></li>';
                     const first_part = asset.buyer.slice(0,5);
                     const last_part = asset.buyer.slice(-5);
                     ele += '<li data-wallet="'+asset.buyer+'" class="item-buyer">'+first_part+'...'+last_part+'</li>';
+                    ele += '<li class="break"></li>';
                     let has_pdf = "";
                     if(asset.token_3_details.pdf!=""){has_pdf=' data-pdf="'+asset.token_3_details.pdf+'"'; }
-                    ele += '<li><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
+                    ele += '<li class="img-2"><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
                     ele += '<li data-mint="'+asset.token_3_mint+'" class="item-details"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
+                    ele += '<li class="mobile-break"></li>';
                     ele += '<li class="item-amount buyer-amount">'+asset.token_3_amount+'</li>';
                     ele += '<li class="arrow arrow_down"><img src="'+arrow_down+'" /></li>';
                     const time = asset.utime*1000;
@@ -812,7 +816,7 @@ async function load_sent(){
                     const display_time = hours + ':' + minutesStr + ' ' + ampm + ' ' + month + '/' + day + '/' + year;
                     ele += '<li class="item-time">'+display_time+'</li>';
                     ele += '<li class="item-action"><button class="item-action item-cancel">Cancel</button></li>';
-                    ele += '</ul>';
+                    ele += '</ul></div>';
                     $("#sent-view .panel-list").prepend(ele);
                 }
                 displayed.push(asset.acct);
@@ -829,6 +833,8 @@ async function load_sent(){
     }
 }
 // load received
+const store_received = [];
+let init_received = false;
 async function load_received(){
     try{
         if(!window.mcswap || !window.mcswap.publicKey){
@@ -853,6 +859,7 @@ async function load_received(){
         while(i < splReceived.data.length){
             if(!window.mcswap || !window.mcswap.publicKey){
                 $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
+                $(".refresher").removeClass("spin");
                 return;
             }
             const asset = splReceived.data[i];
@@ -861,18 +868,21 @@ async function load_received(){
                     asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
                     const merged = token_list.concat(asset_list);
                     asset.token_3_details = await asset_map(merged,asset.token_3_mint);
-                    let ele = '<ul id="received-'+asset.acct+'" class="row">';
+                    let ele = '<div class="drag-box" id="received-market-'+asset.acct+'"><ul id="received-'+asset.acct+'" class="row">';
                     ele += '<li><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
                     ele += '<li data-mint="'+asset.token_1_mint+'" class="item-details"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
+                    ele += '<li class="mobile-break"></li>';
                     ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
                     ele += '<li class="arrow arrow_down"><img src="'+arrow_down+'" /></li>';
                     const first_part = asset.seller.slice(0,5);
                     const last_part = asset.seller.slice(-5);
                     ele += '<li data-wallet="'+asset.seller+'" class="item-buyer">'+first_part+'...'+last_part+'</li>';
+                    ele += '<li class="break"></li>';
                     let has_pdf = "";
                     if(asset.token_3_details.pdf!=""){has_pdf=' data-pdf="'+asset.token_3_details.pdf+'"'; }
-                    ele += '<li><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
+                    ele += '<li class="img-2"><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
                     ele += '<li data-mint="'+asset.token_3_mint+'" class="item-details"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
+                    ele += '<li class="mobile-break"></li>';
                     ele += '<li class="item-amount buyer-amount">'+asset.token_3_amount+'</li>';
                     ele += '<li class="arrow arrow_up"><img src="'+arrow_up+'" /></li>';
                     const time = asset.utime*1000;
@@ -888,8 +898,8 @@ async function load_received(){
                     const minutesStr = minutes < 10 ? '0' + minutes : minutes;
                     const display_time = hours + ':' + minutesStr + ' ' + ampm + ' ' + month + '/' + day + '/' + year;
                     ele += '<li class="item-time">'+display_time+'</li>';
-                    ele += '<li class="item-action"><button class="item-action item-authorize">Authorize</button></li>';
-                    ele += '</ul>';
+                    ele += '<li class="item-action"><button class="item-hide">hide</button><button class="item-action item-authorize">Authorize</button></li>';
+                    ele += '</ul></div>';
                     $("#received-view .panel-list").prepend(ele);
                 }
                 displayed.push(asset.acct);
@@ -907,6 +917,8 @@ async function load_received(){
     }
 }
 // load received
+const store_public = [];
+let init_public = false;
 async function load_public(){
     try{
         if(!window.mcswap || !window.mcswap.publicKey){
@@ -937,6 +949,7 @@ async function load_public(){
         while(i < splSent.data.length){
             if(!window.mcswap || !window.mcswap.publicKey){
                 $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
+                $(".refresher").removeClass("spin");
                 return;
             }
             const asset = splSent.data[i];
@@ -945,18 +958,21 @@ async function load_public(){
                     asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
                     const merged = token_list.concat(asset_list);
                     asset.token_3_details = await asset_map(merged,asset.token_3_mint);
-                    let ele = '<ul id="market-'+asset.acct+'" class="row">';
+                    let ele = '<div class="drag-box" id="box-market-'+asset.acct+'"><ul id="market-'+asset.acct+'" class="row">';
                     ele += '<li><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
                     ele += '<li data-mint="'+asset.token_1_mint+'" class="item-details"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
+                    ele += '<li class="mobile-break"></li>';
                     ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
                     ele += '<li class="arrow arrow_down"><img src="'+arrow_down+'" /></li>';
                     const first_part = asset.seller.slice(0,5);
                     const last_part = asset.seller.slice(-5);
                     ele += '<li data-wallet="'+asset.seller+'" class="item-buyer">'+first_part+'...'+last_part+'</li>';
+                    ele += '<li class="break"></li>';
                     let has_pdf = "";
                     if(asset.token_3_details.pdf!=""){has_pdf=' data-pdf="'+asset.token_3_details.pdf+'"'; }
-                    ele += '<li><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
+                    ele += '<li class="img-2"><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
                     ele += '<li data-mint="'+asset.token_3_mint+'" class="item-details"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
+                    ele += '<li class="mobile-break"></li>';
                     ele += '<li class="item-amount buyer-amount">'+asset.token_3_amount+'</li>';
                     ele += '<li class="arrow arrow_up"><img src="'+arrow_up+'" /></li>';
                     const time = asset.utime*1000;
@@ -976,9 +992,9 @@ async function load_public(){
                         ele += '<li class="item-action"><button class="item-action item-cancel">Cancel</button></li>';
                     }
                     else{
-                        ele += '<li class="item-action"><button class="item-action item-public-authorize">Authorize</button></li>';
+                        ele += '<li class="item-action"><button class="item-hide">hide</button><button class="item-action item-public-authorize">Authorize</button></li>';
                     }
-                    ele += '</ul>';
+                    ele += '</ul></div>';
                     $("#market-view .panel-list").prepend(ele);
                 }
                 displayed.push(asset.acct);
@@ -1053,7 +1069,7 @@ $(document).delegate(".item-amount", "click", async function(){
     const view = parts[0];
     const id = parts[1];
     const amount = $(this).html();
-    const symbol = $(this).prev().find(".item-symbol").html();
+    const symbol = $(this).prev().prev().find(".item-symbol").html();
     if(view=="market"){
         if($(this).hasClass("seller-amount")){
             toast("Buyer receives: "+amount+" "+symbol, 3000);
@@ -1250,6 +1266,10 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
         }
     }
 });
+$(document).delegate(".item-hide", "click", async function(){
+    $(this).parent().parent().parent().hide();
+    positioner();
+});
 
 
 // settings
@@ -1433,16 +1453,6 @@ async function getValue(ele,gecko,amount,currency){
     }
     catch(error){}
 }
-function debounce(func,delay){
-  let timer;
-  return function(...args) {
-    const context = this;
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      func.apply(context, args);
-    }, delay);
-  };
-}
 const debounceValue = debounce(getValue, 1500);
 $("#creator-amount, #buyer-amount").on("keyup change input",function(e){
     e.preventDefault();
@@ -1508,15 +1518,50 @@ $("#buyer-type").on("change",function(){
 });
 // main navigation
 $("#nav #cog, #nav .view").on("click", async function(){
+    let id = $(this).attr("id");
+    $("#"+id+"-view ul.row").hide();
     $("#nav #cog, #nav .view").removeClass("active-view").removeClass("active-cog");
     $(this).addClass("active-view");
-    let id = $(this).attr("id");
     if(id=="cog"){id="settings";$("#cog").addClass("active-cog");}
     $(".views").hide();
     $("#"+id+"-view").show();
+    await positioner();
+    $("#"+id+"-view ul.row").show();
 });
 
 
+// notifications
+function noti(message=false){
+    const title = "xTrader";
+  if (!("Notification" in window)) {
+    alert("This browser does not support desktop notification");
+  } 
+  else if (Notification.permission === "granted" && message) {
+    const notification = new Notification(message.text);
+  } 
+  else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        const options = {
+            body: "Welcome to xTrader!",
+            icon: "https://www.xtrader.me/special_icon.png",
+        }
+        const notification = new Notification(title, options);
+      }
+    });
+  }
+}
+// debounce
+function debounce(func,delay){
+  let timer;
+  return function(...args) {
+    const context = this;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(context, args);
+    }, delay);
+  };
+}
 // get balance
 async function balance(_rpc_,_wallet_,_mint_,_decimals_){
     try{
@@ -1629,6 +1674,7 @@ async function inAppBrowse(){
 }
 // load the asset list
 $(window).on("load", async function(){
+    noti();
     let wakeLock = null;
     if("wakeLock" in navigator){
         try{
@@ -1646,6 +1692,16 @@ $(window).on("load", async function(){
         $(".mcswap_disconnect_button").removeClass().addClass("mobile_disconnect_button");
     }
     let i=0;
+    while (i < asset_list.length) {
+        const asset = asset_list[i];
+        const item = '<option value="'+asset.mint+'">'+asset.symbol+'</option>';
+        $("#sent-filter").append(item);
+        $("#received-filter").append(item);
+        $("#market-filter").append(item);
+        asset_mints.push(asset.mint);
+        i++;
+    }
+    i=0;
     while (i < token_list.length) {
         const asset = token_list[i];
         if(!asset.gecko){asset.gecko="false";}
@@ -1686,15 +1742,122 @@ $(window).on("load", async function(){
         $("#asset-list").append(item);
         i++;
     }
-    i=0;
-    while (i < asset_list.length) {
-        const asset = asset_list[i];
-        const item = '<option value="'+asset.mint+'">'+asset.symbol+'</option>';
-        $("#sent-filter").append(item);
-        $("#received-filter").append(item);
-        asset_mints.push(asset.mint);
-        i++;
+});
+
+
+// swipe events
+class TouchEvent {
+
+    // static SWIPE_THRESHOLD = 200;
+    static SWIPE_LEFT   = 1;
+    static SWIPE_RIGHT  = 2;
+    static SWIPE_UP     = 3;
+    static SWIPE_DOWN   = 4;
+
+    constructor(startEvent, endEvent) {
+        this.startEvent = startEvent;
+        this.endEvent = endEvent || null;
+        this.threshold = $("#views").width()/3;
+    }
+
+    isSwipeLeft() {
+        return this.getSwipeDirection() == TouchEvent.SWIPE_LEFT;
+    }
+
+    isSwipeRight() {
+        return this.getSwipeDirection() == TouchEvent.SWIPE_RIGHT;
+    }
+
+    isSwipeUp() {
+        return this.getSwipeDirection() == TouchEvent.SWIPE_UP;
+    }
+
+    isSwipeDown() {
+        return this.getSwipeDirection() == TouchEvent.SWIPE_DOWN;
+    }
+
+    getSwipeDirection() {
+        if (!this.startEvent.changedTouches || !this.endEvent.changedTouches) {
+            return null;
+        }
+
+        let start = this.startEvent.changedTouches[0];
+        let end = this.endEvent.changedTouches[0];
+
+        if (!start || !end) {
+            return null;
+        }
+
+        let horizontalDifference = start.screenX - end.screenX;
+        let verticalDifference = start.screenY - end.screenY;
+
+        // Horizontal difference dominates
+        if (Math.abs(horizontalDifference) > Math.abs(verticalDifference)) {
+            if (horizontalDifference >= this.threshold) {
+                return TouchEvent.SWIPE_LEFT;
+            } else if (horizontalDifference <= -this.threshold) {
+                return TouchEvent.SWIPE_RIGHT;
+            }
+
+        // Vertical or no difference dominates
+        } else {
+            if (verticalDifference >= this.threshold) {
+                return TouchEvent.SWIPE_UP;
+            } else if (verticalDifference <= -this.threshold) {
+                return TouchEvent.SWIPE_DOWN;
+            }
+        }
+
+        return null;
+    }
+
+    setEndEvent(endEvent) {
+        this.endEvent = endEvent;
+    }
+}
+let touchEvent = null;
+let isDragging = false;
+let initialX;
+let initialLeft;
+$(document).delegate("ul.row", "touchstart", function(e){
+    touchEvent = new TouchEvent(e);
+    isDragging = true;
+    initialX = e.touches[0].clientX;
+    initialLeft = $(this).position().left;
+});
+$(document).delegate("ul.row", "touchmove", function(e){
+    if(!isDragging) return;
+    const currentX = e.touches[0].clientX;
+    const deltaX = currentX - initialX;
+    if(deltaX >= 0){
+        $(this).css('left', (initialLeft + deltaX) + 'px');
+        const level = (1 - (deltaX / $(this).width()));
+        $(this).css('opacity', level + '');
     }
 });
+$(document).delegate("ul.row", "touchend", handleSwipe);
+function handleSwipe(event){
+    if(!touchEvent){
+        isDragging=false;
+        return;
+    }
+    touchEvent.setEndEvent(event);
+    if(touchEvent.isSwipeRight()){
+        const window_width = $(window).width();
+        $(this).animate({'left': window_width}, 300, async function(){
+            await new Promise(_=>setTimeout(_,500));
+            $(this).parent().hide();
+            positioner();
+        });
+    } else if(touchEvent.isSwipeLeft()){
+    }
+    else{
+        positioner();
+    }
+    touchEvent = null;
+    isDragging = false;
+}
+
+
 const arrow_up = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFzGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgOS4xLWMwMDIgNzkuYTZhNjM5NiwgMjAyNC8wMy8xMi0wNzo0ODoyMyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDI1LjExIChXaW5kb3dzKSIgeG1wOkNyZWF0ZURhdGU9IjIwMjUtMDctMDhUMDE6Mjc6MzktMDQ6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDI1LTA3LTA4VDAxOjMwOjMxLTA0OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDI1LTA3LTA4VDAxOjMwOjMxLTA0OjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo3MzgyZTdjZC1jNzczLWJlNDktOGI0My1lMDhhMzJiOGUzNzYiIHhtcE1NOkRvY3VtZW50SUQ9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";
 const arrow_down = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFzGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgOS4xLWMwMDIgNzkuYTZhNjM5NiwgMjAyNC8wMy8xMi0wNzo0ODoyMyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDI1LjExIChXaW5kb3dzKSIgeG1wOkNyZWF0ZURhdGU9IjIwMjUtMDctMDhUMDE6Mjc6MzktMDQ6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDI1LTA3LTA4VDAxOjMwOjU1LTA0OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDI1LTA3LTA4VDAxOjMwOjU1LTA0OjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoyNzY0NDk2Yi03YWI4LWMwNGEtYWQ2ZC04Yjc1OTljZDRlNGIiIHhtcE1NOkRvY3VtZW50SUQ9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";
