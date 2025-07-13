@@ -621,7 +621,11 @@ $("body").on('scroll', function() {
 
 // connection events
 async function isConnected(){
-    noti({text:"Welcome back!"});
+    const config = {
+        "body": "Welcome back!",
+        "icon": "https://www.xtrader.me/special_icon.png"
+    }
+    noti(config);
     const inWalletApp = await inAppBrowse();
     if(isMobile() && inWalletApp==false){
       $(".mobile_connect_button").hide();
@@ -1548,10 +1552,7 @@ function noti(message=false){
     alert("This browser does not support notification");
   } 
   else if (Notification.permission === "granted" && message) {
-    const options = {
-        body: message.text,
-        icon: "https://www.xtrader.me/special_icon.png",
-    }
+    const options = message;
     const notification = new Notification(title, options);
   } 
   else if (Notification.permission !== "denied") {
@@ -1564,6 +1565,9 @@ function noti(message=false){
         const notification = new Notification(title, options);
       }
     });
+  }
+  else{
+    alert("debug");
   }
 }
 // debounce
