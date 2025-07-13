@@ -1277,6 +1277,7 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
 });
 $(document).delegate(".item-hide", "click", async function(){
     $(this).parent().parent().parent().hide();
+    toast("Hidden", 2000);
     positioner();
 });
 
@@ -1861,6 +1862,7 @@ function handleSwipe(event){
         $(this).animate({'left': window_width}, 300, async function(){
             await new Promise(_=>setTimeout(_,500));
             $(this).parent().hide();
+            toast("Hidden", 2000);
             positioner();
         });
     } else if(touchEvent.isSwipeLeft()){
