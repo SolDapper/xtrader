@@ -634,7 +634,12 @@ async function isConnected(){
     }
     $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
     $("#mcswap_cover, #mcswap_chooser").fadeOut(300);
-    toast(window.mcswap.publicKey.toString(),2000);
+    let fullWallet = window.mcswap.publicKey.toString();
+    const first_part = fullWallet.slice(0,4);
+    const last_part = fullWallet.slice(-4);
+    fullWallet = first_part + "..." + last_part;
+    toast(fullWallet,4000);
+    toast("Connected!",4000);
     if($("#home-view").is(":visible")){$("#received").click();}
     $(".refresher").addClass("spin");
     await load_sent();
