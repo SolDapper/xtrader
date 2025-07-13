@@ -678,8 +678,12 @@ async function startMWA(){
                   });
                 }
             } 
-            catch(error){return null;}
+            catch(error){
+                alert(error);
+                return null;
+            }
             if(authResult.accounts && authResult.accounts.length > 0 && authResult.accounts[0].address){
+              localStorage.setItem('authToken', authResult.auth_token);
               const base64Address = authResult.accounts[0].address;
               const binaryData = Buffer.from(base64Address, 'base64');
               const base58Address = bs58.encode(binaryData);
@@ -693,7 +697,6 @@ async function startMWA(){
       if(publicKey){
         window.mcswap = {};
         window.mcswap.publicKey = new PublicKey(publicKey);
-        localStorage.setItem('authToken', publicKey);
         return publicKey;
       }
       else{
