@@ -621,11 +621,7 @@ $("body").on('scroll', function() {
 
 // connection events
 async function isConnected(){
-    const config = {
-        "body": "Welcome back!",
-        "icon": "https://www.xtrader.me/special_icon.png"
-    }
-    noti(config);
+    noti();
     const inWalletApp = await inAppBrowse();
     if(isMobile() && inWalletApp==false){
       $(".mobile_connect_button").hide();
@@ -1546,29 +1542,32 @@ $("#nav #cog, #nav .view").on("click", async function(){
 
 
 // notifications
-function noti(message=false){
+function noti(){
     const title = "xTrader";
-  if (!("Notification" in window)) {
-    alert("This browser does not support notification");
-  } 
-  else if (Notification.permission === "granted" && message) {
-    const options = message;
-    const notification = new Notification(title, options);
-  } 
-  else if (Notification.permission !== "denied") {
-    Notification.requestPermission().then((permission) => {
-      if (permission === "granted") {
+    if (!("Notification" in window)) {
+        alert("This browser does not support notification");
+    } 
+    else if (Notification.permission === "granted") {
         const options = {
-            body: "Welcome to xTrader!",
-            icon: "https://www.xtrader.me/special_icon.png",
+            "body": "Welcome back!",
+            "icon": "https://www.xtrader.me/special_icon.png"
         }
         const notification = new Notification(title, options);
-      }
-    });
-  }
-  else{
-    alert("debug");
-  }
+    } 
+    else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+            const options = {
+                body: "Welcome to xTrader!",
+                icon: "https://www.xtrader.me/special_icon.png",
+            }
+            const notification = new Notification(title, options);
+        }
+        });
+    }
+    else{
+        alert("debug");
+    }
 }
 // debounce
 function debounce(func,delay){
