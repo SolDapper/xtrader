@@ -1562,9 +1562,6 @@ function noti(){
         }
         });
     }
-    else{
-        alert("debug");
-    }
 }
 // debounce
 function debounce(func,delay){
