@@ -621,7 +621,6 @@ $("body").on('scroll', function() {
 
 // connection events
 async function isConnected(){
-    noti();
     const inWalletApp = await inAppBrowse();
     if(isMobile() && inWalletApp==false){
       $(".mobile_connect_button").hide();
@@ -635,6 +634,7 @@ async function isConnected(){
     await load_sent();
     await load_received();
     await load_public();
+    noti();
 }
 async function isDisconnected(){
     const inWalletApp = await inAppBrowse();
@@ -681,10 +681,10 @@ async function startMWA(){
             } 
             catch(error){return null;}
             if(authResult.accounts && authResult.accounts.length > 0 && authResult.accounts[0].address){
-              localStorage.setItem('authToken', authResult.auth_token);
               const base64Address = authResult.accounts[0].address;
               const binaryData = Buffer.from(base64Address, 'base64');
               const base58Address = bs58.encode(binaryData);
+              localStorage.setItem('authToken', base58Address);
               return base58Address;
             }
             else{
@@ -1219,7 +1219,6 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
         "escrow": escrow,
         "priority": priority
     });
-    console.log(tx);
     if(tx.tx){
         try{
             $("#mcswap_message").html("Requesting approval...");
