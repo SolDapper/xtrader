@@ -722,11 +722,8 @@ $(document).delegate(".mobile_connect_button", "click", async function(){
     }
 });
 $(document).delegate(".mobile_disconnect_button", "click", async function(){
-    const isAuthToken = localStorage.getItem('authToken');
-    if(isAuthToken){
-        // const result = await transact(async(wallet)=>{return await wallet.deauthorize({auth_token: isAuthToken});});
-        localStorage.removeItem('authToken');
-    }
+    // const result = await transact(async(wallet)=>{return await wallet.deauthorize({auth_token: isAuthToken});});
+    localStorage.removeItem('authToken');
     window.mcswap = false;
     await isDisconnected(true);
 });
