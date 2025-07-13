@@ -725,7 +725,7 @@ $(document).delegate(".mobile_disconnect_button", "click", async function(){
     // const result = await transact(async(wallet)=>{return await wallet.deauthorize({auth_token: isAuthToken});});
     localStorage.removeItem('authToken');
     window.mcswap = false;
-    await isDisconnected(true);
+    isDisconnected();
 });
 
 
