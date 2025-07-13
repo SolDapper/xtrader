@@ -1230,12 +1230,31 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
             let signed=null;
             const inWalletApp = await inAppBrowse();
             if(isMobile() && inWalletApp==false){
-                signed = await transact(async(wallet)=>{
-                    const authToken = localStorage.getItem('authToken');
-                    const authorizationResult = await wallet.authorize({chain:"solana:mainnet-beta",identity:APP_IDENTITY,auth_token:authToken});
-                    const _signedTxs_ = await wallet.signTransactions({transactions:[tx.tx],auth_token:authorizationResult.auth_token});
-                    return _signedTxs_[0];
-                });
+                try{
+                    signed = await transact(async(wallet)=>{
+                        const authToken = localStorage.getItem('authToken');
+                        const authorizationResult = await wallet.authorize({chain:"solana:mainnet-beta",identity:APP_IDENTITY,auth_token:authToken});
+                        const _signedTxs_ = await wallet.signTransactions({transactions:[tx.tx],auth_token:authorizationResult.auth_token});
+                        return _signedTxs_[0];
+                    });
+                }
+                catch(err){
+                    if(err=="SolanaMobileWalletAdapterProtocolError: sign request declined"){
+                        toast("User Declined", 5000);
+                        signed=null;
+                    }
+                    else if(err=="SolanaMobileWalletAdapterProtocolError: auth_token not valid for signing"){
+                        toast("Wrong Wallet", 5000);
+                        localStorage.removeItem('authToken');
+                        window.mcswap = false;
+                        isDisconnected();
+                        signed=null;
+                        return;
+                    }
+                    else{
+                        signed=null;
+                    }
+                }
             }
             else{
                 signed = await window.mcswap.signTransaction(tx.tx).catch(async function(err){});
@@ -1243,7 +1262,7 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
             if(!signed){
                 $("#mcswap_message").html("");
                 $("#mcswap_cover").fadeOut(300);
-                toast("Transaction canceled",2000);
+                toast("Canceled",2000);
                 return;
             }
             $("#mcswap_message").html("Processing...");
