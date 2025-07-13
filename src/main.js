@@ -1611,7 +1611,7 @@ function noti(){
     else if (Notification.permission === "granted") {
         const options = {
             "body": "Welcome Back!",
-            "icon": "https://www.xtrader.me/special_icon.png"
+            "icon": "https://www.xtrader.me/wallet_icon.png"
         }
         const notification = new Notification(title, options);
     } 
@@ -1620,7 +1620,7 @@ function noti(){
         if (permission === "granted") {
             const options = {
                 body: "Welcome to xTrader!",
-                icon: "https://www.xtrader.me/special_icon.png",
+                icon: "https://www.xtrader.me/wallet_icon.png",
             }
             const notification = new Notification(title, options);
         }
