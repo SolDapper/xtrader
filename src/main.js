@@ -707,7 +707,6 @@ async function startMWA(){
     }
 }
 $(document).delegate(".mobile_connect_button", "click", async function(){
-    toast("trying",3000);
     $("#mcswap_cover").fadeIn(400);
     $("#mcswap_message").html("Requesting connection...");
     const result = await startMWA();
