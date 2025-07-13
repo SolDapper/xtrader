@@ -621,7 +621,7 @@ $("body").on('scroll', function() {
 
 // connection events
 async function isConnected(){
-    noti();
+    noti({text:"Welcome back!"});
     const inWalletApp = await inAppBrowse();
     if(isMobile() && inWalletApp==false){
       $(".mobile_connect_button").hide();
@@ -635,7 +635,6 @@ async function isConnected(){
     await load_sent();
     await load_received();
     await load_public();
-
 }
 async function isDisconnected(){
     const inWalletApp = await inAppBrowse();
@@ -1550,7 +1549,7 @@ function noti(message=false){
   } 
   else if (Notification.permission === "granted" && message) {
     const options = {
-        body: "Welcome back!",
+        body: message.text,
         icon: "https://www.xtrader.me/special_icon.png",
     }
     const notification = new Notification(title, options);
