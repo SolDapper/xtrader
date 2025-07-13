@@ -1,4 +1,5 @@
-localStorage.clear();
+// localStorage.clear();
+
 
 // imports
 import {Connection,PublicKey,Keypair} from "@solana/web3.js"
@@ -1546,7 +1547,7 @@ function noti(){
     } 
     else if (Notification.permission === "granted") {
         const options = {
-            "body": "Welcome back!",
+            "body": "Welcome Back!",
             "icon": "https://www.xtrader.me/special_icon.png"
         }
         const notification = new Notification(title, options);
