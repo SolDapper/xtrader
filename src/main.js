@@ -1212,6 +1212,7 @@ $(document).delegate(".item-cancel", "click", async function(){
                 $("#mcswap_cover").fadeOut(300);
                 toast("Escrow closed",4000);
                 $("#"+view+"-"+escrow).parent().remove();
+                positioner();
             }
         }
         catch(err){
@@ -1304,6 +1305,7 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
                 $("#mcswap_cover").fadeOut(300);
                 toast("Transaction complete",4000);
                 $("#"+view+"-"+escrow).parent().remove();
+                positioner();
             }
         }
         catch(err){
@@ -1336,6 +1338,84 @@ $("#settings-priority").on("change", async function(){
 
 
 // create escrow
+function commas(_amount_){
+    return _amount_.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
+}
+function countDecimals(number){
+  const numString = String(number);
+  const parts = numString.split('.');
+  if (parts.length < 2) {
+    return 0;
+  }
+  return parts[1].length;
+}
+async function getValue(ele,gecko,amount,currency){
+    if(gecko=="false"){return;}
+    if(ele=="creator-amount" && $("#creator-asset").html()=="Choose"){return;}
+    else if(ele=="buyer-amount" && $("#buyer-asset").html()=="Choose"){return;}
+    if(gecko=="usdc" || gecko == "tether"){
+        amount = parseFloat(amount).toFixed(2);
+        if(isNaN(amount)){amount="0.00";}
+        if(ele=="creator-amount"){
+            $("#creator-value").html("$"+commas(amount));
+        }
+        else if(ele=="buyer-amount"){
+            $("#buyer-value").html("$"+commas(amount));
+        }
+        return;
+    }
+    const coinId = gecko;
+    const vsCurrency = currency;
+    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=${vsCurrency}`; // 1.2.2, 1.3.2, 1.4.2
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        let _amount_ = data[gecko].usd * amount;
+        _amount_ = _amount_.toFixed(2);
+        if(isNaN(_amount_)){_amount_="0.00";}
+        if(ele=="creator-amount"){
+            $("#creator-value").html("$"+commas(_amount_));
+        }
+        else if(ele=="buyer-amount"){
+            $("#buyer-value").html("$"+commas(_amount_));
+        }
+    }
+    catch(error){}
+}
+const debounceValue = debounce(getValue, 1500);
+$("#creator-amount, #buyer-amount").on("keyup change input",function(e){
+    e.preventDefault();
+    if(e.key==='Enter'){
+        const id = $(this).attr("id");
+        if(id=="creator-amount"){
+            $("#buyer-asset").focus();
+        }
+        else if(id=="buyer-amount"){
+            $("#buyer-wallet").focus();
+        }
+        return;
+    }
+    else{
+        const regex = /[^0-9.]/g;
+        const decimals = $(this).attr("data-decimals");
+        const gecko = $(this).attr("data-gecko");
+        let value = $(this).val();
+        value = value.replace(regex,'');
+        if(countDecimals(value) > decimals){value=parseFloat(value).toFixed(decimals);}
+        $(this).val(value);
+        const id = $(this).attr("id");
+        if(value<=0){
+            if(id=="creator-amount"){
+                $("#creator-value").html("$0.00");
+            }
+            else if(id=="buyer-amount"){
+                $("#buyer-value").html("$0.00");
+            }
+        }
+        debounceValue(id,gecko,value,"usd");
+        return;
+    }
+});
 $("#payment-pay").on("click", async function(){
     $("label").removeClass("form-error");
     if($("#creator-asset").html()=="Choose"){
@@ -1465,8 +1545,14 @@ $("#payment-pay").on("click", async function(){
                $("#mcswap_message").html("");
                 $("#mcswap_cover").fadeOut(300);
                 toast("Escrow created",4000);
-                if(buyer==false){$("#market").click();}
-                else{$("#sent").click();}
+                if(buyer==false){
+                    $("#market").click();
+                    $("#market-refresh").click();
+                }
+                else{
+                    $("#sent").click();
+                    $("#sent-refresh").click();
+                }
             }
         }
         catch(err){
@@ -1481,85 +1567,6 @@ $("#payment-pay").on("click", async function(){
         toast("Transaction canceled",2000);
     }
 });
-function commas(_amount_){
-    return _amount_.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
-}
-function countDecimals(number){
-  const numString = String(number);
-  const parts = numString.split('.');
-  if (parts.length < 2) {
-    return 0;
-  }
-  return parts[1].length;
-}
-async function getValue(ele,gecko,amount,currency){
-    if(gecko=="false"){return;}
-    if(ele=="creator-amount" && $("#creator-asset").html()=="Choose"){return;}
-    else if(ele=="buyer-amount" && $("#buyer-asset").html()=="Choose"){return;}
-    if(gecko=="usdc" || gecko == "tether"){
-        amount = parseFloat(amount).toFixed(2);
-        if(isNaN(amount)){amount="0.00";}
-        if(ele=="creator-amount"){
-            $("#creator-value").html("$"+commas(amount));
-        }
-        else if(ele=="buyer-amount"){
-            $("#buyer-value").html("$"+commas(amount));
-        }
-        return;
-    }
-    const coinId = gecko;
-    const vsCurrency = currency;
-    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=${vsCurrency}`; // 1.2.2, 1.3.2, 1.4.2
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        let _amount_ = data[gecko].usd * amount;
-        _amount_ = _amount_.toFixed(2);
-        if(isNaN(_amount_)){_amount_="0.00";}
-        if(ele=="creator-amount"){
-            $("#creator-value").html("$"+commas(_amount_));
-        }
-        else if(ele=="buyer-amount"){
-            $("#buyer-value").html("$"+commas(_amount_));
-        }
-    }
-    catch(error){}
-}
-const debounceValue = debounce(getValue, 1500);
-$("#creator-amount, #buyer-amount").on("keyup change input",function(e){
-    e.preventDefault();
-    if(e.key==='Enter'){
-        const id = $(this).attr("id");
-        if(id=="creator-amount"){
-            $("#buyer-asset").focus();
-        }
-        else if(id=="buyer-amount"){
-            $("#buyer-wallet").focus();
-        }
-        return;
-    }
-    else{
-        const regex = /[^0-9.]/g;
-        const decimals = $(this).attr("data-decimals");
-        const gecko = $(this).attr("data-gecko");
-        let value = $(this).val();
-        value = value.replace(regex,'');
-        if(countDecimals(value) > decimals){value=parseFloat(value).toFixed(decimals);}
-        $(this).val(value);
-        const id = $(this).attr("id");
-        if(value<=0){
-            if(id=="creator-amount"){
-                $("#creator-value").html("$0.00");
-            }
-            else if(id=="buyer-amount"){
-                $("#buyer-value").html("$0.00");
-            }
-        }
-        debounceValue(id,gecko,value,"usd");
-        return;
-    }
-});
-
 
 // close asset list
 $("button#asset-list-close").on("click", function(){
