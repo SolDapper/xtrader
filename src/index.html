@@ -50,17 +50,17 @@
             </div></div></div>
             <div class="views" id="received-view"><h1>Inbox</h1><h2>Manage Received Escrows</h2><div class="panel"><div class="panel-box">
                 <button id="received-refresh" class="refresher"><img src="./img/refresh.png" /></button>
-                <div class="panel-options"><select id="received-filter"><option>All xStocks</option></select><select id="received-sellers"><option>All Sellers</option></select></div>
+                <div class="panel-options"><select disabled id="received-filter"><option>All xStocks</option></select><select id="received-sellers"><option>All Sellers</option></select></div>
                 <div class="panel-list"></div>
             </div></div></div>
             <div class="views" id="sent-view"><h1>Sent</h1><h2>Manage Sent Escrows</h2><div class="panel"><div class="panel-box">
                 <button id="sent-refresh" class="refresher"><img src="./img/refresh.png" /></button>
-                <div class="panel-options"><select id="sent-filter"><option>All xStocks</option></select><select id="sent-buyers"><option>All Buyers</option></select></div>
+                <div class="panel-options"><select disabled id="sent-filter"><option>All xStocks</option></select><select id="sent-buyers"><option>All Buyers</option></select></div>
                 <div class="panel-list"></div>
             </div></div></div>
             <div class="views" id="market-view"><h1>Market</h1><h2>Browse Public Escrows</h2><div class="panel"><div class="panel-box">
                 <button id="market-refresh" class="refresher"><img src="./img/refresh.png" /></button>
-                <div class="panel-options"><select id="market-filter"><option>All xStocks</option></select><select id="market-sellers"><option>All Sellers</option></select></div>
+                <div class="panel-options"><select disabled id="market-filter"><option>All xStocks</option></select><select id="market-sellers"><option>All Sellers</option></select></div>
                 <div class="panel-list"><div class="list-clear"></div></div>
             </div><div class="list-clear"></div></div></div>
             <div class="views" id="settings-view"><h1>xTrader</h1><h2>Settings &amp; Preferences</h2><div class="panel"><div class="panel-box">
@@ -83,10 +83,12 @@
                     <input id="settings-screensaver" type="number" min="60" value="60" /> seconds
                 </div>
                 
-                <!-- <div class="row"><span class="label-category">Endpoint</span></div>
+                <div style="display: none">
+
+                <div class="row"><span class="label-category">Endpoint</span></div>
                 <div class="row">Add a custom <a target="_blank" class="inline-link" href="https://www.helius.dev/solana-rpc-nodes">Helius</a> RPC endpoint to unlock more settings</div>
                 <div class="row">
-                    <input id="settings-rpc" class="settings-input" type="text" placeholder="https://mainnet.helius-rpc.com/?api-key=<your-key>" />
+                    <input id="settings-rpc" disabled class="settings-input" type="text" placeholder="https://mainnet.helius-rpc.com/?api-key=<your-key>" />
                 </div>
 
                 <div class="row"><span class="label-category">Refresh</span></div>
@@ -111,7 +113,9 @@
                         <option value="Yes">Yes</option>
                         <option value="No" selected>No</option>
                     </select>
-                </div> -->
+                </div>
+
+                </div>
 
             </div></div></div>
         </div>
