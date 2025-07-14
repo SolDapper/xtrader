@@ -742,4 +742,35 @@ a.inline-link:hover{
 }
 
 
-
+#main-cover{
+    z-index: 1000;
+    opacity: .8;
+    background: #000;
+    width: 100%;
+    height: 100%;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+#main-message{
+    float: left;
+    color: #f7f7f7;
+    text-shadow: 2px 2px #111;
+    z-index: 11;
+    text-align: center;
+    width: 100%;
+    height: 100px;
+    font-family: Ubuntu;
+    display: block;
+    position: absolute;
+    font-size: 18px;
+    font-weight: 700;
+    top: 45%;
+    animation: 1.5s linear infinite message_blinker;
+}
+@keyframes message_blinker {
+  50% {
+      opacity: 0.25;
+ }
+}

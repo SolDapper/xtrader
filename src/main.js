@@ -716,15 +716,15 @@ async function startMWA(){
     }
 }
 $(document).delegate(".mobile_connect_button", "click", async function(){
-    $("#mcswap_cover").fadeIn(400);
-    $("#mcswap_message").html("Requesting connection...");
+    $("#main-cover").fadeIn(400);
+    $("#main-message").html("Requesting connection...");
     const result = await startMWA();
     if(result){
         isConnected();
     }
     else{
-        $("#mcswap_message").html("");
-        $("#mcswap_cover").fadeOut(400);
+        $("#main-message").html("");
+        $("#main-cover").fadeOut(400);
     }
 });
 $(document).delegate(".mobile_disconnect_button", "click", async function(){
@@ -1140,9 +1140,14 @@ $(document).delegate(".item-time", "click", async function(){
     toast("Created: "+time, 3000);
     copy(time);
 });
+$(document).delegate(".item-hide", "click", async function(){
+    $(this).parent().parent().parent().hide();
+    toast("Hidden", 2000);
+    positioner();
+});
 $(document).delegate(".item-cancel", "click", async function(){
-    $("#mcswap_cover").fadeIn(300);
-    $("#mcswap_message").html("Preparing transaction...");
+    $("#main-cover").fadeIn(300);
+    $("#main-message").html("Preparing transaction...");
     const item = $(this).parent().parent().attr("id");
     const parts = item.split("-");
     const view = parts[0];
@@ -1158,7 +1163,7 @@ $(document).delegate(".item-cancel", "click", async function(){
     });
     if(tx){
         try{
-            $("#mcswap_message").html("Requesting approval...");
+            $("#main-message").html("Requesting approval...");
             let signed=null;
             const inWalletApp = await inAppBrowse();
             if(isMobile() && inWalletApp==false){
@@ -1197,44 +1202,39 @@ $(document).delegate(".item-cancel", "click", async function(){
                 toast("Canceled",2000);
                 return;
             }
-            $("#mcswap_message").html("Closing escrow...");
+            $("#main-message").html("Closing escrow...");
             const signature = await mcswap.send(rpc,signed);
             console.log("signature", signature);
             console.log("awaiting status...");
             const status = await mcswap.status(rpc,signature);
             if(status!="finalized"){
-                $("#mcswap_message").html("");
-                $("#mcswap_cover").fadeOut(300);
+                $("#main-message").html("");
+                $("#main-cover").fadeOut(300);
                 toast("Transaction failed",2000);
             }
             else{
-                $("#mcswap_message").html("");
-                $("#mcswap_cover").fadeOut(300);
+                $("#main-message").html("");
+                $("#main-cover").fadeOut(300);
                 toast("Escrow closed",4000);
                 $("#"+view+"-"+escrow).parent().remove();
                 positioner();
             }
         }
         catch(err){
-            $("#mcswap_message").html("");
-            $("#mcswap_cover").fadeOut(300);
+            $("#main-message").html("");
+            $("#main-cover").fadeOut(300);
             toast("Transaction error",2000);
         }
     }
     else{
-        $("#mcswap_message").html("");
-        $("#mcswap_cover").fadeOut(300);
+        $("#main-message").html("");
+        $("#main-cover").fadeOut(300);
         toast("Transaction canceled",2000);
     }
 });
-$(document).delegate(".item-hide", "click", async function(){
-    $(this).parent().parent().parent().hide();
-    toast("Hidden", 2000);
-    positioner();
-});
 $(document).delegate(".item-public-authorize, .item-authorize", "click", async function(){
-    $("#mcswap_cover").fadeIn(300);
-    $("#mcswap_message").html("Preparing transaction...");
+    $("#main-cover").fadeIn(300);
+    $("#main-message").html("Preparing transaction...");
     const item = $(this).parent().parent().attr("id");
     const parts = item.split("-");
     const view = parts[0];
@@ -1251,7 +1251,7 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
     });
     if(tx.tx){
         try{
-            $("#mcswap_message").html("Requesting approval...");
+            $("#main-message").html("Requesting approval...");
             let signed=null;
             const inWalletApp = await inAppBrowse();
             if(isMobile() && inWalletApp==false){
@@ -1285,38 +1285,38 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
                 signed = await window.mcswap.signTransaction(tx.tx).catch(async function(err){});
             }
             if(!signed){
-                $("#mcswap_message").html("");
-                $("#mcswap_cover").fadeOut(300);
+                $("#main-message").html("");
+                $("#main-cover").fadeOut(300);
                 toast("Canceled",2000);
                 return;
             }
-            $("#mcswap_message").html("Processing...");
+            $("#main-message").html("Processing...");
             const signature = await mcswap.send(rpc,signed);
             console.log("signature", signature);
             console.log("awaiting status...");
             const status = await mcswap.status(rpc,signature);
             if(status!="finalized"){
-                $("#mcswap_message").html("");
-                $("#mcswap_cover").fadeOut(300);
+                $("#main-message").html("");
+                $("#main-cover").fadeOut(300);
                 toast("Transaction failed",2000);
             }
             else{
-                $("#mcswap_message").html("");
-                $("#mcswap_cover").fadeOut(300);
+                $("#main-message").html("");
+                $("#main-cover").fadeOut(300);
                 toast("Transaction complete",4000);
                 $("#"+view+"-"+escrow).parent().remove();
                 positioner();
             }
         }
         catch(err){
-            $("#mcswap_message").html("");
-            $("#mcswap_cover").fadeOut(300);
+            $("#main-message").html("");
+            $("#main-cover").fadeOut(300);
             toast("Transaction error",2000);
         }
     }
     else{
-        $("#mcswap_message").html("");
-        $("#mcswap_cover").fadeOut(300);
+        $("#main-message").html("");
+        $("#main-cover").fadeOut(300);
         if(tx.logs && tx.logs.includes("Program log: CERROR: Invalid token 3 ata")){
             toast("Insufficient "+symbol, 2000);
         }
@@ -1448,11 +1448,11 @@ $("#payment-pay").on("click", async function(){
         $("#connect").click();
         return;
     }
-    $("#mcswap_cover").fadeIn(300);
-    $("#mcswap_message").html("Preparing transaction...");
+    $("#main-cover").fadeIn(300);
+    $("#main-message").html("Preparing transaction...");
     const amount = await balance(rpc,window.mcswap.publicKey.toString(),$("#creator-mint").val(),$("#creator-amount").attr("data-decimals"));    
     if(amount < $("#creator-amount").val()){
-        $("#mcswap_cover").fadeOut(300);
+        $("#main-cover").fadeOut(300);
         toast("Insufficient "+$("#creator-asset").html());
         $("#creator-amount").prev().addClass("form-error");
         return;
@@ -1491,7 +1491,7 @@ $("#payment-pay").on("click", async function(){
     const tx = await mcswap.splCreate(config);
     if(tx.tx){
         try{
-            $("#mcswap_message").html("Requesting approval...");
+            $("#main-message").html("Requesting approval...");
             let signed=null;
             const inWalletApp = await inAppBrowse();
             if(isMobile() && inWalletApp==false){
@@ -1525,25 +1525,25 @@ $("#payment-pay").on("click", async function(){
                 signed = await window.mcswap.signTransaction(tx.tx).catch(async function(err){});
             }
             if(!signed){
-                $("#mcswap_message").html("");
-                $("#mcswap_cover").fadeOut(300);
+                $("#main-message").html("");
+                $("#main-cover").fadeOut(300);
                 toast("Transaction canceled",2000);
                 return;
             }
-            $("#mcswap_message").html("Creating escrow...");
+            $("#main-message").html("Creating escrow...");
             console.log("debug");
             const signature = await mcswap.send(rpc,signed);
             console.log("signature", signature);
             console.log("awaiting status...");
             const status = await mcswap.status(rpc,signature);
             if(status!="finalized"){
-                $("#mcswap_message").html("");
-                $("#mcswap_cover").fadeOut(300);
+                $("#main-message").html("");
+                $("#main-cover").fadeOut(300);
                 toast("Transaction failed",2000);
             }
             else{
-               $("#mcswap_message").html("");
-                $("#mcswap_cover").fadeOut(300);
+                $("#main-message").html("");
+                $("#main-cover").fadeOut(300);
                 toast("Escrow created",4000);
                 if(buyer==false){
                     $("#market").click();
@@ -1556,14 +1556,14 @@ $("#payment-pay").on("click", async function(){
             }
         }
         catch(err){
-            $("#mcswap_message").html("");
-            $("#mcswap_cover").fadeOut(300);
+            $("#main-message").html("");
+            $("#main-cover").fadeOut(300);
             toast("Transaction error",2000);
         }
     }
     else{
-        $("#mcswap_message").html("");
-        $("#mcswap_cover").fadeOut(300);
+        $("#main-message").html("");
+        $("#main-cover").fadeOut(300);
         toast("Transaction canceled",2000);
     }
 });
