@@ -629,10 +629,10 @@ async function isConnected(){
       $(".mobile_connect_button").hide();
       $('.mobile_disconnect_button').show();
     }
-    else if(!isMobile()){
-        noti();
-    }
+    else if(!isMobile()){noti();}
+    $("#nav-contain button.view").prop("disabled",false);
     $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
+    $("#main-cover, #main-chooser").fadeOut(300);
     $("#mcswap_cover, #mcswap_chooser").fadeOut(300);
     let fullWallet = window.mcswap.publicKey.toString();
     const first_part = fullWallet.slice(0,4);
@@ -652,6 +652,7 @@ async function isDisconnected(){
         $('.mobile_disconnect_button').hide();
         $(".mobile_connect_button").show();
     }
+    $("#nav-contain button.view").prop("disabled",true);
     $("#received-view .panel-list, #sent-view .panel-list, #market-view .panel-list").html("");
     toast("Disconnected!",2000);
     $("#nav .view, #nav #cog").removeClass("active-view").removeClass("active-cog");
@@ -1197,8 +1198,8 @@ $(document).delegate(".item-cancel", "click", async function(){
                 signed = await window.mcswap.signTransaction(tx).catch(async function(err){});
             }
             if(!signed){
-                $("#mcswap_message").html("");
-                $("#mcswap_cover").fadeOut(300);
+                $("#main-message").html("");
+                $("#main-cover").fadeOut(300);
                 toast("Canceled",2000);
                 return;
             }
