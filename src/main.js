@@ -1141,14 +1141,14 @@ $(document).delegate(".item-time", "click", async function(){
     copy(time);
 });
 $(document).delegate(".item-cancel", "click", async function(){
+    $("#mcswap_cover").fadeIn(300);
+    $("#mcswap_message").html("Preparing transaction...");
     const item = $(this).parent().parent().attr("id");
     const parts = item.split("-");
     const view = parts[0];
     const escrow = parts[1];
     const seller = window.mcswap.publicKey.toString();
     const priority = $("#settings-priority").val();
-    $("#mcswap_cover").fadeIn(300);
-    $("#mcswap_message").html("Preparing transaction...");
     const tx = await mcswap.splCancel({
         "rpc": rpc,
         "blink": false,
@@ -1211,7 +1211,7 @@ $(document).delegate(".item-cancel", "click", async function(){
                 $("#mcswap_message").html("");
                 $("#mcswap_cover").fadeOut(300);
                 toast("Escrow closed",4000);
-                $("#"+view+"-"+escrow).remove();
+                $("#"+view+"-"+escrow).parent().remove();
             }
         }
         catch(err){
@@ -1226,7 +1226,14 @@ $(document).delegate(".item-cancel", "click", async function(){
         toast("Transaction canceled",2000);
     }
 });
+$(document).delegate(".item-hide", "click", async function(){
+    $(this).parent().parent().parent().hide();
+    toast("Hidden", 2000);
+    positioner();
+});
 $(document).delegate(".item-public-authorize, .item-authorize", "click", async function(){
+    $("#mcswap_cover").fadeIn(300);
+    $("#mcswap_message").html("Preparing transaction...");
     const item = $(this).parent().parent().attr("id");
     const parts = item.split("-");
     const view = parts[0];
@@ -1234,8 +1241,6 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
     const buyer = window.mcswap.publicKey.toString();
     const priority = $("#settings-priority").val();
     const symbol = $(this).parent().prev().prev().prev().prev().find(".item-symbol").html();
-    $("#mcswap_cover").fadeIn(300);
-    $("#mcswap_message").html("Preparing transaction...");
     const tx = await mcswap.splExecute({
         "rpc": rpc,
         "blink": false,
@@ -1298,7 +1303,7 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
                 $("#mcswap_message").html("");
                 $("#mcswap_cover").fadeOut(300);
                 toast("Transaction complete",4000);
-                $("#"+view+"-"+escrow).remove();
+                $("#"+view+"-"+escrow).parent().remove();
             }
         }
         catch(err){
@@ -1317,11 +1322,6 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
             toast("Transaction stopped", 2000);
         }
     }
-});
-$(document).delegate(".item-hide", "click", async function(){
-    $(this).parent().parent().parent().hide();
-    toast("Hidden", 2000);
-    positioner();
 });
 
 
