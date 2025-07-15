@@ -1826,8 +1826,13 @@ $(window).on("load", async function(){
         i++;
     }
 
-    const authToken = localStorage.getItem('authToken');
-    if(authToken){startMWA();}
+    if(!isMobile()){
+        const authToken = localStorage.getItem('authToken');
+        if(authToken){
+            toast("Connecting...");
+            $("#connect").click();
+        }
+    }
 
 });
 
