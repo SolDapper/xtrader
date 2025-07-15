@@ -36,6 +36,7 @@
                     <input disabled id="creator-wallet" form="create-form" type="hidden" />
                     <div class="row"><label for="creator-asset">Asset</label><img id="creator-icon" class="little-icon" src="#" /><button id="creator-asset">Choose</button><input required id="creator-mint" form="create-form" type="hidden" /></div>
                     <div class="row"><label for="creator-amount">Amount</label><input disabled required placeholder="0.00000" id="creator-amount" type="text" /></div>
+                    <div class="row"><label for="create-memo">Memo</label><input required placeholder="(optional)" id="create-memo" form="create-form" type="text" /></div>
                     <div class="row"><span class="label-category">For</span><span id="buyer-value">$0.00</span><span class="estimated-value">(estimate)</span></div>
                     <div class="row"><label for="buyer-asset">Asset</label><img id="buyer-icon" class="little-icon" src="#" /><button id="buyer-asset">Choose</button><input required id="buyer-mint" form="create-form" type="hidden" /></div>
                     <div class="row"><label for="buyer-amount">Amount</label><input disabled required placeholder="0.00000" id="buyer-amount" type="text" /></div>
@@ -45,8 +46,7 @@
                         <option>Public Listing</option>
                     </select></div>
                     <div class="row"><label for="buyer-wallet">Wallet</label><input required placeholder="Address" id="buyer-wallet" form="create-form" type="text" /></div>
-                    <div class="row"><label for="create-memo">Memo</label><input required placeholder="(optional)" id="create-memo" form="create-form" type="text" /></div>
-                    <button id="payment-pay" class="submit" form="create-form">Send</button>
+                    <button id="payment-pay" class="submit" form="create-form">Create</button>
                 </div>
             </div></div></div>
             <div class="views" id="received-view"><h1>Inbox</h1><h2>Manage Received Escrows</h2><div class="panel"><div class="panel-box">
