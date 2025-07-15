@@ -1600,9 +1600,21 @@ $("#buyer-type").on("change",function(){
 $("#nav #cog, #nav .view").on("click", async function(){
     let id = $(this).attr("id");
     $("#"+id+"-view ul.row").hide();
-    $("#nav #cog, #nav .view").removeClass("active-view").removeClass("active-cog");
-    $(this).addClass("active-view");
-    if(id=="cog"){id="settings";$("#cog").addClass("active-cog");}
+    if(id=="cog"){
+        if($(this).hasClass("active-view")){
+            $("#nav #cog, #nav .view").removeClass("active-view").removeClass("active-cog");
+            id="home";
+        }
+        else{
+            $("#nav #cog, #nav .view").removeClass("active-view").removeClass("active-cog");
+            $(this).addClass("active-view").addClass("active-cog");
+            id="settings";
+        }
+    }
+    else{
+        $("#nav #cog, #nav .view").removeClass("active-view").removeClass("active-cog");
+        $(this).addClass("active-view");
+    }
     $(".views").hide();
     $("#"+id+"-view").show();
     await positioner();
