@@ -756,6 +756,7 @@ a.inline-link:hover{
     font-weight: bold;
     line-height: 40px;
     text-align: center;
+    border-radius: 6px;
 }
 #settings-refresh:disabled, #settings-rate:disabled, #settings-notis:disabled{
     background: #000000;
