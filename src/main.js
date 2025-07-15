@@ -1242,7 +1242,7 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
     const escrow = parts[1];
     const buyer = window.mcswap.publicKey.toString();
     const priority = $("#settings-priority").val();
-    const symbol = $(this).parent().prev().prev().prev().prev().find(".item-symbol").html();
+    const symbol = $(this).parent().prev().prev().prev().prev().prev().find(".item-symbol").html();
     const tx = await mcswap.splExecute({
         "rpc": rpc,
         "blink": false,
