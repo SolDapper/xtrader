@@ -1825,7 +1825,6 @@ $(window).on("load", async function(){
         $("#asset-list").append(item);
         i++;
     }
-
     if(!isMobile()){
         const authToken = localStorage.getItem('authToken');
         if(authToken){
@@ -1833,7 +1832,6 @@ $(window).on("load", async function(){
             $("#connect").click();
         }
     }
-
 });
 
 
