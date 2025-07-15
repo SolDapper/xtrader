@@ -1073,7 +1073,8 @@ $(document).delegate("img.item-img", "click", async function(){
 $(document).delegate(".item-details", "click", async function(){
     const mint = $(this).attr("data-mint");
     toast("Copied chart link",3000);
-    const href = "https://jup.ag/tokens/"+mint;
+    // const href = "https://jup.ag/tokens/"+mint;
+    const href = "https://jup.ag/swap/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v-"+mint;
     copy(href);
     const inWalletApp = await inAppBrowse();
     if(!isMobile() || (isMobile() && inWalletApp==false)){
