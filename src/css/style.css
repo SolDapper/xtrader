@@ -716,6 +716,7 @@ a.inline-link:hover{
     font-family: Ubuntu;
     font-weight: bold;
     line-height: 40px;
+    border-radius: 6px;
 }
 .settings-input::placeholder {
   color: #292929; /* or any other color like #ff0000, rgba(255, 0, 0, 0.5) */
@@ -737,6 +738,7 @@ a.inline-link:hover{
     transition: all .3s;
     text-align: center;
     cursor: pointer;
+    border-radius: 6px;
 }
 #settings-priority:hover, #settings-refresh:hover, #settings-notis:hover{
     color: #1dd2bd;
