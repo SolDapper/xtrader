@@ -1824,13 +1824,6 @@ $(window).on("load", async function(){
         $("#asset-list").append(item);
         i++;
     }
-    if(!isMobile()){
-        const authToken = localStorage.getItem('authToken');
-        if(authToken){
-            toast("Connecting...");
-            $("#connect").click();
-        }
-    }
 });
 
 
