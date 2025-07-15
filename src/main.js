@@ -1083,8 +1083,7 @@ $(document).delegate("img.item-img", "click", async function(){
 $(document).delegate(".item-details", "click", async function(){
     const mint = $(this).attr("data-mint");
     toast("Copied chart link",3000);
-    // const href = "https://jup.ag/tokens/"+mint;
-    const href = "https://jup.ag/swap/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v-"+mint;
+    const href = "https://jup.ag/tokens/"+mint;
     copy(href);
     const inWalletApp = await inAppBrowse();
     if(!isMobile() || (isMobile() && inWalletApp==false)){
@@ -1100,28 +1099,28 @@ $(document).delegate(".item-amount", "click", async function(){
     const symbol = $(this).prev().prev().find(".item-symbol").html();
     if(view=="market"){
         if($(this).hasClass("seller-amount")){
-            toast("Buyer receives: "+amount+" "+symbol, 3000);
+            toast("The offering "+amount+" "+symbol, 3000);
         }
         else if($(this).hasClass("buyer-amount")){
-            toast("Buyer sends: "+amount+" "+symbol, 3000);
+            toast("You send "+amount+" "+symbol, 3000);
         }
         copy(amount);
     }
     else if(view=="sent"){
         if($(this).hasClass("seller-amount")){
-            toast("You're selling: "+amount+" "+symbol, 3000);
+            toast("Your offer "+amount+" "+symbol, 3000);
         }
         else if($(this).hasClass("buyer-amount")){
-            toast("Buyer sends: "+amount+" "+symbol, 3000);
+            toast("They send "+amount+" "+symbol, 3000);
         }
         copy(amount);
     }
     else if(view=="received"){
         if($(this).hasClass("seller-amount")){
-            toast("You receive: "+amount+" "+symbol, 3000);
+            toast("You receive "+amount+" "+symbol, 3000);
         }
         else if($(this).hasClass("buyer-amount")){
-            toast("You send: "+amount+" "+symbol, 3000);
+            toast("You send "+amount+" "+symbol, 3000);
         }
         copy(amount);
     }
@@ -1136,21 +1135,21 @@ $(document).delegate(".item-buyer", "click", async function(){
     const first_part = wallet.slice(0,5);
     const last_part = wallet.slice(-5);
     if(view=="market"){
-        toast("Seller: "+first_part+"..."+last_part, 3000);
+        toast("Created by "+first_part+"..."+last_part, 3000);
         copy(wallet);
     }
     else if(view=="sent"){
-        toast("Buyer: "+first_part+"..."+last_part, 3000);
+        toast("Offered to "+first_part+"..."+last_part, 3000);
         copy(wallet);
     }
     else if(view=="received"){
-        toast("Seller: "+first_part+"..."+last_part, 3000);
+        toast("Created by "+first_part+"..."+last_part, 3000);
         copy(wallet);
     }
 });
 $(document).delegate(".item-time", "click", async function(){
     const time = $(this).html();
-    toast("Created: "+time, 3000);
+    toast("Created "+time, 3000);
     copy(time);
 });
 $(document).delegate(".item-hide", "click", async function(){
