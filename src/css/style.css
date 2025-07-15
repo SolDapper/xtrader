@@ -227,12 +227,26 @@ label.form-error{
     font-family: "Ubuntu";
     font-weight: bold;
     color: #fff;
+    border-radius: 6px;
 }
 #create-form input::placeholder {
   color: #292929; /* or any other color like #ff0000, rgba(255, 0, 0, 0.5) */
   opacity: 1; /* For Firefox, to ensure full color opacity, if needed */
 }
-#create-form button, #create-form select{
+#create-form button{
+    background: #111;
+    border: 0;
+    outline: none;
+    line-height: 40px;
+    height: 40px;
+    width: 363px;
+    font-family: "Ubuntu";
+    font-weight: bold;
+    color: #2a71f8;
+    border-radius: 6px;
+    transition: .3s;
+}
+#create-form select{
     background: #111;
     border: 0;
     outline: none;
@@ -242,7 +256,15 @@ label.form-error{
     font-family: "Ubuntu";
     font-weight: bold;
     color: #2a71f8;
+    border-radius: 6px;
     transition: .3s;
+}
+
+
+
+#create-form button#creator-asset,
+#create-form button#buyer-asset{
+    border-radius: 6px;
 }
 #create-form select{
     text-align: center;
@@ -283,16 +305,14 @@ label.form-error{
 
 /* asset list */
 .little-icon{
-    float: left;
     background: #000;
     border: 0;
     border-radius: 100%;
     outline: none;
     width: 40px;
     height: 40px;
-    margin: 0 0 0 -15px;
+    margin: 0 9px -15px -18px;
     display: none;
-    position: absolute;
 }
 #asset-list-box{
     display: none;

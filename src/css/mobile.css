@@ -154,8 +154,9 @@
 @media only screen and (max-width: 600px) {
     #create-form #creator-asset,
     #create-form #buyer-asset{
-        width: calc(100% - 64px);
+        width: calc(100% - 95px);
     }
+    #create-form #create-memo,
     #create-form #creator-amount,
     #create-form #buyer-amount,
     #create-form #buyer-wallet{
