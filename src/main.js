@@ -558,6 +558,7 @@ const asset_list = [
         decimals: 8
     }
 ];
+const all_mints = [];
 const asset_mints = [];
 async function asset_map(_tokens_,mint=false){
   if(mint!=false){
@@ -790,7 +791,7 @@ async function load_sent(){
                 return;
             }
             const asset = splSent.data[i];
-            if(asset_mints.includes(asset.token_1_mint)){
+            if(asset_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#sent-'+asset.acct).length){
                     asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
                     const merged = token_list.concat(asset_list);
@@ -873,7 +874,7 @@ async function load_received(){
                 return;
             }
             const asset = splReceived.data[i];
-            if(asset_mints.includes(asset.token_1_mint)){
+            if(asset_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#received-'+asset.acct).length){
                     asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
                     const merged = token_list.concat(asset_list);
@@ -963,7 +964,7 @@ async function load_public(){
                 return;
             }
             const asset = splSent.data[i];
-            if(asset_mints.includes(asset.token_1_mint)){
+            if(asset_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#market-'+asset.acct).length){
                     asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
                     const merged = token_list.concat(asset_list);
@@ -1774,6 +1775,13 @@ $(window).on("load", async function(){
         $(".mcswap_disconnect_button").removeClass().addClass("mobile_disconnect_button");
     }
     let i=0;
+    while (i < token_list.length) {
+        const asset = token_list[i];
+        const item = '<option value="'+asset.mint+'">'+asset.symbol+'</option>';
+        all_mints.push(asset.mint);
+        i++;
+    }
+    i=0;
     while (i < asset_list.length) {
         const asset = asset_list[i];
         const item = '<option value="'+asset.mint+'">'+asset.symbol+'</option>';
@@ -1781,6 +1789,7 @@ $(window).on("load", async function(){
         $("#received-filter").append(item);
         $("#market-filter").append(item);
         asset_mints.push(asset.mint);
+        all_mints.push(asset.mint);
         i++;
     }
     i=0;
