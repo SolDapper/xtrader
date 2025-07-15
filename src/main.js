@@ -1825,6 +1825,10 @@ $(window).on("load", async function(){
         $("#asset-list").append(item);
         i++;
     }
+
+    const authToken = localStorage.getItem('authToken');
+    if(authToken){startMWA();}
+
 });
 
 
