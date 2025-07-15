@@ -62,7 +62,7 @@ const token_list = [
         name: "TETHER",
         symbol: "USDT",
         mint: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
-        icon: "https://image-cdn.solana.fm/images/?imageUrl=https://raw.githubusercontent.com/Smaler1/coin/main/logo.png",
+        icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg",
         pdf: "",
         decimals: 6,
         gecko: "tether"
@@ -801,7 +801,7 @@ async function load_sent(){
                 return;
             }
             const asset = splSent.data[i];
-            if(asset_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
+            if(all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#sent-'+asset.acct).length){
                     asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
                     const merged = token_list.concat(asset_list);
@@ -884,7 +884,7 @@ async function load_received(){
                 return;
             }
             const asset = splReceived.data[i];
-            if(asset_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
+            if(all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#received-'+asset.acct).length){
                     asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
                     const merged = token_list.concat(asset_list);
@@ -974,7 +974,7 @@ async function load_public(){
                 return;
             }
             const asset = splSent.data[i];
-            if(asset_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
+            if(all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#market-'+asset.acct).length){
                     asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
                     const merged = token_list.concat(asset_list);
@@ -1581,6 +1581,7 @@ $("#payment-pay").on("click", async function(){
     }
 });
 
+
 // close asset list
 $("button#asset-list-close").on("click", function(){
     $("#asset-list-box").attr("data-chooser",null).removeClass("animate__slideInLeft").addClass("animate__slideOutLeft");
@@ -1589,14 +1590,14 @@ $("button#asset-list-close").on("click", function(){
 $("button#creator-asset").on("click", function(e){
     e.preventDefault();
     $("#asset-list-box").scrollTop(0);
-    $("#asset-list ul:lt(3)").hide();
+    // $("#asset-list ul:lt(3)").hide();
     $("#asset-list-box").attr("data-chooser","creator-asset").removeClass("animate__slideOutLeft").addClass("animate__slideInLeft").show();
 });
 // choose asset 2
 $("button#buyer-asset").on("click", function(e){
     e.preventDefault();
     $("#asset-list-box").scrollTop(0);
-    $("#asset-list ul:lt(3)").show();
+    // $("#asset-list ul:lt(3)").show();
     $("#asset-list-box").attr("data-chooser","buyer-asset").removeClass("animate__slideOutLeft").addClass("animate__slideInLeft").show();
 });
 // escrow type
@@ -1674,9 +1675,14 @@ function debounce(func,delay){
 async function balance(_rpc_,_wallet_,_mint_,_decimals_){
     try{
         const connection = new Connection(_rpc_,'confirmed');
-        const response = await connection.getParsedTokenAccountsByOwner(new PublicKey(_wallet_),{mint:new PublicKey(_mint_)}).catch(function(err){return;});
         let amount = 0;
-        if(response != null && response.value.length > 0){amount = response.value[0].account.data.parsed.info.tokenAmount.amount;}
+        if(_mint_=="So11111111111111111111111111111111111111112"){
+            amount = await connection.getBalance(window.mcswap.publicKey.toString());
+        }
+        else{
+            const response = await connection.getParsedTokenAccountsByOwner(new PublicKey(_wallet_),{mint:new PublicKey(_mint_)}).catch(function(err){return;});
+            if(response != null && response.value.length > 0){amount = response.value[0].account.data.parsed.info.tokenAmount.amount;}
+        }
         let multiplier = 1;
         for (let i = 0; i < _decimals_; i++) {multiplier = multiplier * 10;} 
         let amount_ = amount / multiplier;
@@ -1802,6 +1808,9 @@ $(window).on("load", async function(){
     while (i < token_list.length) {
         const asset = token_list[i];
         const item = '<option value="'+asset.mint+'">'+asset.symbol+'</option>';
+        $("#sent-filter").append(item);
+        $("#received-filter").append(item);
+        $("#market-filter").append(item);
         all_mints.push(asset.mint);
         i++;
     }
