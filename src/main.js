@@ -1467,6 +1467,8 @@ $("#payment-pay").on("click", async function(){
     const buyer_mint = $("#buyer-mint").val().trim();
     const buyer_amount = $("#buyer-amount").val().trim();
     const priority = $("#settings-priority").val().trim();
+    const memo = $("#create-memo").val();
+    if(memo==""){memo=false;}
     const affiliateWallet = false;
     const affiliateFee = 0;
     const config = {
@@ -1488,7 +1490,7 @@ $("#payment-pay").on("click", async function(){
         "token3Amount": buyer_amount,
         "token4Mint": false,
         "token4Amount": false,
-        "sellerEmail": false
+        "memo": memo
     }
     const tx = await mcswap.splCreate(config);
     if(tx.tx){
