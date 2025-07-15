@@ -1532,7 +1532,6 @@ $("#payment-pay").on("click", async function(){
                 return;
             }
             $("#main-message").html("Creating escrow...");
-            console.log("debug");
             const signature = await mcswap.send(rpc,signed);
             console.log("signature", signature);
             console.log("awaiting status...");
