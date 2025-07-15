@@ -966,6 +966,7 @@ async function load_public(){
             const asset = splSent.data[i];
             if(asset_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#market-'+asset.acct).length){
+                    console.log(asset);
                     asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
                     const merged = token_list.concat(asset_list);
                     asset.token_3_details = await asset_map(merged,asset.token_3_mint);
