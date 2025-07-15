@@ -559,7 +559,6 @@ const asset_list = [
     }
 ];
 const all_mints = [];
-const asset_mints = [];
 async function asset_map(_tokens_,mint=false){
   if(mint!=false){
     for (let i = 0; i < _tokens_.length; i++) {
@@ -803,8 +802,8 @@ async function load_sent(){
             const asset = splSent.data[i];
             if(all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#sent-'+asset.acct).length){
-                    asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
-                    const merged = token_list.concat(asset_list);
+                    const merged = [...asset_list, ...token_list];
+                    asset.token_1_details = await asset_map(merged,asset.token_1_mint);
                     asset.token_3_details = await asset_map(merged,asset.token_3_mint);
                     let ele = '<div class="drag-box" id="box-sent-'+asset.acct+'"><ul id="sent-'+asset.acct+'" class="row">';
                     ele += '<li><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
@@ -886,8 +885,8 @@ async function load_received(){
             const asset = splReceived.data[i];
             if(all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#received-'+asset.acct).length){
-                    asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
-                    const merged = token_list.concat(asset_list);
+                    const merged = [...asset_list, ...token_list];
+                    asset.token_1_details = await asset_map(merged,asset.token_1_mint);
                     asset.token_3_details = await asset_map(merged,asset.token_3_mint);
                     let ele = '<div class="drag-box" id="received-market-'+asset.acct+'"><ul id="received-'+asset.acct+'" class="row">';
                     ele += '<li><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
@@ -976,8 +975,8 @@ async function load_public(){
             const asset = splSent.data[i];
             if(all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#market-'+asset.acct).length){
-                    asset.token_1_details = await asset_map(asset_list,asset.token_1_mint);
-                    const merged = token_list.concat(asset_list);
+                    const merged = [...asset_list, ...token_list];
+                    asset.token_1_details = await asset_map(merged,asset.token_1_mint);
                     asset.token_3_details = await asset_map(merged,asset.token_3_mint);
                     let ele = '<div class="drag-box" id="box-market-'+asset.acct+'"><ul id="market-'+asset.acct+'" class="row">';
                     ele += '<li><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
@@ -1821,7 +1820,6 @@ $(window).on("load", async function(){
         $("#sent-filter").append(item);
         $("#received-filter").append(item);
         $("#market-filter").append(item);
-        asset_mints.push(asset.mint);
         all_mints.push(asset.mint);
         i++;
     }
