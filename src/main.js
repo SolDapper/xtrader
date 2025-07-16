@@ -85,9 +85,13 @@ async function positioner(){
     else{
         $("ul.row").css({"width":(ele_width-64)+"px","left":adj+"px","opacity":"1.0"});
     }
-    if($(window).width()<1400){
+    if($(window).width()<900){
         $('.panel-list .drag-box').css('height','354px');
         $('.panel-list .drag-box:visible:last').css('height','340px');
+    }
+    else if($(window).width()<1400){
+        $('.panel-list .drag-box').css('height','150px');
+        $('.panel-list .drag-box:visible:last').css('height','136px');
     }
     else{
         $('.panel-list .drag-box').css('height','auto');
@@ -121,6 +125,7 @@ async function getMemo(escrow){
 
 }
 getMemo("78W53qUAAFVkQiscj2HdSECGXpCuZGyBnHHJMUpNGkoD");
+
 
 // connection events
 async function isConnected(){
@@ -242,6 +247,33 @@ $(document).delegate(".mobile_disconnect_button", "click", async function(){
 });
 
 
+// load user selects
+async function loadUsers(ele,array){
+    array.sort();
+    for(let i=0; i<array.length; i++){
+        const address = array[i];
+        const first_part = address.slice(0,4);
+        const last_part = address.slice(-4);
+        const option = '<option value="'+address+'">'+first_part+'...'+last_part+'</option>';
+        if(ele=="received" && !$("#received-sellers option[value='"+address+"']").length){
+            $("#received-sellers").append(option);
+        }
+        else if(ele=="sent" && !$("#sent-buyers option[value='"+address+"']").length){
+            $("#sent-buyers").append(option);
+        }
+        else if(ele=="market" && !$("#market-sellers option[value='"+address+"']").length){
+            $("#market-sellers").append(option);
+        }
+        if(i==array.length-1){
+            const user_filter_sent = localStorage.getItem("user-filter-sent"); 
+            const user_filter_received = localStorage.getItem("user-filter-received"); 
+            const user_filter_market = localStorage.getItem("user-filter-market");
+            if(user_filter_sent){$("#sent-buyers").val(user_filter_sent);}
+            if(user_filter_received){$("#received-sellers").val(user_filter_received);}
+            if(user_filter_market){$("#market-sellers").val(user_filter_market);}
+        }
+    }
+}
 // backchecking displayed escrows
 async function backcheck(ele,array){
     const list = $("#"+ele+"-view .panel-list").find("ul");
@@ -256,8 +288,6 @@ async function backcheck(ele,array){
             }
             i++;
             if(i==count){
-                console.log("ele", ele);
-                console.log("test", test);
                 positioner();
                 return;
             }
@@ -292,6 +322,7 @@ async function load_sent(){
         }
         let i = 0;
         const displayed = [];
+        const users = [];
         let hidden=localStorage.getItem("hidden-market");
         if(hidden){hidden=JSON.parse(hidden);}else{hidden=[];}
         while(i < splSent.data.length){
@@ -312,8 +343,8 @@ async function load_sent(){
                     ele += '<li class="mobile-break"></li>';
                     ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
                     ele += '<li class="arrow arrow_up"><img src="'+arrow_up+'" /></li>';
-                    const first_part = asset.buyer.slice(0,5);
-                    const last_part = asset.buyer.slice(-5);
+                    const first_part = asset.buyer.slice(0,4);
+                    const last_part = asset.buyer.slice(-4);
                     ele += '<li data-wallet="'+asset.buyer+'" class="item-buyer">'+first_part+'...'+last_part+'</li>';
                     ele += '<li class="break"></li>';
                     let has_pdf = "";
@@ -341,10 +372,12 @@ async function load_sent(){
                     $("#sent-view .panel-list").prepend(ele);
                 }
                 displayed.push(asset.acct);
+                if(!users.includes(asset.buyer)){users.push(asset.buyer);}
             }
             i++;
             if(i==splSent.data.length){
-                await backcheck("sent",displayed);
+                await loadUsers("sent", users);
+                await backcheck("sent", displayed);
                 $("#sent-filter").trigger("change");
                 $("#sent-refresh").removeClass("spin");
             }
@@ -378,6 +411,7 @@ async function load_received(){
         }
         let i = 0;
         const displayed = [];
+        const users = [];
         let hidden=localStorage.getItem("hidden-received");
         if(hidden){hidden=JSON.parse(hidden);}else{hidden=[];}
         while(i < splReceived.data.length){
@@ -398,8 +432,8 @@ async function load_received(){
                     ele += '<li class="mobile-break"></li>';
                     ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
                     ele += '<li class="arrow arrow_down"><img src="'+arrow_down+'" /></li>';
-                    const first_part = asset.seller.slice(0,5);
-                    const last_part = asset.seller.slice(-5);
+                    const first_part = asset.seller.slice(0,4);
+                    const last_part = asset.seller.slice(-4);
                     ele += '<li data-wallet="'+asset.seller+'" class="item-buyer">'+first_part+'...'+last_part+'</li>';
                     ele += '<li class="break"></li>';
                     let has_pdf = "";
@@ -427,10 +461,12 @@ async function load_received(){
                     $("#received-view .panel-list").prepend(ele);
                 }
                 displayed.push(asset.acct);
+                if(!users.includes(asset.seller)){users.push(asset.seller);}
             }
             i++;
             if(i==splReceived.data.length){
-                await backcheck("received",displayed);
+                await loadUsers("received", users);
+                await backcheck("received", displayed);
                 $("#received-filter").trigger("change");
                 $("#received-refresh").removeClass("spin");
                 return;
@@ -452,7 +488,7 @@ async function load_public(){
         }
         const _rpc_ = $("#settings-rpc").val().trim();
         if(_rpc_==""){
-            toast("RPC Endpoint Required");
+            toast("RPC endpoint required");
         }
         else{
             $("#market-refresh").addClass("spin");
@@ -474,6 +510,7 @@ async function load_public(){
             }
             let i = 0;
             const displayed = [];
+            const users = [];
             let hidden=localStorage.getItem("hidden-market");
             if(hidden){hidden=JSON.parse(hidden);}else{hidden=[];}
             while(i < splSent.data.length){
@@ -494,8 +531,8 @@ async function load_public(){
                         ele += '<li class="mobile-break"></li>';
                         ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
                         ele += '<li class="arrow arrow_down"><img src="'+arrow_down+'" /></li>';
-                        const first_part = asset.seller.slice(0,5);
-                        const last_part = asset.seller.slice(-5);
+                        const first_part = asset.seller.slice(0,4);
+                        const last_part = asset.seller.slice(-4);
                         ele += '<li data-wallet="'+asset.seller+'" class="item-buyer">'+first_part+'...'+last_part+'</li>';
                         ele += '<li class="break"></li>';
                         let has_pdf = "";
@@ -528,10 +565,12 @@ async function load_public(){
                         $("#market-view .panel-list").prepend(ele);
                     }
                     displayed.push(asset.acct);
+                    if(!users.includes(asset.seller)){users.push(asset.seller);}
                 }
                 i++;
                 if(i==splSent.data.length){
-                    await backcheck("market",displayed);
+                    await loadUsers("market", users);
+                    await backcheck("market", displayed);
                     $("#market-filter").trigger("change");
                     $("#market-refresh").removeClass("spin");
                     return;
@@ -582,6 +621,7 @@ $("#market-refresh, #sent-refresh, #received-refresh").on("click", async functio
 
 
 // line items clicks
+
 $(document).delegate("img.item-img", "click", async function(){
     const item = $(this).parent().parent().attr("id");
     const parts = item.split("-");
@@ -872,33 +912,50 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
 
 
 // line item filters
-async function applyAssetFilter(view,filter){
+async function applyAssetFilter(view,filter,user){
     let qty = 0;
     let i = 0;
     const list = $("#"+view+"-view .panel-list ul li.first-detail");
+    $("#"+view+"-view .panel-list ul").parent().hide();
+    $("#"+view+"-view .panel-list ul").hide();
     if(filter=="All Assets"){
-        list.each(function(){
+        list.each(async function(){
             const item = $(this);
+            const this_user = item.parent().find(".item-buyer").attr("data-wallet");
             if(!item.parent().parent().hasClass("hidden")){
-                item.parent().parent().show();
-                qty++;
+                if(user=="All Creators" || user=="All Recipients"){
+                    item.parent().parent().show();
+                    qty++;
+                }
+                else if(user==this_user){
+                    item.parent().parent().show();
+                    qty++;
+                }
             }
             i++;
             if(i==list.length){
                 $("#"+view+"-view .qty-center").html(qty);
-                positioner();
+                await positioner();
+                $("#"+view+"-view .panel-list ul").show();
             }
         });
     }
     else{
         let _filter_ = filter.toLowerCase();
-        list.each(function(){
+        list.each(async function(){
             const item = $(this);
+            const this_user = item.parent().find(".item-buyer").attr("data-wallet");
             const mint = item.attr("data-mint").toLowerCase();
             if(mint.includes(_filter_)){
                 if(!item.parent().parent().hasClass("hidden")){
-                    item.parent().parent().show();
-                    qty++;
+                    if(user=="All Creators" || user=="All Recipients"){
+                        item.parent().parent().show();
+                        qty++;
+                    }
+                    else if(user==this_user){
+                        item.parent().parent().show();
+                        qty++;
+                    }
                 }
             }
             else{
@@ -907,16 +964,46 @@ async function applyAssetFilter(view,filter){
             i++;
             if(i==list.length){
                 $("#"+view+"-view .qty-center").html(qty);
-                positioner();
+                await positioner();
+                $("#"+view+"-view .panel-list ul").show();
             }
         });
     }
     localStorage.setItem("filter-"+view, filter);
+    localStorage.setItem("user-filter-"+view, user);
 }
 $("#received-filter, #sent-filter, #market-filter").on("change", async function(){
     const view = $(this).attr("id").replace("-filter","");
-    const filter = $(this).val();
-    applyAssetFilter(view,filter);
+    const filter = $(this).val().trim();
+    let ele;
+    if(view=="received"){
+        ele = $("#received-sellers");
+    }
+    else if(view=="sent"){
+        ele = $("#sent-buyers");
+    }
+    else if(view=="market"){
+        ele = $("#market-sellers");
+    }
+    const user = ele.val().trim();
+    applyAssetFilter(view,filter,user);
+});
+$("#received-sellers, #sent-buyers, #market-sellers").on("change", async function(){
+    let view = $(this).attr("id").replace("-sellers","");
+    view = view.replace("-buyers","");
+    const filter = $("#"+view+"-filter").val().trim();
+    let ele;
+    if(view=="received"){
+        ele = $("#received-sellers");
+    }
+    else if(view=="sent"){
+        ele = $("#sent-buyers");
+    }
+    else if(view=="market"){
+        ele = $("#market-sellers");
+    }
+    const user = ele.val().trim();
+    applyAssetFilter(view,filter,user);
 });
 
 
@@ -966,7 +1053,6 @@ $("#settings-rpc").on("keyup change input",function(e){
         debounceRPC();
     }
 });
-
 
 
 // create escrow
@@ -1022,7 +1108,7 @@ $("#creator-amount, #buyer-amount").on("keyup change input",function(e){
     if(e.key==='Enter'){
         const id = $(this).attr("id");
         if(id=="creator-amount"){
-            $("#buyer-asset").focus();
+            $("#create-memo").focus();
         }
         else if(id=="buyer-amount"){
             $("#buyer-wallet").focus();
@@ -1047,6 +1133,13 @@ $("#creator-amount, #buyer-amount").on("keyup change input",function(e){
             }
         }
         debounceValue(id,gecko,value,"usd");
+        return;
+    }
+});
+$("#create-memo").on("keyup change input",function(e){
+    e.preventDefault();
+    if(e.key==='Enter'){
+        $("#buyer-asset").focus();
         return;
     }
 });
@@ -1234,7 +1327,7 @@ $("#buyer-type").on("change",function(){
 // main navigation
 $("#nav #cog, #nav .view").on("click", async function(){
     let id = $(this).attr("id");
-    $("#"+id+"-view").hide();
+    $("#"+id+"-view ul.row").hide();
     if(id=="cog"){
         if($(this).hasClass("active-view")){
             $("#nav #cog, #nav .view").removeClass("active-view").removeClass("active-cog");
@@ -1252,7 +1345,8 @@ $("#nav #cog, #nav .view").on("click", async function(){
     }
     $(".views").hide();
     $("#"+id+"-view").show();
-    positioner();
+    await positioner();
+    $("#"+id+"-view ul.row").show();
 });
 // filter asset list
 async function filterAssetList(filter){
@@ -1349,7 +1443,6 @@ async function pingRPC(HELIUS_RPC_URL){
   }
   catch(error){return;}
 }
-
 // get balance
 async function balance(_rpc_,_wallet_,_mint_,_decimals_){
     try{
