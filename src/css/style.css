@@ -230,8 +230,8 @@ label.form-error{
     border-radius: 6px;
 }
 #create-form input::placeholder {
-  color: #292929; /* or any other color like #ff0000, rgba(255, 0, 0, 0.5) */
-  opacity: 1; /* For Firefox, to ensure full color opacity, if needed */
+  color: #292929;
+  opacity: 1;
 }
 #create-form button{
     background: #111;
@@ -366,6 +366,7 @@ label.form-error{
 #asset-list ul:first-of-type {
     border-top: 1px solid #111111;
 }
+
 #asset-list ul:nth-child(3){
     border-bottom: 0;
 }
@@ -706,7 +707,7 @@ a.inline-link:hover{
     border-top: 1px solid #11111182;
 }
 .settings-input{
-    color: #fff;
+    color: #2a71f8;
     background: #111;
     border: 0;
     outline: none;
@@ -750,7 +751,7 @@ a.inline-link:hover{
     outline: none;
     width: 80px;
     height: 40px;
-    padding: 0 0 0 15px;
+    padding: 0;
     margin: 0 14px 0 0;
     font-family: "Ubuntu";
     font-weight: bold;
@@ -796,4 +797,40 @@ a.inline-link:hover{
   50% {
       opacity: 0.25;
  }
+}
+
+#asset_filter{
+    color: #fff;
+    background: #111;
+    border: 0;
+    border-radius: 6px;
+    outline: none;
+    width: calc(100% - 75px);
+    height: 26px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-family: Ubuntu;
+    font-weight: bold;
+    line-height: 26px;
+    transition: all .3s;
+    margin: 8px 0 0 6px;
+    float: left;
+}
+#asset_filter::placeholder {
+  color: #292929;
+  opacity: 1;
+}
+
+.qty-left{
+    margin-left: 5px;
+}
+.qty-center{
+    padding: 0 3px 0 3px;
+}
+.qty-left, .qty-center, .qty-right{
+    font-weight: normal;
+}
+.qty-center{
+    color: #1dd2bd;
+    font-weight: bold;
 }

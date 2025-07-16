@@ -49,17 +49,17 @@
                     <button id="payment-pay" class="submit" form="create-form">Create</button>
                 </div>
             </div></div></div>
-            <div class="views" id="received-view"><h1>Inbox</h1><h2>Manage Received Offers</h2><div class="panel"><div class="panel-box">
+            <div class="views" id="received-view"><h1>Inbox</h1><h2>Manage Received Offers <span class="qty-left">(</span><span class="qty-center">0</span><span class="qty-right">)</span></h2><div class="panel"><div class="panel-box">
                 <button id="received-refresh" class="refresher"><img src="./img/refresh.png" /></button>
                 <div class="panel-options"><select id="received-filter"><option>All Assets</option></select><select id="received-sellers"><option>All Creators</option></select></div>
                 <div class="panel-list"></div>
             </div></div></div>
-            <div class="views" id="sent-view"><h1>Sent</h1><h2>Manage Sent Offers</h2><div class="panel"><div class="panel-box">
+            <div class="views" id="sent-view"><h1>Sent</h1><h2>Manage Sent Offers <span class="qty-left">(</span><span class="qty-center">0</span><span class="qty-right">)</span></h2><div class="panel"><div class="panel-box">
                 <button id="sent-refresh" class="refresher"><img src="./img/refresh.png" /></button>
                 <div class="panel-options"><select id="sent-filter"><option>All Assets</option></select><select id="sent-buyers"><option>All Recipients</option></select></div>
                 <div class="panel-list"></div>
             </div></div></div>
-            <div class="views" id="market-view"><h1>Market</h1><h2>Browse Public Offers</h2><div class="panel"><div class="panel-box">
+            <div class="views" id="market-view"><h1>Market</h1><h2>Browse Public Offers <span class="qty-left">(</span><span class="qty-center">0</span><span class="qty-right">)</span></h2><div class="panel"><div class="panel-box">
                 <button id="market-refresh" class="refresher"><img src="./img/refresh.png" /></button>
                 <div class="panel-options"><select id="market-filter"><option>All Assets</option></select><select id="market-sellers"><option>All Creators</option></select></div>
                 <div class="panel-list"><div class="list-clear"></div></div>
@@ -70,27 +70,27 @@
                 <div class="row">Priority fee level</div>
                 <div class="row">
                     <select id="settings-priority">
-                        <option value="Min">Minimum</option>
+                        <option value="Min">Min</option>
                         <option value="Low" selected>Low</option>
                         <option value="Medium">Medium</option>
                         <option value="High">High</option>
-                        <option value="VeryHigh">Extreme</option>
+                        <option value="Extreme">Extreme</option>
                     </select>
                 </div>
 
                 <div class="row"><span class="label-category">Screensaver</span></div>
                 <div class="row">Timeout</div>
                 <div class="row">
-                    <input id="settings-screensaver" type="number" min="60" value="60" /> seconds
+                    <input id="settings-screensaver" type="number" min="60" value="60" /> seconds (min 30)
                 </div>
                 
-                <div style="display: none">
-
                 <div class="row"><span class="label-category">Endpoint</span></div>
-                <div class="row">Add a custom <a target="_blank" class="inline-link" href="https://www.helius.dev/solana-rpc-nodes">Helius</a> RPC endpoint to unlock more settings</div>
+                <div class="row">Add a custom <a target="_blank" class="inline-link" href="https://www.helius.dev/solana-rpc-nodes">Helius</a> RPC endpoint</div>
                 <div class="row">
-                    <input id="settings-rpc" disabled class="settings-input" type="text" placeholder="https://mainnet.helius-rpc.com/?api-key=<your-key>" />
+                    <input id="settings-rpc" class="settings-input" type="text" placeholder="https://mainnet.helius-rpc.com/?api-key=<your-key>" />
                 </div>
+
+                <div style="display: none">
 
                 <div class="row"><span class="label-category">Refresh</span></div>
                 <div class="row">Auto refresh enabled</div>
@@ -122,7 +122,7 @@
         </div>
         <a href="https://x.com/xtraderme" target="_blank"><img id="x-logo" src="./img/x-logo.png" /></a>
     </main>
-    <div id="asset-list-box" class="animate__animated"><button id="asset-list-close"><img src="./img/close.png" /></button>
+    <div id="asset-list-box" class="animate__animated"><input placeholder="Search" id="asset_filter" type="text" /><button id="asset-list-close"><img src="./img/close.png" /></button>
         <div id="asset-list"></div>
     </div>
     <div id="main-cover"><div id="main-message"></div></div>

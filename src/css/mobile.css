@@ -103,9 +103,9 @@
     .panel-list .drag-box{
         height: 354px;
     }
-    .panel-list .drag-box:last-of-type{
+    /* .panel-list .drag-box:last-of-type{
         height: 341px;
-    }
+    } */
     .panel-options{
         width: calc(100% - 36px);
     }
