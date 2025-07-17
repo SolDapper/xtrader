@@ -1758,6 +1758,18 @@ function handleSwipe(event){
     if(touchEvent.isSwipeRight()){
         const window_width = $(window).width();
         $(this).animate({'left': window_width}, 300, async function(){
+            const id = $(this).parent().attr("id");
+            const view = id.split("-")[1];
+            const escrow = id.split("-")[2];
+            const hidden = localStorage.getItem("hidden-"+view);
+            if(hidden){
+                const array = JSON.parse(hidden);
+                if(!array.includes(escrow)){array.push(escrow);}
+                localStorage.setItem("hidden-"+view, JSON.stringify(array));
+            }
+            else{
+                localStorage.setItem("hidden-"+view, JSON.stringify([escrow]));
+            }
             await new Promise(_=>setTimeout(_,500));
             $(this).parent().hide();
             toast("Hidden", 2000);
