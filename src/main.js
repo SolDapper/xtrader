@@ -728,6 +728,9 @@ $(document).delegate(".item-hide", "click", async function(){
     }
     toast("Hidden", 2000);
     positioner();
+    const ele = $("#"+view+"-view .qty-center");
+    const count = parseInt(ele.html());
+    ele.html(count-1);
 });
 $(document).delegate(".item-cancel", "click", async function(){
     $("#main-cover").fadeIn(300);
@@ -1774,6 +1777,9 @@ function handleSwipe(event){
             $(this).parent().hide();
             toast("Hidden", 2000);
             positioner();
+            const ele = $("#"+view+"-view .qty-center");
+            const count = parseInt(ele.html());
+            ele.html(count-1);
         });
     } else if(touchEvent.isSwipeLeft()){
     }
