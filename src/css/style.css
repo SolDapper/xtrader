@@ -671,8 +671,7 @@ button.item-cancel:hover, button.item-authorize:hover, button.item-public-author
 
 
 .panel-list ul.row li button.item-hide {
-    position: absolute;
-    float: right;
+    float: left;
     background: #090909;
     border-radius: 20px;
     width: 70px;
