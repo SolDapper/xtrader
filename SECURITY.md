@@ -7,7 +7,7 @@
 
 Please contact the maintainers:
 
-X: @LitterBoxGame
+X: @xtraderme
 
 <a name="process"></a>
 ## Incident Response Process
