@@ -713,7 +713,8 @@ $(document).delegate(".item-time", "click", async function(){
     copy(time);
 });
 $(document).delegate(".item-hide", "click", async function(){
-    $(this).parent().parent().parent().hide();
+    const parent = $(this).parent().parent().parent();
+    parent.addClass("hidden").hide();
     const id = $(this).parent().parent().parent().attr("id");
     const view = id.split("-")[1];
     const escrow = id.split("-")[2];
@@ -1761,7 +1762,9 @@ function handleSwipe(event){
     if(touchEvent.isSwipeRight()){
         const window_width = $(window).width();
         $(this).animate({'left': window_width}, 300, async function(){
-            const id = $(this).parent().attr("id");
+            const parent = $(this).parent();
+            parent.addClass("hidden");
+            const id = parent.attr("id");
             const view = id.split("-")[1];
             const escrow = id.split("-")[2];
             const hidden = localStorage.getItem("hidden-"+view);
@@ -1774,7 +1777,7 @@ function handleSwipe(event){
                 localStorage.setItem("hidden-"+view, JSON.stringify([escrow]));
             }
             await new Promise(_=>setTimeout(_,500));
-            $(this).parent().hide();
+            parent.hide();
             toast("Hidden", 2000);
             positioner();
             const ele = $("#"+view+"-view .qty-center");
