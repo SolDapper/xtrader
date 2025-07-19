@@ -24,7 +24,9 @@
 </head>
 <body>
     <div id="vanta"></div>
-    <div id="nav"><div id="nav-contain"><button disabled class="view" id="received">Inbox</button><button disabled class="view" id="sent">Sent</button><button disabled class="view" id="compose">Compose</button><button disabled class="view" id="market">Market</button><button id="connect" class="mcswap_connect_button">Connect</button><button id="disconnect" class="mcswap_disconnect_button">Disconnect</button><button id="cog" class="cog" ><img src="./img/cog.png" /></button></div></div>
+    <div id="nav"><div id="nav-contain"><button disabled class="view" id="received">Inbox</button><button disabled class="view" id="sent">Sent</button><button disabled class="view" id="compose">Compose</button>
+        <!-- <button disabled class="view" id="market">Market</button> -->
+        <button id="connect" class="mcswap_connect_button">Connect</button><button id="disconnect" class="mcswap_disconnect_button">Disconnect</button><button id="cog" class="cog" ><img src="./img/cog.png" /></button></div></div>
     <main>
         <div id="views">
             <div class="views" id="home-view">
@@ -43,7 +45,7 @@
                     <div class="row"><span class="label-category">To</span></div>
                     <div class="row"><label for="buyer-type">Type</label><select id="buyer-type" form="create-form">
                         <option>Wallet Address</option>
-                        <option>Public Listing</option>
+                        <option disabled>Public Listing</option>
                     </select></div>
                     <div class="row"><label for="buyer-wallet">Wallet</label><input required placeholder="Address" id="buyer-wallet" form="create-form" type="text" /></div>
                     <button id="payment-pay" class="submit" form="create-form">Create</button>

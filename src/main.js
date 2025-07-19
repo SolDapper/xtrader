@@ -150,10 +150,11 @@ async function isConnected(){
     await load_sent();
     await load_received();
     const _rpc_ = $("#settings-rpc").val().trim();
-    if(_rpc_ && _rpc_!=""){await load_public();}
+    if(_rpc_ && _rpc_!=""){
+        // await load_public();
+    }
     else{
         $("#market-refresh").removeClass("spin");
-
     }
 }
 async function isDisconnected(){
@@ -602,7 +603,7 @@ $("#market-refresh, #sent-refresh, #received-refresh").on("click", async functio
             }
             else{
                 toast("Refreshing...",2000);
-                await load_public();
+                // await load_public();
             }
         }
         else if(id=="sent-refresh"){
@@ -806,6 +807,9 @@ $(document).delegate(".item-cancel", "click", async function(){
                 toast("Escrow closed",4000);
                 $("#"+view+"-"+escrow).parent().remove();
                 positioner();
+                const ele = $("#"+view+"-view .qty-center");
+                const count = parseInt(ele.html());
+                ele.html(count-1);
             }
         }
         catch(err){
@@ -894,6 +898,9 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
                 toast("Transaction complete",4000);
                 $("#"+view+"-"+escrow).parent().remove();
                 positioner();
+                const ele = $("#"+view+"-view .qty-center");
+                const count = parseInt(ele.html());
+                ele.html(count-1);
             }
         }
         catch(err){
