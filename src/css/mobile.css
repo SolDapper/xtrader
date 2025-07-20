@@ -141,6 +141,18 @@
         text-align: left;
         padding-left: 15px;
     }
+    .item-lebel{
+        font-size: 12px;
+    }
+    .item-acct{
+        display: inline-block;
+        font-size: 12px;
+        overflow: hidden;
+        width: calc(100% - 30px);
+    }
+    #logo-home button#introduction{
+        font-size: 12px;
+    }
 }
 @media only screen and (max-width: 696px) {
     .panel-list ul.row li.item-amount, 
@@ -203,11 +215,21 @@
     .arrow_up, .arrow_down{
         margin: 0 0 0 -19px;
     }
-}
-@media only screen and (max-width: 450px) {
     button.item-action{
         width: 110px;
         float: left;
         margin-left: 20px;
+    }
+    #logo-home button#introduction{
+        font-weight: normal;
+    }
+    #logo-home{
+        top: calc(50% - 80px);
+    }
+    #introduction-view .panel-box .row{
+        font-size: 14px;
+    }
+    #introduction-view .panel-box .row .label-category{
+        font-size: 14px;
     }
 }

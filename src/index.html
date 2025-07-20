@@ -24,13 +24,16 @@
 </head>
 <body>
     <div id="vanta"></div>
-    <div id="nav"><div id="nav-contain"><button disabled class="view" id="received">Inbox</button><button disabled class="view" id="sent">Sent</button><button disabled class="view" id="compose">Compose</button>
+    <div id="nav"><div id="nav-contain"><button disabled class="view" id="received">Inbox</button><button disabled class="view" id="sent">Sent</button><button disabled class="view" id="compose">Compose</button><button disabled class="view" id="blackbook">Blackbook</button>
         <!-- <button disabled class="view" id="market">Market</button> -->
-        <button id="connect" class="mcswap_connect_button">Connect</button><button id="disconnect" class="mcswap_disconnect_button">Disconnect</button><button id="cog" class="cog" ><img src="./img/cog.png" /></button></div></div>
+        <button disabled id="connect" class="mcswap_connect_button">Connect</button><button id="disconnect" class="mcswap_disconnect_button">Disconnect</button><button disabled id="cog" class="cog" ><img src="./img/cog.png" /></button></div></div>
     <main>
         <div id="views">
             <div class="views" id="home-view">
-                <img id="logo-home" class="animate__animated animate__zoomIn" src="./img/logo.png" />
+                <div class="animate__animated animate__zoomIn" id="logo-home">
+                    <img id="logo-home-img" src="./img/logo.png" />
+                    <button id="introduction">Get Started</button>
+                </div>
             </div>
             <div class="views" id="compose-view"><h1>Compose</h1><h2>Compose New Offer</h2><div id="compose-panel" class="panel"><div class="panel-box">
                 <div id="create-form">
@@ -38,14 +41,14 @@
                     <input disabled id="creator-wallet" form="create-form" type="hidden" />
                     <div class="row"><label for="creator-asset">Asset</label><img id="creator-icon" class="little-icon" src="#" /><button id="creator-asset">Choose</button><input required id="creator-mint" form="create-form" type="hidden" /></div>
                     <div class="row"><label for="creator-amount">Amount</label><input disabled required placeholder="0.00000" id="creator-amount" type="text" /></div>
-                    <div class="row"><label for="create-memo">Memo</label><input required placeholder="(optional)" id="create-memo" form="create-form" type="text" /></div>
+                    <div class="row"><label for="create-memo">Ref</label><input required placeholder="(optional identifiers)" id="create-memo" form="create-form" type="text" /></div>
                     <div class="row"><span class="label-category">For</span><span id="buyer-value">$0.00</span><span class="estimated-value">(usd estimate)</span></div>
                     <div class="row"><label for="buyer-asset">Asset</label><img id="buyer-icon" class="little-icon" src="#" /><button id="buyer-asset">Choose</button><input required id="buyer-mint" form="create-form" type="hidden" /></div>
                     <div class="row"><label for="buyer-amount">Amount</label><input disabled required placeholder="0.00000" id="buyer-amount" type="text" /></div>
                     <div class="row"><span class="label-category">To</span></div>
                     <div class="row"><label for="buyer-type">Type</label><select id="buyer-type" form="create-form">
                         <option>Wallet Address</option>
-                        <option disabled>Public Listing</option>
+                        <option disabled>Public Market</option>
                     </select></div>
                     <div class="row"><label for="buyer-wallet">Wallet</label><input required placeholder="Address" id="buyer-wallet" form="create-form" type="text" /></div>
                     <button id="payment-pay" class="submit" form="create-form">Create</button>
@@ -121,6 +124,111 @@
                 </div>
 
             </div></div></div>
+
+            <div class="views" id="blackbook-view"><h1>Blackbook</h1><h2>Manage Private Contacts <span class="qty-left">(</span><span class="qty-center">0</span><span class="qty-right">)</span></h2><div class="panel"><div class="panel-box">
+
+                <div class="panel-options"><input placeholder="Search" id="search-blackbook" /><button id="import-blackbook">Import</button><button id="export-blackbook">Export</button></div>
+                <div class="panel-list">
+                    <div class="coming-soon">Coming Soon!</div>
+                </div>
+
+            </div></div></div>
+
+            <div class="views" id="introduction-view"><h1>Intro</h1><h2>Getting Started</h2><div class="panel"><div class="panel-box">
+                
+                <div class="row"><span class="label-category">Disclaimer</span></div>
+                <div class="row">
+                    This application is still in beta as an experimental model albeit we strive to bring a premium and trusted OTC/P2P application mainstream in support of tokenized capital markets.   
+                    Using xTrader on a public computer or device shared with others is highly discouraged. 
+                    The information provided by xTrader below (or otherwise) should never be considered as financial advice. 
+                    All liability of its use falls solely on the individual user according to the regulatory requirements of their jurisdiction. 
+                    xTrader is simply an interface tool that provides a peer-to-peer trustless escrow service through a smart contract. 
+                    The xTrader app never takes custody of anyones assets, for any reason. 
+                    Absolutely no personal data, app settings, preferences, or private contacts are databased by xTrader. 
+                    In fact, xTrader currently uses no databases at all. 
+                    All of your private Blackbook contacts, app settings, and preferences are stored locally on your device's browser and can be cleared by you at any time. 
+                </div>
+
+                <div class="row"><span class="label-category">Let's begin</span></div>
+                <div class="row">
+                    The following guide makes the assumption you have no experience with cyrpto currencies or tokenized stocks. 
+                    It is geared towards helping traditional stock traders begin their journey into tokenized capital markets.
+                </div>
+
+                <div class="row"><span class="label-category">1. U.S. Dollars to USDC</span></div>
+                <div class="row">
+                    USDC is a crypto version of the U.S. dollar. 
+                    You can convert your U.S. dollars to USDC through a crypto exchange or another on-ramp app like Moonshot. 
+                    In some cases this step can take some time due to variable waiting periods for I.D. verification and holding times before your USDC is available to be freely used outside of the exchange. 
+                    For example, after verifying your ID and connecting your bank account to Coinbase, you can convert funds from a bank account to USDC. However you will have to wait roughly 1 week for your bank to settle payment before you can use the USDC outside of the Coinbase platform.
+                </div>
+
+                <div class="row"><span class="label-category">2. Non-Custodial Wallets</span></div>
+                <div class="row">
+                    You will need a Non-Custodial wallet that is compatible with the Solana network. 
+                    While your main exchange account could be thought of as your crypto bank account, your non-custodial wallet is moreso like the wallet in your pocket. 
+                    It is similar in that it is imperative that you are very careful with your personal wallet. Only connect it to web and mobile applications that you trust. 
+                    NEVER share your wallets private keys for any reason. you should only ever share your public wallet address.
+                </div>
+                <!-- <div class="row">
+                    To manage your xStock (and/or other token) holdings, here are a few highly recommended and well established Solana network compatible wallet providers:
+                </div>
+                <div class="row">
+                    <img /> Phantom: Android / IOS / Browser <br />
+                    <img /> Solflare: Android / IOS / Browser <br />
+                    <img /> Backpack: Android / IOS / Browser <br />
+                </div> -->
+
+                <div class="row"><span class="label-category">3. Transferring USDC</span></div>
+                <div class="row">
+                    You will need to transfer your preferred amount of USDC from your exchange account to your non-custodial wallet's public address. 
+                    We highly suggest holding only what you immediately need in your personal wallet to limit risk.
+                </div>
+
+                <div class="row"><span class="label-category">4. Buying xStocks</span></div>
+                <div class="row">
+                    While centralized exchanges like Coinbase and Kraken currently block U.S. (and other regions) users from directly purchasing xStocks, you can aquire them from decentralized exchanges like Jupiter or even in swap tools included in your personal wallet. 
+                    For example you can connect your personal wallet to the Jupiter website to browse and buy xStocks for major U.S. based companies using your USDC here: <a class="inline-link" target="_blank" href="https://jup.ag/pro?tab=stocks">Jupiter</a>. 
+                    We highly recommend using Jupiter for your day to day xStocks trading as they are the largest decentralized exchange on the Solana network and have no trading fees. 
+                </div>
+
+                <div class="row"><span class="label-category">5. Using xTrader</span></div>
+                <div class="row">
+                    Now that you or your institution holds xStocks, you can use xTrader to send or sell your holdings directly to another person or institution 
+                    by creating a new "Offer" and defining the receiving party's public wallet address. The receiving party must then Authorize the transfer which provides proof of acceptance. 
+                    The Memo field can be used for one or more physical document identifiers to conform with regulatory compliance for institutional OTC trades. 
+                    The party creating the "Offer" can cancel the offer at any time prior to a recipient authorizing the trade or receipt of assets. 
+                    Once a recipient authorizes a trade or receipt of assets, it is executed immediately and with finality. 
+                </div>
+                
+                <div class="row"><span class="label-category">Community Support</span></div>
+                <div class="row">
+                     For help getting started with anything above or to contact xTrader you can join our community at X: <a class="inline-link" target="_blank" href="https://x.com/i/communities/1945987627322417389">xTrader Community</a>. 
+                     And kindly support our efforts by giving our main page a follow: <a class="inline-link" target="_blank" href="https://x.com/xtraderme">xTrader Page</a>
+                </div>
+
+                <!-- <div class="row"><span class="label-category">Power Users</span></div>
+                <div class="row">
+                    Solana Mobile
+                </div> -->
+
+                <div class="row"><span class="label-category">User Agreement</span></div>
+                <div class="row">
+                    By checking the box below you agree: <br /><br />
+                    a. That you have read and understand the provided information.<br /><br />
+                    b. That you understand the risks associated with using any crypto product.<br /><br />
+                    c. Unchecking this box at any time will remove all data associated with this app.<br /><br />
+                    <input id="agreement" type="checkbox" /> I agree, please continue.<br /><br />
+                </div>
+
+            </div></div></div>
+
+            <div class="views" id="template-view"><h1>Title</h1><h2>Sub Title</h2><div class="panel"><div class="panel-box">
+                <div class="row"><span class="label-category">Priority</span></div>
+                <div class="row">Priority fee level</div>
+                <div class="row"></div>
+            </div></div></div>
+
         </div>
         <a href="https://x.com/xtraderme" target="_blank"><img id="x-logo" src="./img/x-logo.png" /></a>
     </main>
