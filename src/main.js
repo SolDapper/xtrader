@@ -113,6 +113,7 @@ window.addEventListener("click", resetTimeout);
 resetTimeout();
 $("body").on('scroll', function() {
     positioner();
+    resetTimeout();
 });
 
 
