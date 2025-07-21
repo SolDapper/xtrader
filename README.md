@@ -1,4 +1,4 @@
-# LitterBox
+# xTrader
 
 ## install dependencies
 ```javascript
