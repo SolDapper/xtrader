@@ -87,7 +87,7 @@ async function positioner(){
     }
     if($(window).width()<900){
         $('.panel-list .drag-box').css('height','404px');
-        $('.panel-list .drag-box:visible:last').css('height','391px');
+        $('.panel-list .drag-box:visible:last').css('height','392px');
     }
     else if($(window).width()<1400){
         $('.panel-list .drag-box').css('height','200px');
