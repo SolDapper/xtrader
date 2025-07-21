@@ -86,12 +86,12 @@ async function positioner(){
         $("ul.row").css({"width":(ele_width-64)+"px","left":adj+"px","opacity":"1.0"});
     }
     if($(window).width()<900){
-        $('.panel-list .drag-box').css('height','414px');
-        $('.panel-list .drag-box:visible:last').css('height','400px');
+        $('.panel-list .drag-box').css('height','404px');
+        $('.panel-list .drag-box:visible:last').css('height','391px');
     }
     else if($(window).width()<1400){
-        $('.panel-list .drag-box').css('height','210px');
-        $('.panel-list .drag-box:visible:last').css('height','196px');
+        $('.panel-list .drag-box').css('height','200px');
+        $('.panel-list .drag-box:visible:last').css('height','186px');
     }
     else{
         $('.panel-list .drag-box').css('height','auto');
@@ -373,6 +373,7 @@ async function load_sent(){
                     ele += '<li class="item-action"><button class="item-action item-cancel">Cancel</button></li>';
                     ele += '</ul></div>';
                     $("#sent-view .panel-list").prepend(ele);
+                    positioner();
                 }
                 displayed.push(asset.acct);
                 if(!users.includes(asset.buyer)){users.push(asset.buyer);}
@@ -467,6 +468,7 @@ async function load_received(){
                     ele += '<li class="item-action"><button class="item-hide">hide</button><button class="item-action item-authorize">Authorize</button></li>';
                     ele += '</ul></div>';
                     $("#received-view .panel-list").prepend(ele);
+                    positioner();
                 }
                 displayed.push(asset.acct);
                 if(!users.includes(asset.seller)){users.push(asset.seller);}
@@ -576,6 +578,7 @@ async function load_public(){
                         }
                         ele += '</ul></div>';
                         $("#market-view .panel-list").prepend(ele);
+                        positioner();
                     }
                     displayed.push(asset.acct);
                     if(!users.includes(asset.seller)){users.push(asset.seller);}
