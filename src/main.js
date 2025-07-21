@@ -1130,7 +1130,7 @@ async function save_settings(){
         settings.priority = $("#settings-priority").val();
         settings.screensaver = $("#settings-screensaver").val();
         const test_rpc = $("#settings-rpc").val().trim();
-        if(settings.screensaver<30){settings.screensaver="30";}
+        if(settings.screensaver<30){settings.screensaver="120";}
         if(await pingRPC(test_rpc)){
             settings.rpc = test_rpc;
             $("#settings-rpc").css("color", "#2a71f8");
