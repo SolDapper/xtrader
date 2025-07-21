@@ -1,1 +1,1 @@
-Privacy Policy
+# xTrader.me Privacy Policy
