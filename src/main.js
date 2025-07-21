@@ -739,13 +739,11 @@ $(document).delegate(".item-amount", "click", async function(){
             toast("The offer "+amount_a+" "+symbol_a, 5000);
             toast("Value $"+amounts[gecko_a].usd, 5000);
             toast("PnL "+amounts[gecko_a].dif, 5000);
-             copy(amount_a);
         }
         else if($(this).hasClass("buyer-amount")){
             toast("You send "+amount_b+" "+symbol_b, 5000);
             toast("Value $"+amounts[gecko_b].usd, 5000);
             toast("PnL "+amounts[gecko_b].dif, 5000);
-            copy(amount_b);
         }
     }
     else if(view=="sent"){
@@ -758,7 +756,6 @@ $(document).delegate(".item-amount", "click", async function(){
             else{
                 toast("Your PnL $-"+amounts[gecko_a].dif, 5000);
             }
-            copy(amount_a);
         }
         else if($(this).hasClass("buyer-amount")){
             toast("They send "+amount_b+" "+symbol_b, 5000);
@@ -769,7 +766,6 @@ $(document).delegate(".item-amount", "click", async function(){
             else{
                 toast("Their PnL $"+amounts[gecko_b].dif, 5000);
             }
-            copy(amount_b);
         }
     }
     else if(view=="received"){
@@ -782,7 +778,6 @@ $(document).delegate(".item-amount", "click", async function(){
             else{
                 toast("Your PnL $"+amounts[gecko_a].dif, 5000);
             }
-            copy(amount_a);
         }
         else if($(this).hasClass("buyer-amount")){
             toast("You send "+amount_b+" "+symbol_b, 5000);
@@ -793,7 +788,6 @@ $(document).delegate(".item-amount", "click", async function(){
             else{
                 toast("Your PnL $"+amounts[gecko_b].dif, 5000);
             }
-            copy(amount_b);
         }
     }
 });

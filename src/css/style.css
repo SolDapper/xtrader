@@ -563,8 +563,10 @@ select#sent-buyers{
 .panel-list ul.row li.item-id span.item-label{
     color: #1dd2bd;
     margin-right: 5px;
+    vertical-align: top;
 }
 .item-acct{
+    vertical-align: top;
     cursor: pointer;
     transition: .3s;
     color: #f9df95;
