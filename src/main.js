@@ -1852,7 +1852,7 @@ $("#agreement").on("click", async function(){
         }
         localStorage.clear();
         $("#settings-rpc").val("");
-        $("#settings-screensaver").val("60");
+        $("#settings-screensaver").val("120");
         $("#settings-priority").val("Low");
     }
 });

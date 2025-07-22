@@ -116,13 +116,13 @@ button{
 }
 #agreement{
     cursor: pointer;
-    accent-color: #f9df95;
-    border: 1px solid #fff;
+    accent-color: #fff;
+    border: none;
     outline: none;
     margin: 10px 20px 0 15px;
     padding: 0;
     display: inline-block;
-    transform: scale(2.0);
+    transform: scale(1.8);
 }
 #nav{
     display: block;
@@ -785,6 +785,7 @@ button.item-cancel:hover, button.item-authorize:hover, button.item-public-author
 a.inline-link{
     color: #2a71f8;
     text-decoration: none;
+    transition: .3s;
 }
 a.inline-link:hover{
     color: #1dd2bd;
@@ -924,6 +925,41 @@ a.inline-link:hover{
 .qty-center{
     color: #1dd2bd;
     font-weight: bold;
+}
+
+img.intro-wallet{
+    width: 40px;
+    height: 40px;
+}
+.wallet-name{
+    display: inline-block;
+    line-height: 40px;
+    height: 40px;
+    vertical-align: top;
+    margin-right: 15px;
+    width: 65px;
+}
+a.wallet-link{
+    display: inline-block;
+    line-height: 40px;
+    height: 40px;
+    vertical-align: top;
+    color: #2a71f8;
+    text-decoration: none;
+}
+a.wallet-link:hover{
+    color: #1dd2bd;
+}
+.link-sep{
+    display: inline-block;
+    line-height: 40px;
+    height: 40px;
+    vertical-align: top;
+    padding: 0 10px;
+}
+.wallet-options{
+    display: inline-block;
+    vertical-align: top;
 }
 
 #search-blackbook{
