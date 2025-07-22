@@ -1,6 +1,3 @@
-// localStorage.clear();
-
-
 // imports
 import {Connection,PublicKey,TransactionMessage,AddressLookupTableAccount} from "@solana/web3.js"
 import 'dotenv/config';
@@ -22,25 +19,27 @@ import "./css/mobile.css";
 import token_list from './js/list/tokens.js';
 import asset_list from './js/list/xstocks.js';
 
+
 const rpc = process.env.RPC;
 const mode = window.location.pathname;
 const APP_IDENTITY = {name:'xTrader',uri:'https://www.xtrader.me/',icon:'wallet_icon.png',};
 
 
-// serviceWorker
+// service worker
 if('serviceWorker' in navigator){
   try {
     navigator.serviceWorker.register(
       new URL('../service-worker.js', import.meta.url),
       {type: 'module'}
     );
-    console.log('Service Worker Registered');
+    // console.log('Service Worker Registered');
   } catch (error) {
-    console.log('Service Worker Register Failed');
+    // console.log('Service Worker Register Failed');
   }
 }
 
 
+// asset mapper
 const all_mints = [];
 async function asset_map(_tokens_,mint=false){
   if(mint!=false){
@@ -680,7 +679,7 @@ async function getMemo(escrow){
         return;
     }
     catch(err){
-        console.log("err", err);
+        // console.log("err", err);
         return;
     }
 }
@@ -902,8 +901,8 @@ $(document).delegate(".item-cancel", "click", async function(){
             }
             $("#main-message").html("Closing offer...");
             const signature = await mcswap.send(rpc,signed);
-            console.log("signature", signature);
-            console.log("awaiting status...");
+            // console.log("signature", signature);
+            // console.log("awaiting status...");
             const status = await mcswap.status(rpc,signature);
             if(status!="finalized"){
                 $("#main-message").html("");
@@ -993,8 +992,8 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
             }
             $("#main-message").html("Processing...");
             const signature = await mcswap.send(rpc,signed);
-            console.log("signature", signature);
-            console.log("awaiting status...");
+            // console.log("signature", signature);
+            // console.log("awaiting status...");
             const status = await mcswap.status(rpc,signature);
             if(status!="finalized"){
                 $("#main-message").html("");
@@ -1266,7 +1265,7 @@ async function getValue(ele=false,gecko,amount,currency){
         }
     }
     catch(error){
-        console.log("pricing error", error);
+        // console.log("pricing error", error);
     }
 }
 const debounceValue = debounce(getValue, 1500);
@@ -1387,7 +1386,7 @@ $("#payment-pay").on("click", async function(){
         "token4Amount": false,
         "memo": memo
     }
-    console.log("config", config);
+    // console.log("config", config);
     const tx = await mcswap.splCreate(config);
     if(tx.tx){
         try{
@@ -1432,8 +1431,8 @@ $("#payment-pay").on("click", async function(){
             }
             $("#main-message").html("Creating offer...");
             const signature = await mcswap.send(rpc,signed);
-            console.log("signature", signature);
-            console.log("awaiting status...");
+            // console.log("signature", signature);
+            // console.log("awaiting status...");
             const status = await mcswap.status(rpc,signature);
             if(status!="finalized"){
                 $("#main-message").html("");
@@ -1662,7 +1661,7 @@ async function balance(_rpc_,_wallet_,_mint_,_decimals_){
         return formatted;
     }
     catch(err){
-        console.log("err", err);
+        // console.log("err", err);
         return;
     }
 }
