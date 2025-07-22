@@ -20,6 +20,7 @@ import token_list from './js/list/tokens.js';
 import asset_list from './js/list/xstocks.js';
 
 
+// constants
 const rpc = process.env.RPC;
 const mode = window.location.pathname;
 const APP_IDENTITY = {name:'xTrader',uri:'https://www.xtrader.me/',icon:'wallet_icon.png',};
@@ -1360,9 +1361,6 @@ $("#payment-pay").on("click", async function(){
     const priority = $("#settings-priority").val().trim();
     const memo = $("#create-memo").val();
     if(memo==""){memo=false;}
-
-    
-
     const affiliateWallet = false;
     const affiliateFee = 0;
     const config = {
