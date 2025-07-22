@@ -1333,7 +1333,7 @@ $("#payment-pay").on("click", async function(){
         return;
     }
     if($("#buyer-type").val()=="Wallet Address" && !isValidSolanaAddress($("#buyer-wallet").val().trim())){
-        toast("Invlid buyer wallet",2000);
+        toast("Invalid buyer wallet",2000);
         $("#buyer-wallet").prev().addClass("form-error");
         return;
     }
