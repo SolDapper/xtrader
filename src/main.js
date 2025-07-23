@@ -1666,8 +1666,14 @@ async function balance(_rpc_,_wallet_,_mint_,_decimals_){
 // validate wallet
 function isValidSolanaAddress(address){
   try {
-    const publicKey = new PublicKey(address);
-    return PublicKey.isOnCurve(publicKey.toBytes());
+
+    if(address.includes(".sol")){
+        return true;
+    }
+    else{
+        const publicKey = new PublicKey(address);
+        return PublicKey.isOnCurve(publicKey.toBytes());
+    }
   } catch (error) {
     return false;
   }
