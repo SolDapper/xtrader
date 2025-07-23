@@ -1460,6 +1460,10 @@ $("#payment-pay").on("click", async function(){
         $("#main-message").html("");
         $("#main-cover").fadeOut(300);
         toast("Transaction canceled",2000);
+        if(tx.details){
+            // check for low sol balance from simulation
+
+        }
     }
 });
 
@@ -1469,18 +1473,18 @@ $("button#asset-list-close").on("click", function(){
     $("#asset-list-box").attr("data-chooser",null).removeClass("animate__slideInLeft").addClass("animate__slideOutLeft");
 });
 // choose asset 1
-$("button#creator-asset").on("click", function(e){
+$("button#creator-asset").on("click", async function(e){
     e.preventDefault();
     $("#asset-list-box").scrollTop(0);
-    // $("#asset-list ul:lt(3)").hide();
     $("#asset-list-box").attr("data-chooser","creator-asset").removeClass("animate__slideOutLeft").addClass("animate__slideInLeft").show();
+    $("#asset_filter").focus();
 });
 // choose asset 2
-$("button#buyer-asset").on("click", function(e){
+$("button#buyer-asset").on("click", async function(e){
     e.preventDefault();
     $("#asset-list-box").scrollTop(0);
-    // $("#asset-list ul:lt(3)").show();
     $("#asset-list-box").attr("data-chooser","buyer-asset").removeClass("animate__slideOutLeft").addClass("animate__slideInLeft").show();
+    $("#asset_filter").focus();
 });
 // escrow type
 $("#buyer-type").on("change",function(){
@@ -1519,7 +1523,7 @@ $("#nav #cog, #nav .view, #introduction").on("click", async function(){
     $("#"+id+"-view ul.row").show();
 });
 // select asset
-$(document).delegate("#asset-list ul", "click", function(){
+$(document).delegate("#asset-list ul", "click", async function(){
     const id = $(this).parent().parent().attr("data-chooser");
     const mint = $(this).attr("id");
     const decimals = $(this).attr("data-decimals");
@@ -1541,6 +1545,9 @@ $(document).delegate("#asset-list ul", "click", function(){
         $("#buyer-icon").attr("src",img).show();
         $("#buyer-amount").val("").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
     }
+    await new Promise(_=>setTimeout(_,1000));
+    $("#asset_filter").val("");
+    $("#asset-list ul").show();
 });
 // filter asset list
 async function filterAssetList(filter){
