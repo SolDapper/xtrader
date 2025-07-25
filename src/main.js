@@ -1860,12 +1860,6 @@ $(window).on("load", async function(){
         $("#import-blackbook").show();
     }
     if(!localStorage.getItem("blackbook")){localStorage.setItem("blackbook", JSON.stringify([]));}
-    
-    if(navigator.contacts){
-        const props = await navigator.contacts.getProperties();
-        $("#coming-soon").html(props);
-    }
-
 });
 
 
