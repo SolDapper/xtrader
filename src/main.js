@@ -173,7 +173,7 @@ async function isDisconnected(){
     const inWalletApp = await inAppBrowse();
     if(!isMobile() || inWalletApp===true){
         const emitter = new EventEmitter();
-        new mcswapConnector(["phantom","solflare","backpack"],emitter).init();
+        new mcswapConnector(["phantom","solflare","backpack","metamask"],emitter).init();
         emitter.on('mcswap_connected',async()=>{isConnected();});
         emitter.on('mcswap_disconnected',async()=>{isDisconnected();});
     }
@@ -899,7 +899,7 @@ $(document).delegate(".item-cancel", "click", async function(){
                 toast("Canceled",2000);
                 return;
             }
-            $("#main-message").html("Closing offer...");
+            $("#main-message").html("Canceling offer...");
             const signature = await mcswap.send(rpc,signed);
             // console.log("signature", signature);
             // console.log("awaiting status...");
@@ -1837,6 +1837,65 @@ $(window).on("load", async function(){
         $("#connect, #cog").prop("disabled", false);
         $("#agreement").prop("checked", true);
     }
+    if(isMobile()){
+        $("#import-blackbook").hide();
+        $("#import-contact").show();
+    }
+    else{
+        $("#import-contact").hide();
+        $("#import-blackbook").show();
+    }
+    if(!localStorage.getItem("blackbook")){localStorage.setItem("blackbook", JSON.stringify([]));}
+    
+    if(navigator.contacts){
+        const props = await navigator.contacts.getProperties();
+        $("#coming-soon").html(props);
+    }
+
+});
+
+
+// desktop contact vcard upload
+$("#import-blackbook").on("change", async function(event){
+    const file = event.target.files[0];
+    if(file){
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = e.target.result;
+            toast("Importing contact");
+            $("#blackbook-form").get(0).reset();
+        };
+        reader.onerror = function(e) {
+            toast("Error importing contact");
+        };
+        reader.readAsText(file);
+    }
+});
+
+
+// mobile contact select
+const props = ['name','email','tel'];
+const opts = {multiple:false};
+async function getContact(){
+    try{
+        const contacts = await navigator.contacts.select(props, opts);
+        if(contacts.length > 0){
+            const selectedContact = contacts[0];
+            console.log('Selected Contact Name:', selectedContact.name);
+            console.log('Selected Contact Email:', selectedContact.email);
+        } 
+        else {
+            console.log('No contact selected.');
+        }
+    } 
+    catch(ex){
+        console.error('Error accessing contacts:', ex);
+    }
+}
+$("#import-contact").on("click", async function(){
+    if(!window.mcswap==false){return;}
+    const chosen = await getContact();
+    $("#coming-soon").html(chosen);
 });
 
 

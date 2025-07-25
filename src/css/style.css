@@ -969,7 +969,7 @@ a.wallet-link:hover{
     border: 0;
     border-radius: 6px;
     outline: none;
-    width: 275px;
+    width: 271px;
     height: 38px;
     font-family: Ubuntu;
     font-weight: bold;
@@ -980,7 +980,7 @@ a.wallet-link:hover{
   color: #292929;
   opacity: 1;
 }
-#import-blackbook, #export-blackbook{
+#import-blackbook, #export-blackbook, #import-contact{
     color: #2a71f8;
     text-align: center;
     background: #111;
@@ -994,8 +994,38 @@ a.wallet-link:hover{
     line-height: 40px;
     transition: all .3s;
     margin: 0 0 0 11px;
+    vertical-align: top;
+}
+#import-blackbook{
+    width: 273px;
+    cursor: pointer;
+    margin: 0 0 0 7px;
 }
 #import-blackbook:hover, #export-blackbook:hover{
     color: #1dd2bd;
     background: #1b1b1b66;
+}
+#export-blackbook{
+    float: right;
+}
+#export-blackbook:disabled{
+    background: #1b1b1b;
+    color: #3f3f3f;
+    opacity: 0.5;
+    box-shadow: none;
+    cursor: default;
+}
+#import-blackbook::file-selector-button {
+  background: none; 
+  font-family: "Ubuntu";
+  font-weight: bold;
+  border: 0;
+  margin-left: 8px;
+  margin-right: 4px;
+  cursor: pointer;
+}
+#import-contact{
+    width: 275px;
+    cursor: pointer;
+    margin: 0 0 0 7px;
 }
