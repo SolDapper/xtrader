@@ -907,6 +907,7 @@ a.inline-link:hover{
     transition: all .3s;
     margin: 8px 0 0 6px;
     float: left;
+    text-transform: lowercase;
 }
 #asset_filter::placeholder {
   color: #292929;

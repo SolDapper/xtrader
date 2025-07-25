@@ -1309,6 +1309,19 @@ $("#create-memo").on("keyup change input",function(e){
         return;
     }
 });
+$("#buyer-wallet").on("keyup change input",function(e){
+    e.preventDefault();
+    if(e.key==='Enter'){
+        $("#payment-pay").focus();
+        return;
+    }
+    let val = $(this).val();
+    if(val.includes(".sol")){
+        val = val.toLowerCase();
+        $(this).val(val);
+    }
+    return;
+});
 $("#payment-pay").on("click", async function(){
     $("label").removeClass("form-error");
     if($("#creator-asset").html()=="Choose"){
@@ -1354,6 +1367,7 @@ $("#payment-pay").on("click", async function(){
     const seller_mint = $("#creator-mint").val().trim();
     const seller_amount = $("#creator-amount").val().trim();
     let buyer = $("#buyer-wallet").val().trim();
+    buyer = buyer.toLowerCase();
     if(buyer=="Any"){buyer=false;}
     const buyer_mint = $("#buyer-mint").val().trim();
     const buyer_amount = $("#buyer-amount").val().trim();
