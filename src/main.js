@@ -1851,7 +1851,7 @@ $(window).on("load", async function(){
         $("#connect, #cog").prop("disabled", false);
         $("#agreement").prop("checked", true);
     }
-    if(isMobile()){
+    if(isMobile() && !inAppBrowse()){
         $("#import-blackbook").hide();
         $("#import-contact").show();
     }
