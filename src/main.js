@@ -1453,7 +1453,7 @@ $("#payment-pay").on("click", async function(){
             else{
                 $("#main-message").html("");
                 $("#main-cover").fadeOut(300);
-                toast("Escrow created",4000);
+                toast("Offer created",4000);
                 if(buyer==false){
                     $("#market").click();
                     $("#market-refresh").click();
