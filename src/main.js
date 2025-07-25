@@ -1892,8 +1892,9 @@ async function getContact(){
         console.error('Error accessing contacts:', ex);
     }
 }
-$("#import-contact").on("click", async function(){
-    if(!window.mcswap==false){return;}
+$("#import-contact").on("click", async function(e){
+    e.preventDefault();
+    if(!window.mcswap){return;}
     const chosen = await getContact();
     $("#coming-soon").html(chosen);
 });
