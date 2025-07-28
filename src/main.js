@@ -1512,6 +1512,7 @@ $("#set-percent").on("keyup change input",function(e){
     e.preventDefault();
     if(e.key==='Enter'){
         $("#set-button").click();
+        $("#buyer-wallet").focus();
         return;
     }
     const regex = /[^0-9.]/g;
@@ -1544,12 +1545,12 @@ $("#set-button").on("click", async function(){
         result = parseFloat(result).toFixed(token.decimals);
         $("#buyer-amount").val(result);
         $("#buyer-amount").click();
+        $("#buyer-wallet").focus();
     }
     catch(err){
         toast("Calculation failed");
     }
 });
-
 
 
 // close asset list
