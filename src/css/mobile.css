@@ -234,7 +234,7 @@
     }
     #create-form button#set-button{
         display: block;
-        width: calc(100% - 170px);
+        width: 160px;
         margin-left: 64px;
         margin-top: 9px;
     }

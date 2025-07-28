@@ -936,6 +936,7 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
     $("#main-cover").fadeIn(300);
     $("#main-message").html("Preparing transaction...");
     const item = $(this).parent().parent().attr("id");
+    const ref = $(this).parent().parent().find(".item-title").html();
     const parts = item.split("-");
     const view = parts[0];
     const escrow = parts[1];
@@ -947,7 +948,8 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
         "blink": false,
         "buyer": buyer,
         "escrow": escrow,
-        "priority": priority
+        "priority": priority,
+        "memo": ref
     });
     if(tx.tx){
         try{
@@ -1365,7 +1367,7 @@ $("#payment-pay").on("click", async function(){
         return;
     }
     if($("#buyer-type").val()=="Wallet Address" && !isValidSolanaAddress($("#buyer-wallet").val().trim())){
-        toast("Invalid buyer wallet",2000);
+        toast("Invalid recipient wallet",2000);
         $("#buyer-wallet").prev().addClass("form-error");
         return;
     }
@@ -1507,6 +1509,11 @@ $("#plus-minus").on("click", async function(){
     $("#set-percent").focus();
 });
 $("#set-percent").on("keyup change input",function(e){
+    e.preventDefault();
+    if(e.key==='Enter'){
+        $("#set-button").click();
+        return;
+    }
     const regex = /[^0-9.]/g;
     let value = $(this).val();
     value = value.replace(regex,'');
