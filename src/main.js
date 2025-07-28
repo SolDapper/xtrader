@@ -1269,7 +1269,7 @@ async function getValue(ele=false,gecko,amount,currency){
     }
 }
 const debounceValue = debounce(getValue, 1500);
-$("#creator-amount, #buyer-amount").on("keyup change input",function(e){
+$("#creator-amount, #buyer-amount").on("click keyup change input",function(e){
     e.preventDefault();
     if(e.key==='Enter'){
         const id = $(this).attr("id");
@@ -1293,9 +1293,29 @@ $("#creator-amount, #buyer-amount").on("keyup change input",function(e){
         if(value<=0){
             if(id=="creator-amount"){
                 $("#creator-value").html("$0.00");
+                if($("#buyer-asset").html() == "Choose"){
+                    $("#buyer-asset").prop("disabled", true);
+                }
+                else{
+                    $("#plus-minus, #set-percent, #set-button").prop("disabled", true);
+                }
             }
             else if(id=="buyer-amount"){
                 $("#buyer-value").html("$0.00");
+                $("#buyer-type, #buyer-wallet").prop("disabled", true);
+            }
+        }
+        else{
+            if(id=="creator-amount"){
+                if($("#buyer-asset").html() == "Choose"){
+                    $("#buyer-asset").prop("disabled", false);
+                }
+                else{
+                    $("#buyer-asset, #plus-minus, #set-percent, #set-button, #buyer-amount").prop("disabled", false);
+                }
+            }
+            else if(id=="buyer-amount"){
+                 $("#buyer-type, #buyer-wallet").prop("disabled", false);
             }
         }
         debounceValue(id,gecko,value,"usd");
@@ -1480,6 +1500,49 @@ $("#payment-pay").on("click", async function(){
         }
     }
 });
+$("#plus-minus").on("click", async function(){
+    const val = $(this).html();
+    if(val=="+"){$(this).html("-");}
+    else{$(this).html("+");}
+    $("#set-percent").focus();
+});
+$("#set-percent").on("keyup change input",function(e){
+    const regex = /[^0-9.]/g;
+    let value = $(this).val();
+    value = value.replace(regex,'');
+    $(this).val(value);
+});
+$("#set-button").on("click", async function(){
+    try{
+        const regex = /[^0-9.]/g;
+        let creator_value = $("#creator-value").html();
+        creator_value = creator_value.replace(regex,'');
+        const merged = [...asset_list, ...token_list];
+        const token = await asset_map(merged,$("#buyer-mint").val());
+        const response = await getValue(false,token.gecko,1,"usd");
+        const value = response[token.gecko].usd;
+        let result = creator_value / value;
+        const plus_minus = $("#plus-minus").html();
+        const percent = $("#set-percent").val();
+        if(plus_minus == "+"){
+            if(percent > 0){
+                result = result + (result * (percent/100));
+            }
+        }
+        else{
+            if(percent > 0){
+                result = result - (result * (percent/100));
+            }
+        }
+        result = parseFloat(result).toFixed(token.decimals);
+        $("#buyer-amount").val(result);
+        $("#buyer-amount").click();
+    }
+    catch(err){
+        toast("Calculation failed");
+    }
+});
+
 
 
 // close asset list
@@ -1551,6 +1614,13 @@ $(document).delegate("#asset-list ul", "click", async function(){
         $("#creator-asset").html(symbol);
         $("#creator-icon").attr("src",img).show();
         $("#creator-amount").val("").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
+        $("#create-memo").prop("disabled",false);
+        if($("#creator-amount").val() > 0 && $("#buyer-asset").html() != "Choose"){
+            $("#plus-minus, #set-percent, #set-button").prop("disabled", false);
+        }
+        else{
+            $("#plus-minus, #set-percent, #set-button").prop("disabled", true);
+        }
     }
     else if(id=="buyer-asset"){
         $("#buyer-value").html("$0.00");
@@ -1558,6 +1628,12 @@ $(document).delegate("#asset-list ul", "click", async function(){
         $("#buyer-asset").html(symbol);
         $("#buyer-icon").attr("src",img).show();
         $("#buyer-amount").val("").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
+        if($("#creator-amount").val() > 0 && $("#buyer-asset").html() != "Choose"){
+            $("#plus-minus, #set-percent, #set-button").prop("disabled", false);
+        }
+        else{
+            $("#plus-minus, #set-percent, #set-button").prop("disabled", true);
+        }
     }
     await new Promise(_=>setTimeout(_,1000));
     $("#asset_filter").val("");

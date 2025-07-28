@@ -271,7 +271,44 @@ span#creator-value, span#buyer-value{
 .estimated-value{
     font-size: 12px;
     margin-left: 10px;
-    color: #4d4d4d;
+    color: #f9df95;
+}
+
+
+/* price adjust */
+#create-form button#plus-minus, #create-form input#set-percent, #create-form button#set-button, #create-form span#set-symbol{
+    display: inline-block;
+    vertical-align: top;
+}
+#create-form button#plus-minus{
+    width: 70px;
+    font-size: 22px;
+    font-weight: bold;
+    height: 42px;
+}
+#create-form input#set-percent{
+    width: 50px;
+    margin-left: 10px;
+    text-align: center;
+}
+#create-form span#set-symbol{
+    width: 32px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    height: 42px;
+    line-height: 42px;
+    color: #1dd2bd;
+}
+#create-form button#set-button{
+    width: 100px;
+}
+#create-form select#buyer-type:disabled, #create-form input#buyer-wallet:disabled, #create-form input#create-memo:disabled, #create-form button#buyer-asset:disabled, #create-form button#plus-minus:disabled, #create-form input#set-percent:disabled, #create-form button#set-button:disabled{
+    color: #3f3f3f;
+    opacity: .5;
+    box-shadow: none;
+    cursor: default;
+    background: #1b1b1b;
 }
 
 

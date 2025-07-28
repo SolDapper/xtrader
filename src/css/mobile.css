@@ -232,4 +232,10 @@
     #introduction-view .panel-box .row .label-category{
         font-size: 14px;
     }
+    #create-form button#set-button{
+        display: block;
+        width: calc(100% - 106px);
+        margin-left: 64px;
+        margin-top: 9px;
+    }
 }
