@@ -1525,11 +1525,17 @@ $("#set-button").on("click", async function(){
         const regex = /[^0-9.]/g;
         let creator_value = $("#creator-value").html();
         creator_value = creator_value.replace(regex,'');
+        let result;
         const merged = [...asset_list, ...token_list];
         const token = await asset_map(merged,$("#buyer-mint").val());
-        const response = await getValue(false,token.gecko,1,"usd");
-        const value = response[token.gecko].usd;
-        let result = creator_value / value;
+        if(token.gecko=="usdc" || token.gecko=="tether"){
+            result = parseFloat(creator_value);
+        }
+        else{
+            const response = await getValue(false,token.gecko,1,"usd");
+            const value = response[token.gecko].usd;
+            result = creator_value / value;            
+        }
         const plus_minus = $("#plus-minus").html();
         const percent = $("#set-percent").val();
         if(plus_minus == "+"){
@@ -1548,6 +1554,7 @@ $("#set-button").on("click", async function(){
         $("#buyer-wallet").focus();
     }
     catch(err){
+        console.log("err", err);
         toast("Calculation failed");
     }
 });
