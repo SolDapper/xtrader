@@ -451,7 +451,8 @@ label.form-error{
     opacity: 0.5;
 }
 #asset-list{
-    margin-top: 44px;
+    margin-top: 9px;
+    border-top: 1px solid #111111;
 }
 .list-clear{
     display: block;
@@ -470,16 +471,15 @@ label.form-error{
 #asset-list ul:hover{
     background: #111;
 }
-#asset-list ul:first-of-type {
+/* #asset-list ul:first-of-type {
     border-top: 1px solid #111111;
-}
-
-#asset-list ul:nth-child(3){
+} */
+/* #asset-list ul:nth-child(3){
     border-bottom: 0;
-}
-#asset-list ul:nth-child(4){
+} */
+/* #asset-list ul:nth-child(4){
     border-top: 1px solid #111111;
-}
+} */
 #asset-list ul li.list-icon{
     display: inline-block;
     margin: 0;
@@ -928,6 +928,25 @@ a.inline-link:hover{
  }
 }
 
+#asset_group{
+    color: #f9df95;
+    background: #111;
+    border: 0;
+    border-radius: 6px;
+    outline: none;
+    width: calc(100% - 45px);
+    height: 26px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-family: Ubuntu;
+    font-weight: bold;
+    line-height: 26px;
+    transition: all .3s;
+    margin: 8px 0 0 6px;
+    float: left;
+    cursor: pointer;
+}
+
 #asset_filter{
     color: #f9df95;
     background: #111;
@@ -943,7 +962,6 @@ a.inline-link:hover{
     line-height: 26px;
     transition: all .3s;
     margin: 8px 0 0 6px;
-    float: left;
     text-transform: lowercase;
 }
 #asset_filter::placeholder {

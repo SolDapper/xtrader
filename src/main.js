@@ -16,8 +16,28 @@ import mcswapConnector from "mcswap-connector";
 import "mcswap-connector/src/colors/xtrader-connector.css";
 import "./css/style.css";
 import "./css/mobile.css";
-import token_list from './js/list/tokens.js';
-import asset_list from './js/list/xstocks.js';
+import tokens_list from './js/list/tokens.js';
+import xstocks_list from './js/list/xstocks.js';
+import prestocks_list from './js/list/prestocks.js';
+import genesis_list from './js/list/genesis.js';
+const groups = [
+    {
+        name: "xStocks",
+        slug: "xstocks"
+    },
+    {
+        name: "ShiftStocks",
+        slug: "shiftstocks"
+    },
+    {
+        name: "PreStocks",
+        slug: "prestocks"
+    },
+    {
+        name: "Genesis",
+        slug: "genesis"
+    }
+]
 
 
 // constants
@@ -332,7 +352,7 @@ async function load_sent(){
             const asset = splSent.data[i];
             if(!hidden.includes(asset.acct) && all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#sent-'+asset.acct).length){
-                    const merged = [...asset_list, ...token_list];
+                    const merged = [...tokens_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
                     asset.token_1_details = await asset_map(merged,asset.token_1_mint);
                     asset.token_3_details = await asset_map(merged,asset.token_3_mint);
                     let ele = '<div class="drag-box" id="box-sent-'+asset.acct+'"><ul id="sent-'+asset.acct+'" class="row">';
@@ -342,7 +362,7 @@ async function load_sent(){
                     ele += '<li class="item-title">'+memo+'</li>';
                     ele += '<li class="item-id"><span class="item-label">ID: </span><span class="item-acct">'+asset.acct+'</span></li>';
                     ele += '<li class="first-li-img"><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
-                    ele += '<li data-mint="'+asset.token_1_mint+'" class="item-details first-detail"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
+                    ele += '<li data-issuer="'+asset.token_1_details.issuer+'" data-mint="'+asset.token_1_mint+'" class="item-details first-detail"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
                     ele += '<li class="mobile-break"></li>';
                     ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
                     ele += '<li class="arrow arrow_up"><img src="'+arrow_up+'" /></li>';
@@ -353,7 +373,7 @@ async function load_sent(){
                     let has_pdf = "";
                     if(asset.token_3_details.pdf!=""){has_pdf=' data-pdf="'+asset.token_3_details.pdf+'"'; }
                     ele += '<li class="img-2"><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
-                    ele += '<li data-mint="'+asset.token_3_mint+'" class="item-details last-detail"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
+                    ele += '<li data-issuer="'+asset.token_3_details.issuer+'" data-mint="'+asset.token_3_mint+'" class="item-details last-detail"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
                     ele += '<li class="mobile-break"></li>';
                     ele += '<li class="item-amount buyer-amount">'+asset.token_3_amount+'</li>';
                     ele += '<li class="arrow arrow_down"><img src="'+arrow_down+'" /></li>';
@@ -427,7 +447,7 @@ async function load_received(){
             const asset = splReceived.data[i];
             if(!hidden.includes(asset.acct) && all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#received-'+asset.acct).length){
-                    const merged = [...asset_list, ...token_list];
+                    const merged = [...tokens_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
                     asset.token_1_details = await asset_map(merged,asset.token_1_mint);
                     asset.token_3_details = await asset_map(merged,asset.token_3_mint);
                     let ele = '<div class="drag-box" id="box-received-'+asset.acct+'"><ul id="received-'+asset.acct+'" class="row">';
@@ -437,7 +457,7 @@ async function load_received(){
                     ele += '<li class="item-title">'+memo+'</li>';
                     ele += '<li class="item-id"><span class="item-label">ID: </span><span class="item-acct">'+asset.acct+'</span></li>';
                     ele += '<li class="first-li-img"><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
-                    ele += '<li data-mint="'+asset.token_1_mint+'" class="item-details first-detail"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
+                    ele += '<li data-issuer="'+asset.token_1_details.issuer+'" data-mint="'+asset.token_1_mint+'" class="item-details first-detail"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
                     ele += '<li class="mobile-break"></li>';
                     ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
                     ele += '<li class="arrow arrow_down"><img src="'+arrow_down+'" /></li>';
@@ -448,7 +468,7 @@ async function load_received(){
                     let has_pdf = "";
                     if(asset.token_3_details.pdf!=""){has_pdf=' data-pdf="'+asset.token_3_details.pdf+'"'; }
                     ele += '<li class="img-2"><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
-                    ele += '<li data-mint="'+asset.token_3_mint+'" class="item-details last-detail"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
+                    ele += '<li data-issuer="'+asset.token_3_details.issuer+'" data-mint="'+asset.token_3_mint+'" class="item-details last-detail"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
                     ele += '<li class="mobile-break"></li>';
                     ele += '<li class="item-amount buyer-amount">'+asset.token_3_amount+'</li>';
                     ele += '<li class="arrow arrow_up"><img src="'+arrow_up+'" /></li>';
@@ -532,7 +552,7 @@ async function load_public(){
                 const asset = splSent.data[i];
                 if(!hidden.includes(asset.acct) && all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                     if(!$('#market-'+asset.acct).length){
-                        const merged = [...asset_list, ...token_list];
+                        const merged = [...tokens_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
                         asset.token_1_details = await asset_map(merged,asset.token_1_mint);
                         asset.token_3_details = await asset_map(merged,asset.token_3_mint);
                         let ele = '<div class="drag-box" id="box-market-'+asset.acct+'"><ul id="market-'+asset.acct+'" class="row">';
@@ -542,7 +562,7 @@ async function load_public(){
                         ele += '<li class="item-title">'+memo+'</li>';
                         ele += '<li class="item-id"><span class="item-label">ID: </span><span class="item-acct">'+asset.acct+'</span></li>';
                         ele += '<li class="first-li-img"><img data-pdf="'+asset.token_1_details.pdf+'" class="item-img" src="'+asset.token_1_details.icon+'" /></li>';
-                        ele += '<li data-mint="'+asset.token_1_mint+'" class="item-details first-detail"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
+                        ele += '<li data-issuer="'+asset.token_1_details.issuer+'" data-mint="'+asset.token_1_mint+'" class="item-details first-detail"><div class="item-symbol">'+asset.token_1_details.symbol+'</div><div class="item-name">'+asset.token_1_details.name+'</div></li>';
                         ele += '<li class="mobile-break"></li>';
                         ele += '<li class="item-amount seller-amount">'+asset.token_1_amount+'</li>';
                         ele += '<li class="arrow arrow_down"><img src="'+arrow_down+'" /></li>';
@@ -553,7 +573,7 @@ async function load_public(){
                         let has_pdf = "";
                         if(asset.token_3_details.pdf!=""){has_pdf=' data-pdf="'+asset.token_3_details.pdf+'"'; }
                         ele += '<li class="img-2"><img'+has_pdf+' class="item-img" src="'+asset.token_3_details.icon+'" /></li>';
-                        ele += '<li data-mint="'+asset.token_3_mint+'" class="item-details last-detail"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
+                        ele += '<li data-issuer="'+asset.token_3_details.issuer+'" data-mint="'+asset.token_3_mint+'" class="item-details last-detail"><div class="item-symbol">'+asset.token_3_details.symbol+'</div><div class="item-name">'+asset.token_3_details.name+'</div></li>';
                         ele += '<li class="mobile-break"></li>';
                         ele += '<li class="item-amount buyer-amount">'+asset.token_3_amount+'</li>';
                         ele += '<li class="arrow arrow_up"><img src="'+arrow_up+'" /></li>';
@@ -732,64 +752,64 @@ $(document).delegate(".item-amount", "click", async function(){
     const symbol_b = $(this).parent().find(".last-detail .item-symbol").html();
     const mint_a = $(this).parent().find(".first-detail").data("mint");
     const mint_b = $(this).parent().find(".last-detail").data("mint");
-    const gecko_a = $("#asset-list ul#"+mint_a).attr("data-gecko");
-    const gecko_b = $("#asset-list ul#"+mint_b).attr("data-gecko");
     const amount_a = $(this).parent().find(".first-detail").next().next().html();
     const amount_b = $(this).parent().find(".last-detail").next().next().html();
-    const amounts = await getValue(false,[gecko_a,gecko_b],[amount_a,amount_b],"usd");
+    const issuer_a = $(this).parent().find(".first-detail").attr("data-issuer");
+    const issuer_b = $(this).parent().find(".last-detail").attr("data-issuer");
+    const amounts = await getValue(false,[issuer_a,issuer_b],[mint_a,mint_b],[amount_a,amount_b]);
     if(view=="market"){
         if($(this).hasClass("seller-amount")){
             toast("The offer "+amount_a+" "+symbol_a, 5000);
-            toast("Value $"+amounts[gecko_a].usd, 5000);
-            toast("PnL "+amounts[gecko_a].dif, 5000);
+            toast("Value $"+amounts[mint_a].usdPrice, 5000);
+            toast("PnL "+amounts[mint_a].dif, 5000);
         }
         else if($(this).hasClass("buyer-amount")){
             toast("You send "+amount_b+" "+symbol_b, 5000);
-            toast("Value $"+amounts[gecko_b].usd, 5000);
-            toast("PnL "+amounts[gecko_b].dif, 5000);
+            toast("Value $"+amounts[mint_b].usdPrice, 5000);
+            toast("PnL "+amounts[mint_b].dif, 5000);
         }
     }
     else if(view=="sent"){
         if($(this).hasClass("seller-amount")){
             toast("Your offer "+amount_a+" "+symbol_a, 5000);
-            toast("Value $"+amounts[gecko_a].usd, 5000);
-            if(amounts[gecko_a].usd < amounts[gecko_b].usd){
-                toast("Your PnL $"+amounts[gecko_a].dif, 5000);
+            toast("Value $"+amounts[mint_a].usdPrice, 5000);
+            if(amounts[mint_a].usdPrice < amounts[mint_b].usdPrice){
+                toast("Your PnL $"+amounts[mint_a].dif, 5000);
             }
             else{
-                toast("Your PnL $-"+amounts[gecko_a].dif, 5000);
+                toast("Your PnL $-"+amounts[mint_a].dif, 5000);
             }
         }
         else if($(this).hasClass("buyer-amount")){
             toast("They send "+amount_b+" "+symbol_b, 5000);
-            toast("Value $"+amounts[gecko_b].usd, 5000);
-            if(amounts[gecko_a].usd < amounts[gecko_b].usd){
-                toast("Their PnL $-"+amounts[gecko_b].dif, 5000);
+            toast("Value $"+amounts[mint_b].usd, 5000);
+            if(amounts[mint_a].usdPrice < amounts[mint_b].usdPrice){
+                toast("Their PnL $-"+amounts[mint_b].dif, 5000);
             }
             else{
-                toast("Their PnL $"+amounts[gecko_b].dif, 5000);
+                toast("Their PnL $"+amounts[mint_b].dif, 5000);
             }
         }
     }
     else if(view=="received"){
         if($(this).hasClass("seller-amount")){
             toast("You receive "+amount_a+" "+symbol_a, 5000);
-            toast("Value $"+amounts[gecko_a].usd, 5000);
-            if(amounts[gecko_a].usd < amounts[gecko_b].usd){
-                toast("Your PnL $-"+amounts[gecko_a].dif, 5000);
+            toast("Value $"+amounts[mint_a].usdPrice, 5000);
+            if(amounts[mint_a].usdPrice < amounts[mint_b].usdPrice){
+                toast("Your PnL $-"+amounts[mint_a].dif, 5000);
             }
             else{
-                toast("Your PnL $"+amounts[gecko_a].dif, 5000);
+                toast("Your PnL $"+amounts[mint_a].dif, 5000);
             }
         }
         else if($(this).hasClass("buyer-amount")){
             toast("You send "+amount_b+" "+symbol_b, 5000);
-            toast("Value $"+amounts[gecko_b].usd, 5000);
-            if(amounts[gecko_a].usd < amounts[gecko_b].usd){
-                toast("Your PnL $-"+amounts[gecko_b].dif, 5000);
+            toast("Value $"+amounts[mint_b].usdPrice, 5000);
+            if(amounts[mint_a].usdPrice < amounts[mint_b].usdPrice){
+                toast("Your PnL $-"+amounts[mint_b].dif, 5000);
             }
             else{
-                toast("Your PnL $"+amounts[gecko_b].dif, 5000);
+                toast("Your PnL $"+amounts[mint_b].dif, 5000);
             }
         }
     }
@@ -1188,74 +1208,82 @@ function countDecimals(number){
   }
   return parts[1].length;
 }
-async function getValue(ele=false,gecko,amount,currency){
-    if(gecko=="false"){return;}
+async function getValue(ele=false,issuers=false,mints,amounts){
+    // if(issuer=="false"){return;}
     if(ele=="creator-amount" && $("#creator-asset").html()=="Choose"){return;}
     else if(ele=="buyer-amount" && $("#buyer-asset").html()=="Choose"){return;}
     if(ele!=false){
-        if(gecko=="usdc" || gecko == "tether"){
-            amount = parseFloat(amount).toFixed(2);
-            if(isNaN(amount)){amount="0.00";}
+        if(issuers=="usdc" || issuers == "tether"){
+            amounts = parseFloat(amounts).toFixed(2);
+            if(isNaN(amounts)){amounts="0.00";}
             if(ele=="creator-amount"){
-                $("#creator-value").html("$"+commas(amount));
+                $("#creator-value").html("$"+commas(amounts));
                 return;
             }
             else if(ele=="buyer-amount"){
-                $("#buyer-value").html("$"+commas(amount));
+                $("#buyer-value").html("$"+commas(amounts));
                 return;
             }
             else{
-                return amount;
+                return amounts;
             }
         }
     }
-    const url = 'https://api.coingecko.com/api/v3/simple/price?ids='+gecko+'&vs_currencies='+currency;
+    // const url = 'https://api.coingecko.com/api/v3/simple/price?ids='+gecko+'&vs_currencies='+currency;
+    const url = 'https://lite-api.jup.ag/price/v3?ids='+mints;
+    const options = {
+      method: 'GET', // Or 'POST', 'PUT', etc.
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    };
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, options);
         const data = await response.json();
         if(ele==false){
-            if(!data[gecko[0]] || !data[gecko[0]].usd){
-                data[gecko[0]] = {};
-                if(gecko[0]=="usdc" || gecko[0]=="tether"){
-                    data[gecko[0]].usd = commas(parseFloat(amount[0]).toFixed(2));
+            if(!data[mints[0]] || !data[mints[0]].usdPrice){
+                data[mints[0]] = {};
+                if(issuers[0]=="usdc" || issuers[0]=="tether"){
+                    data[mints[0]].usdPrice = commas(parseFloat(amounts[0]).toFixed(2));
                 }
                 else{
-                    data[gecko[0]].usd = "0.00";
+                    data[mints[0]].usdPrice = "0.00";
                 }
             }
             else{
-                 data[gecko[0]].usd = commas(parseFloat((data[gecko[0]].usd * amount[0])).toFixed(2));
+                 data[mints[0]].usdPrice = commas(parseFloat((data[mints[0]].usdPrice * amounts[0])).toFixed(2));
             }
-            if(!data[gecko[1]] || !data[gecko[1]].usd){
-                data[gecko[1]] = {};
-                if(gecko[1]=="usdc" || gecko[1]=="tether"){
-                    data[gecko[1]].usd = commas(parseFloat(amount[1]).toFixed(2));
+            if(!data[mints[1]] || !data[mints[1]].usdPrice){
+                data[mints[1]] = {};
+                if(issuers[1]=="usdc" || issuers[1]=="tether"){
+                    data[mints[1]].usdPrice = commas(parseFloat(amounts[1]).toFixed(2));
                 }
                 else{
-                    data[gecko[1]].usd = "0.00";
+                    data[mints[1]].usdPrice = "0.00";
                 }
             }
             else{
-                 data[gecko[1]].usd = commas(parseFloat((data[gecko[1]].usd * amount[1])).toFixed(2));
+                 data[mints[1]].usdPrice = commas(parseFloat((data[mints[1]].usdPrice * amounts[1])).toFixed(2));
             }
-            if(data[gecko[0]].usd < data[gecko[1]].usd){
-                data[gecko[0]].dif = commas((parseFloat(data[gecko[1]].usd - data[gecko[0]].usd).toFixed(2)));
-                data[gecko[1]].dif = commas((parseFloat(data[gecko[1]].usd - data[gecko[0]].usd).toFixed(2)));
+            if(data[mints[0]].usdPrice < data[mints[1]].usdPrice){
+                data[mints[0]].dif = commas((parseFloat(data[mints[1]].usdPrice - data[mints[0]].usdPrice).toFixed(2)));
+                data[mints[1]].dif = commas((parseFloat(data[mints[1]].usdPrice - data[mints[0]].usdPrice).toFixed(2)));
             }
-            else if(data[gecko[0]].usd > data[gecko[1]].usd){
-                data[gecko[0]].dif = commas((parseFloat(data[gecko[0]].usd - data[gecko[1]].usd).toFixed(2)));
-                data[gecko[1]].dif = commas((parseFloat(data[gecko[0]].usd - data[gecko[1]].usd).toFixed(2)));
+            else if(data[mints[0]].usdPrice > data[mints[1]].usdPrice){
+                data[mints[0]].dif = commas((parseFloat(data[mints[0]].usdPrice - data[mints[1]].usdPrice).toFixed(2)));
+                data[mints[1]].dif = commas((parseFloat(data[mints[0]].usdPrice - data[mints[1]].usdPrice).toFixed(2)));
             }
             else{
-                data[gecko[0]].dif = "0.00";
-                data[gecko[1]].dif = "0.00";
+                data[mints[0]].dif = "0.00";
+                data[mints[1]].dif = "0.00";
             }
             return data;
         }
         else{
             let _amount_ = "0.00";
-            if(data[gecko].usd){
-                _amount_ = data[gecko].usd * amount;
+            if(data[mints].usdPrice){
+                _amount_ = data[mints].usdPrice * amounts;
                 _amount_ = _amount_.toFixed(2);
             }
             if(ele=="creator-amount"){
@@ -1267,7 +1295,7 @@ async function getValue(ele=false,gecko,amount,currency){
         }
     }
     catch(error){
-        // console.log("pricing error", error);
+        console.log("pricing error", error);
     }
 }
 const debounceValue = debounce(getValue, 1500);
@@ -1286,12 +1314,19 @@ $("#creator-amount, #buyer-amount").on("click keyup change input",function(e){
     else{
         const regex = /[^0-9.]/g;
         const decimals = $(this).attr("data-decimals");
-        const gecko = $(this).attr("data-gecko");
+        const id = $(this).attr("id");
+        const issuer = $(this).attr("data-issuer");
+        let mint;
+        if(id=="creator-amount"){
+            mint = $("#creator-mint").val();
+        }
+        else if(id=="buyer-amount"){
+            mint = $("#buyer-mint").val();
+        }
         let value = $(this).val();
         value = value.replace(regex,'');
         if(countDecimals(value) > decimals){value=parseFloat(value).toFixed(decimals);}
         $(this).val(value);
-        const id = $(this).attr("id");
         if(value<=0){
             if(id=="creator-amount"){
                 $("#creator-value").html("$0.00");
@@ -1320,7 +1355,7 @@ $("#creator-amount, #buyer-amount").on("click keyup change input",function(e){
                  $("#buyer-type, #buyer-wallet").prop("disabled", false);
             }
         }
-        debounceValue(id,gecko,value,"usd");
+        debounceValue(id,issuer,mint,value);
         return;
     }
 });
@@ -1389,12 +1424,12 @@ $("#payment-pay").on("click", async function(){
     const seller_mint = $("#creator-mint").val().trim();
     const seller_amount = $("#creator-amount").val().trim();
     let buyer = $("#buyer-wallet").val().trim();
-    buyer = buyer.toLowerCase();
+    if(buyer.includes(".")){buyer = buyer.toLowerCase();}
     if(buyer=="Any"){buyer=false;}
     const buyer_mint = $("#buyer-mint").val().trim();
     const buyer_amount = $("#buyer-amount").val().trim();
     const priority = $("#settings-priority").val().trim();
-    const memo = $("#create-memo").val();
+    let memo = $("#create-memo").val();
     if(memo==""){memo=false;}
     const affiliateWallet = false;
     const affiliateFee = 0;
@@ -1419,7 +1454,6 @@ $("#payment-pay").on("click", async function(){
         "token4Amount": false,
         "memo": memo
     }
-    // console.log("config", config);
     const tx = await mcswap.splCreate(config);
     if(tx.tx){
         try{
@@ -1526,14 +1560,15 @@ $("#set-button").on("click", async function(){
         let creator_value = $("#creator-value").html();
         creator_value = creator_value.replace(regex,'');
         let result;
-        const merged = [...asset_list, ...token_list];
-        const token = await asset_map(merged,$("#buyer-mint").val());
-        if(token.gecko=="usdc" || token.gecko=="tether"){
+        const merged = [...tokens_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
+        const mint = $("#buyer-mint").val();
+        const token = await asset_map(merged,mint);
+        if(token.issuer=="usdc" || token.issuer=="tether"){
             result = parseFloat(creator_value);
         }
         else{
-            const response = await getValue(false,token.gecko,1,"usd");
-            const value = response[token.gecko].usd;
+            const response = await getValue(false,token.issuer,mint,1);
+            const value = response[mint].usdPrice;
             result = creator_value / value;            
         }
         const plus_minus = $("#plus-minus").html();
@@ -1560,6 +1595,48 @@ $("#set-button").on("click", async function(){
 });
 
 
+// filter asset list
+async function filterAssetList(filter){
+    const group = $("#asset_group").val();
+    if(filter!=""){
+        filter = filter.toLowerCase();
+        let i = 0;
+        const length = $("#asset-list ul").length;
+        $("#asset-list ul").each(function(){
+            const item = $(this);
+            const id = item.attr("id").toLowerCase();
+            const symbol = item.find(".list-symbol").html().toLowerCase();
+            const name = item.find(".list-name").html().toLowerCase();
+            const issuer = item.attr("data-issuer");
+            if(id.includes(filter) || symbol.includes(filter) || name.includes(filter)){
+                if(group=="all" || group==issuer){
+                    $("ul#"+item.attr("id")).show();
+                }
+                else{
+                    $("ul#"+item.attr("id")).hide();
+                }
+            }
+            else{
+                $("ul#"+item.attr("id")).hide();
+            }
+            i++;
+            if(i==length){
+                $('#asset-list ul:visible:first').css('border-top','1px solid #111111');
+                $('#asset-list ul:visible:last').css('border-bottom','1px solid #111111');
+            }
+        });
+    }
+    else{
+        if(group=="all"){
+            $("#asset-list ul").show();
+        }
+        else{
+            $("#asset-list ul").hide();
+            $("#asset-list ul[data-issuer="+group+"]").show();
+        } 
+    }
+}
+const debounceAssetList = debounce(filterAssetList, 500);
 // close asset list
 $("button#asset-list-close").on("click", function(){
     $("#asset-list-box").attr("data-chooser",null).removeClass("animate__slideInLeft").addClass("animate__slideOutLeft");
@@ -1567,6 +1644,7 @@ $("button#asset-list-close").on("click", function(){
 // choose asset 1
 $("button#creator-asset").on("click", async function(e){
     e.preventDefault();
+    debounceAssetList($("#asset_filter").val());
     $("#asset-list-box").scrollTop(0);
     $("#asset-list-box").attr("data-chooser","creator-asset").removeClass("animate__slideOutLeft").addClass("animate__slideInLeft").show();
     $("#asset_filter").focus();
@@ -1574,6 +1652,7 @@ $("button#creator-asset").on("click", async function(e){
 // choose asset 2
 $("button#buyer-asset").on("click", async function(e){
     e.preventDefault();
+    debounceAssetList($("#asset_filter").val());
     $("#asset-list-box").scrollTop(0);
     $("#asset-list-box").attr("data-chooser","buyer-asset").removeClass("animate__slideOutLeft").addClass("animate__slideInLeft").show();
     $("#asset_filter").focus();
@@ -1618,8 +1697,8 @@ $("#nav #cog, #nav .view, #introduction").on("click", async function(){
 $(document).delegate("#asset-list ul", "click", async function(){
     const id = $(this).parent().parent().attr("data-chooser");
     const mint = $(this).attr("id");
+    const issuer = $(this).attr("data-issuer");
     const decimals = $(this).attr("data-decimals");
-    const gecko = $(this).attr("data-gecko");
     const symbol = $(this).find(".list-symbol").html();
     const img = $(this).find(".list-icon img").attr("src");
     $("#asset-list-close").click();
@@ -1628,7 +1707,7 @@ $(document).delegate("#asset-list ul", "click", async function(){
         $("#creator-mint").val(mint);
         $("#creator-asset").html(symbol);
         $("#creator-icon").attr("src",img).show();
-        $("#creator-amount").val("").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
+        $("#creator-amount").val("").attr("data-issuer",issuer).attr("data-decimals",decimals).prop("disabled",false).focus();
         $("#create-memo").prop("disabled",false);
         if($("#creator-amount").val() > 0 && $("#buyer-asset").html() != "Choose"){
             $("#plus-minus, #set-percent, #set-button").prop("disabled", false);
@@ -1642,7 +1721,7 @@ $(document).delegate("#asset-list ul", "click", async function(){
         $("#buyer-mint").val(mint);
         $("#buyer-asset").html(symbol);
         $("#buyer-icon").attr("src",img).show();
-        $("#buyer-amount").val("").attr("data-gecko",gecko).attr("data-decimals",decimals).prop("disabled",false).focus();
+        $("#buyer-amount").val("").attr("data-issuer",issuer).attr("data-decimals",decimals).prop("disabled",false).focus();
         if($("#creator-amount").val() > 0 && $("#buyer-asset").html() != "Choose"){
             $("#plus-minus, #set-percent, #set-button").prop("disabled", false);
         }
@@ -1654,37 +1733,11 @@ $(document).delegate("#asset-list ul", "click", async function(){
     $("#asset_filter").val("");
     $("#asset-list ul").show();
 });
-// filter asset list
-async function filterAssetList(filter){
-    if(filter!=""){
-        filter = filter.toLowerCase();
-        let i = 0;
-        const length = $("#asset-list ul").length;
-        $("#asset-list ul").each(function(){
-            const item = $(this);
-            const id = item.attr("id").toLowerCase();
-            const symbol = item.find(".list-symbol").html().toLowerCase();
-            const name = item.find(".list-name").html().toLowerCase();
-            if(id.includes(filter) || symbol.includes(filter) || name.includes(filter)){
-                $("ul#"+item.attr("id")).show();
-            }
-            else{
-                $("ul#"+item.attr("id")).hide();
-            }
-            i++;
-            if(i==length){
-                $('#asset-list ul:visible:first').css('border-top','1px solid #111111');
-                $('#asset-list ul:visible:last').css('border-bottom','1px solid #111111');
-            }
-        });
-    }
-    else{
-        $("#asset-list ul").show();
-    }
-}
-const debounceAssetList = debounce(filterAssetList, 500);
 $("#asset_filter").on("keyup change input", async function(){
     debounceAssetList($(this).val());
+});
+$("#asset_group").on("change", async function(){
+    debounceAssetList($("#asset_filter").val());
 });
 
 
@@ -1864,8 +1917,15 @@ $(window).on("load", async function(){
         $(".mcswap_disconnect_button").removeClass().addClass("mobile_disconnect_button");
     }
     let i=0;
-    while (i < token_list.length) {
-        const asset = token_list[i];
+    while (i < groups.length) {
+        const group = groups[i];
+        const item = '<option value="'+group.slug+'">'+group.name+'</option>';
+        $("#asset_group").append(item);
+        i++;
+    }
+    i=0;
+    while (i < tokens_list.length) {
+        const asset = tokens_list[i];
         const item = '<option value="'+asset.mint+'">'+asset.symbol+'</option>';
         $("#sent-filter").append(item);
         $("#received-filter").append(item);
@@ -1873,10 +1933,11 @@ $(window).on("load", async function(){
         all_mints.push(asset.mint);
         i++;
     }
-    asset_list.sort((a,b) => (a.symbol > b.symbol) ? 1 : ((b.symbol > a.symbol) ? -1 : 0));
+    const master_list = [...xstocks_list, ...prestocks_list, ...genesis_list];
+    master_list.sort((a,b) => (a.symbol > b.symbol) ? 1 : ((b.symbol > a.symbol) ? -1 : 0));
     i=0;
-    while (i < asset_list.length) {
-        const asset = asset_list[i];
+    while (i < master_list.length) {
+        const asset = master_list[i];
         const item = '<option value="'+asset.mint+'">'+asset.symbol+'</option>';
         $("#sent-filter").append(item);
         $("#received-filter").append(item);
@@ -1891,10 +1952,9 @@ $(window).on("load", async function(){
     if(filter_received){$("#received-filter").val(filter_received);}
     if(filter_market){$("#market-filter").val(filter_market);}
     i=0;
-    while (i < token_list.length) {
-        const asset = token_list[i];
-        if(!asset.gecko){asset.gecko="false";}
-        let item = '<ul data-gecko="'+asset.gecko+'" data-decimals="'+asset.decimals+'" id="'+asset.mint+'">';
+    while (i < tokens_list.length) {
+        const asset = tokens_list[i];
+        let item = '<ul data-issuer="'+asset.issuer+'" data-decimals="'+asset.decimals+'" id="'+asset.mint+'">';
         item += '<li class="list-icon">';
         item += '<img src="'+asset.icon+'" />';
         item += '</li><li class="list-symbol">';
@@ -1911,10 +1971,9 @@ $(window).on("load", async function(){
         i++;
     }
     i=0;
-    while (i < asset_list.length) {
-        const asset = asset_list[i];
-        if(!asset.gecko){asset.gecko="false";}
-        let item = '<ul data-gecko="'+asset.gecko+'" data-decimals="'+asset.decimals+'" id="'+asset.mint+'">';
+    while (i < master_list.length) {
+        const asset = master_list[i];
+        let item = '<ul data-issuer="'+asset.issuer+'" data-decimals="'+asset.decimals+'" id="'+asset.mint+'">';
         item += '<li class="list-icon">';
         item += '<img src="'+asset.icon+'" />';
         item += '</li><li class="list-symbol">';

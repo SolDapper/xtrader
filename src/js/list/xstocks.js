@@ -1,4 +1,4 @@
-const asset_list = [
+const xstocks_list = [
     {
         name: "Abbott xStock",
         symbol: "ABTx",
@@ -6,7 +6,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf6359f8fa1d916afe97b_Ticker%3DABT%2C%20Company%20Name%3DAbbot%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-ABTx.pdf",
         decimals: 8,
-        gecko: "abbott-xstock"
+        issuer: "xstocks"
     },
     {
         name: "AbbVie xStock",
@@ -15,7 +15,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684be7c58986cdaeeee5bbba_Ticker%3DABBV%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-ABBVx.pdf",
         decimals: 8,
-        gecko: "abbvie-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Accenture xStock",
@@ -24,7 +24,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0b0e15af8be8257db52f_Ticker%3DACN%2C%20Company%20Name%3Daccenture%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-ACNx.pdf",
         decimals: 8,
-        gecko: "accenture-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Alphabet xStock",
@@ -33,7 +33,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684aae04a3d8452e0ae4bad8_Ticker%3DGOOG%2C%20Company%20Name%3DAlphabet%20Inc.%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-GOOGLx.pdf",
         decimals: 8,
-        gecko: "alphabet-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Amazon xStock",
@@ -42,7 +42,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/68497d354d7140b01657a793_Ticker%3DAMZN%2C%20Company%20Name%3DAmazon.com%20Inc.%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-AMZNx.pdf",
         decimals: 8,
-        gecko: "amazon-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Amber xStock",
@@ -51,7 +51,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/68652e463fd5d0c86d866c65_AMBRx.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-AMBRx.pdf",
         decimals: 8,
-        gecko: "amber-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Apple xStock",
@@ -60,7 +60,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/6849799260ee65bf38841f90_Ticker%3DAAPL%2C%20Company%20Name%3DApple%20Inc.%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-AAPLx.pdf",
         decimals: 8,
-        gecko: "apple-xstock"
+        issuer: "xstocks"
     },
     {
         name: "AppLovin xStock",
@@ -69,7 +69,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0deccaecf631c0c174ea_Ticker%3DAPP%2C%20Company%20Name%3Dapp%20lovin%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-APPx.pdf",
         decimals: 8,
-        gecko: "applovin-xstock"
+        issuer: "xstocks"
     },
     {
         name: "AstraZeneca xStock",
@@ -78,7 +78,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf47b066fa1085ae953e9_Ticker%3DAZN%2C%20Company%20Name%3Dastrazeneca%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-AZNx.pdf",
         decimals: 8,
-        gecko: "astrazeneca-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Bank of America xStock",
@@ -87,7 +87,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf5a74604b4f162fd0efd_Ticker%3DBAC%2C%20Company%20Name%3DBank%20of%20America%20Corporation%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-BACx.pdf",
         decimals: 8,
-        gecko: "bank-of-america-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Berkshire Hathaway xStock",
@@ -96,7 +96,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684ab977b76d1a151f09c858_Ticker%3DBRK.B%2C%20Company%20Name%3Dberkshire-hathaway%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-BRK.Bx.pdf",
         decimals: 8,
-        gecko: "berkshire-hathaway-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Broadcom xStock",
@@ -105,7 +105,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684aaef288f41927892d12c1_Ticker%3DAVGO%2C%20Company%20Name%3DBroadcom%20Inc.%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-AVGOx.pdf",
         decimals: 8,
-        gecko: "broadcom-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Chevron xStock",
@@ -114,7 +114,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684be50accfbb14c64319124_Ticker%3DCVX%2C%20Company%20Name%3Dchevron%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-CVXx.pdf",
         decimals: 8,
-        gecko: "chevron-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Circle xStock",
@@ -123,7 +123,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/6861ae6944c62c8dd3a0e165_CRCLx.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-CRCLx.pdf",
         decimals: 8,
-        gecko: "circle-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Cisco xStock",
@@ -132,7 +132,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bec77bfaeef7ac61f7231_Ticker%3DCSCO%2C%20Company%20Name%3DCisco%20Systems%20Inc.%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-CSCOx.pdf",
         decimals: 8,
-        gecko: "cisco-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Coca-Cola xStock",
@@ -141,7 +141,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684beb344604b4f162f66f93_Ticker%3DCOKE%2C%20Company%20Name%3DCokeCola%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-KOx.pdf",
         decimals: 8,
-        gecko: "coca-cola-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Coinbase xStock",
@@ -150,7 +150,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c131b2d6d8cbe9e61a3dc_Ticker%3DCOIN%2C%20Company%20Name%3DCoinbase%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-COINx.pdf",
         decimals: 8,
-        gecko: "coinbase-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Comcast xStock",
@@ -159,7 +159,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bfbe3db57e5f5f6b277aa_Ticker%3DCMCSA%2C%20Company%20Name%3DComcast%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-CMCSAx.pdf",
         decimals: 8,
-        gecko: "comcast-xstock"
+        issuer: "xstocks"
     },
     {
         name: "CrowdStrike xStock",
@@ -168,7 +168,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c10fbaf9d90e3d974ae23_Ticker%3DCRWD%2C%20Company%20Name%3DCrowdstrike%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-CRWDx.pdf",
         decimals: 8,
-        gecko: "crowdstrike-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Danaher xStock",
@@ -177,7 +177,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bfa59ce8102ff96cee2fe_Ticker%3DDHR%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-DHRx.pdf",
         decimals: 8,
-        gecko: "danaher-xstock"
+        issuer: "xstocks"
     },
     {
         name: "DFDV xStock",
@@ -186,7 +186,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/6861b8b7beb9cf856e2332d5_DFDVx.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-DFDVx.pdf",
         decimals: 8,
-        gecko: "dfdv-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Eli Lilly xStock",
@@ -195,7 +195,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684ad0eaa9a1efe9b1b7155a_Ticker%3DLLY%2C%20Company%20Name%3DLilly%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-LLYx.pdf",
         decimals: 8,
-        gecko: "eli-lilly-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Exxon Mobil xStock",
@@ -204,7 +204,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684abe960ee12e238c0a1f0b_Ticker%3DXOM%2C%20Company%20Name%3DExxonMobil%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-XOMx.pdf",
         decimals: 8,
-        gecko: "exxon-mobil-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Gamestop xStock",
@@ -213,7 +213,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c125f1c48a3dab4c66137_Ticker%3DGME%2C%20Company%20Name%3Dgamestop%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-GMEx.pdf",
         decimals: 8,
-        gecko: "gamestop-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Gold xStock",
@@ -222,7 +222,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/685123a7747987b071b10d47_Ticker%3DGLD%2C%20Company%20Name%3DGold%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-GSx.pdf",
         decimals: 8,
-        gecko: "gold-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Goldman Sachs xStock",
@@ -231,7 +231,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c114972ed2d868a1b3f95_Ticker%3DGS%2C%20Company%20Name%3DGoldman%20Sachs%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-GSx.pdf",
         decimals: 8,
-        gecko: "goldman-sachs-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Home Depot xStock",
@@ -240,7 +240,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684be484171c0a11201e098d_Ticker%3DHD%2C%20Company%20Name%3DHome%20Depot%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-HDx.pdf",
         decimals: 8,
-        gecko: "home-depot-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Honeywell xStock",
@@ -249,7 +249,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c08d12385ea1da806a5bb_Ticker%3DHON%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-HONx.pdf",
         decimals: 8,
-        gecko: "honeywell-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Intel xStock",
@@ -258,7 +258,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0a334cac334b4a41651b_Ticker%3DINTC%2C%20Company%20Name%3DIntel%20Corp%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-INTCx.pdf",
         decimals: 8,
-        gecko: "intel-xstock"
+        issuer: "xstocks"
     },
     {
         name: "International Business Machines",
@@ -267,7 +267,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bfb32f7000e98d733283f_Ticker%3DIBM%2C%20Company%20Name%3DIBM%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-IBMx.pdf",
         decimals: 8,
-        gecko: "international-business-machines-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Johnson & Johnson xStock",
@@ -276,7 +276,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684ace98941130a24503a315_Ticker%3DJNJ%2C%20Company%20Name%3Djohnson-johnson%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-JNJx.pdf",
         decimals: 8,
-        gecko: "johnson-johnson-xstock"
+        issuer: "xstocks"
     },
     {
         name: "JPMorgan Chase xStock",
@@ -285,7 +285,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684acf34c10a7e0add155c61_Ticker%3DJPM%2C%20Company%20Name%3DJPMorganChase%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-JPMx.pdf",
         decimals: 8,
-        gecko: "jpmorgan-chase-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Linde xStock",
@@ -294,7 +294,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf2b1132313f4529a3160_Ticker%3DLIN%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-LINx.pdf",
         decimals: 8,
-        gecko: "linde-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Marvell xStock",
@@ -303,7 +303,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0eb412d3850c2c01cd29_Ticker%3DMRVL%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-MRVLx.pdf",
         decimals: 8,
-        gecko: "marvell-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Mastercard xStock",
@@ -312,7 +312,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684ad1ca13c7aaa9ece4cbbf_Ticker%3DMA%2C%20Company%20Name%3DMastercard%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-MAx.pdf",
         decimals: 8,
-        gecko: "mastercard-xstock"
+        issuer: "xstocks"
     },
     {
         name: "McDonald's xStock",
@@ -321,7 +321,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf77838b45bb94ff32be7_Ticker%3DMCD%2C%20Company%20Name%3DMcDonalds%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-MCDx.pdf",
         decimals: 8,
-        gecko: "mcdonald-s-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Medtronic xStock",
@@ -330,7 +330,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bfc99a86580de629510e9_Ticker%3DMDT%2C%20Company%20Name%3DMedtronic%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-MDTx.pdf",
         decimals: 8,
-        gecko: "medtronic-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Merck xStock",
@@ -339,7 +339,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684be6ff5bd0a5643adf85ec_Ticker%3DMRK%2C%20Company%20Name%3DMerck%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-MRKx.pdf",
         decimals: 8,
-        gecko: "merck-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Meta xStock",
@@ -348,7 +348,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/68497dee3db1bae97b91ac05_Ticker%3DMETA%2C%20Company%20Name%3DMeta%20Platforms%20Inc.%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-METAx.pdf",
         decimals: 8,
-        gecko: "meta-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Microsoft xStock",
@@ -357,7 +357,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/68497bdc918924ea97fd8211_Ticker%3DMSFT%2C%20Company%20Name%3DMicrosoft%20Inc.%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-MSFTx.pdf",
         decimals: 8,
-        gecko: "microsoft-xstock"
+        issuer: "xstocks"
     },
     {
         name: "MicroStrategy xStock",
@@ -366,7 +366,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0d47eee3a9c3fa12475a_Ticker%3DMSTR%2C%20Company%20Name%3DMicroStrategy%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-MSTRx.pdf",
         decimals: 8,
-        gecko: "microstrategy-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Nasdaq xStock",
@@ -375,7 +375,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/68511cb6e367f19f06664527_QQQx.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-QQQx.pdf",
         decimals: 8,
-        gecko: "nasdaq-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Netflix xStock",
@@ -384,7 +384,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf6c149d917d503f6cda6_Ticker%3DNFLX%2C%20Company%20Name%3DNetflix%20Inc.%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-NFLXx.pdf",
         decimals: 8,
-        gecko: "netflix-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Novo Nordisk xStock",
@@ -393,7 +393,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf139788d618501b65727_Ticker%3DNOVO_B%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-NVOx.pdf",
         decimals: 8,
-        gecko: "novo-nordisk-xstock"
+        issuer: "xstocks"
     },
     {
         name: "NVIDIA xStock",
@@ -402,7 +402,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684961bfb45e3c4d777b9997_Ticker%3DNVDA%2C%20Company%20Name%3DNVIDIA%20Corp%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-NVDAx.pdf",
         decimals: 8,
-        gecko: "nvidia-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Oracle xStock",
@@ -411,7 +411,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf1ecae4eb4a817da9941_Ticker%3DORCL%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-ORCLx.pdf",
         decimals: 8,
-        gecko: "oracle-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Palantir xStock",
@@ -420,7 +420,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0c4c0e5466272c52958b_Ticker%3DPLTR%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-PLTRx.pdf",
         decimals: 8,
-        gecko: "palantir-xstock"
+        issuer: "xstocks"
     },
     {
         name: "PepsiCo xStock",
@@ -429,7 +429,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684be8662b90a208c5d5b8e5_Ticker%3DPEP%2C%20Company%20Name%3DPepsico%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-PEPx.pdf",
         decimals: 8,
-        gecko: "pepsico-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Pfizer xStock",
@@ -438,7 +438,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684be5e3c54ff3f5c6c9b36f_Ticker%3DPFE%2C%20Company%20Name%3Dpfizer%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-PFEx.pdf",
         decimals: 8,
-        gecko: "pfizer-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Philip Morris xStock",
@@ -447,7 +447,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0981cbec78a581a6bfe7_Ticker%3DPM%2C%20Company%20Name%3Dphilip%20morris%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-PMx.pdf",
         decimals: 8,
-        gecko: "philip-morris-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Procter & Gamble xStock",
@@ -456,7 +456,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684be3c6fa6a62fb260a51e3_Ticker%3DPG%2C%20Company%20Name%3DProctor%20%26%20Gamble%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-PGx.pdf",
         decimals: 8,
-        gecko: "procter-gamble-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Robinhood xStock",
@@ -465,7 +465,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684c0f39cede10b9afa4852f_Ticker%3DHOOD%2C%20Company%20Name%3DRobinhood%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-HOODx.pdf",
         decimals: 8,
-        gecko: "robinhood-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Salesforce xStock",
@@ -474,7 +474,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf3670e24ef4c92a6a7fc_Ticker%3DCRM%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-CRMx.pdf",
         decimals: 8,
-        gecko: "salesforce-xstock"
+        issuer: "xstocks"
     },
     {
         name: "SP500 xStock",
@@ -483,7 +483,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/685116624ae31d5ceb724895_Ticker%3DSPX%2C%20Company%20Name%3DSP500%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-SPYx.pdf",
         decimals: 8,
-        gecko: "sp500-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Tesla xStock",
@@ -492,7 +492,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684aaf9559b2312c162731f5_Ticker%3DTSLA%2C%20Company%20Name%3DTesla%20Inc.%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-TSLAx.pdf",
         decimals: 8,
-        gecko: "tesla-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Thermo Fisher xStock",
@@ -501,7 +501,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bf4d930b0fdc50503056d_Ticker%3DTMO%2C%20Company%20Name%3DThermo_Fisher_Scientific%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-TMOx.pdf",
         decimals: 8,
-        gecko: "thermo-fisher-xstock"
+        issuer: "xstocks"
     },
     {
         name: "TQQQ xStock",
@@ -510,7 +510,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/685125548a5829b9b59a6156_TQQQx.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-TQQQx.pdf",
         decimals: 8,
-        gecko: "tqqq-xstock"
+        issuer: "xstocks"
     },
     {
         name: "UnitedHealth xStock",
@@ -519,7 +519,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684abb4c69185d8a871e2ab5_Ticker%3DUNH%2C%20Company%20Name%3DUnited%20Health%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-UNHx.pdf",
         decimals: 8,
-        gecko: "unitedhealth-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Vanguard xStock",
@@ -528,7 +528,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/68511e335ee1314f602d9a7c_Ticker%3DVTI%2C%20Company%20Name%3DVanguard%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-VTIx.pdf",
         decimals: 8,
-        gecko: "vanguard-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Visa xStock",
@@ -537,7 +537,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684acfd76eb8395c6d1d2210_Ticker%3DV%2C%20Company%20Name%3DVisa%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-Vx.pdf",
         decimals: 8,
-        gecko: "visa-xstock"
+        issuer: "xstocks"
     },
     {
         name: "Walmart xStock",
@@ -546,7 +546,7 @@ const asset_list = [
         icon: "https://cdn.prod.website-files.com/655f3efc4be468487052e35a/684bebd366d5089b2da3cf7e_Ticker%3DWMT%2C%20Company%20Name%3DWalmart%2C%20size%3D256x256.svg",
         pdf: "https://documents.backed.fi/backed-assets-factsheet-WMTx.pdf",
         decimals: 8,
-        gecko: "walmart-xstock"
+        issuer: "xstocks"
     }
 ];
-export default asset_list;
+export default xstocks_list;
