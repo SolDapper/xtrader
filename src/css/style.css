@@ -854,6 +854,7 @@ a.inline-link:hover{
 }
 #settings-rpc{
     width: calc(50% - 30px);
+    color: #f9df95;
 }
 #settings-priority, #settings-refresh, #settings-notis{
     color: #2a71f8;
@@ -893,7 +894,26 @@ a.inline-link:hover{
     color: #282828;
     opacity: 1.0;
 }
-
+#settings-user{
+    color: #f9df95;
+    text-align: center;
+    background: #111;
+    border: 0;
+    border-radius: 6px;
+    outline: none;
+    width: calc(50% - 24px);
+    height: 40px;
+    margin: 0 14px 0 0;
+    padding: 0 12px;
+    font-family: Ubuntu;
+    font-weight: bold;
+    line-height: 40px;
+    font-size: 12px;
+}
+#settings-user::placeholder{
+    color: #f9df95; /* or any other color like #ff0000, rgba(255, 0, 0, 0.5) */
+    opacity: 1;   
+}
 
 #main-cover{
     z-index: 1000;

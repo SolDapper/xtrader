@@ -2,6 +2,10 @@
     #settings-rpc{
         width: calc(100% - 20px);
     }
+    #settings-user{
+        width: calc(100% - 24px);
+        text-align: left;
+    }
     .panel-list ul.row:last-of-type{
         margin-bottom: 0;
     }

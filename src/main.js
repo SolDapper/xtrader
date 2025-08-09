@@ -11,6 +11,7 @@ import "toastify-js/src/toastify.css";
 import "@fontsource/ubuntu";
 import {transact} from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
 import mcswap from 'mcswap-sdk';
+import { getMultiplePrimaryDomains } from '@bonfida/spl-name-service'; // Or similar
 import EventEmitter from 'events';
 import mcswapConnector from "mcswap-connector";
 import "mcswap-connector/src/colors/xtrader-connector.css";
@@ -38,6 +39,26 @@ const groups = [
         slug: "genesis"
     }
 ]
+
+
+// snsGet
+async function snsGet(walletAddressString) {
+  let _rpc_ = $("#settings-rpc").val();
+  if(_rpc_==""){_rpc_ = rpc;}
+  const connection = new Connection(_rpc_,'confirmed');
+  const walletPublicKey = new PublicKey(walletAddressString);
+  const primaryDomains = await getMultiplePrimaryDomains(connection, [walletPublicKey]);
+  if (primaryDomains && primaryDomains.length > 0) {
+    const primaryDomain = primaryDomains[0];
+    if (primaryDomain) {
+      return primaryDomain;
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
+}
 
 
 // constants
@@ -150,6 +171,9 @@ async function isConnected(){
     $("#main-cover, #main-chooser").fadeOut(300);
     $("#mcswap_cover, #mcswap_chooser").fadeOut(300);
     let fullWallet = window.mcswap.publicKey.toString();
+    $("#settings-user").val(fullWallet);
+    const domain = await snsGet(fullWallet);
+    if(domain){$("#settings-user").val(domain+".sol");}
     const first_part = fullWallet.slice(0,4);
     const last_part = fullWallet.slice(-4);
     fullWallet = first_part + "..." + last_part;
@@ -168,6 +192,7 @@ async function isConnected(){
     }
 }
 async function isDisconnected(){
+    $("#settings-user").val("");
     $("#introduction").show();
     const inWalletApp = await inAppBrowse();
     if(isMobile() && inWalletApp==false){
@@ -1156,13 +1181,15 @@ async function save_settings(){
         settings.screensaver = $("#settings-screensaver").val();
         const test_rpc = $("#settings-rpc").val().trim();
         if(settings.screensaver<30){settings.screensaver="120";}
-        if(await pingRPC(test_rpc)){
-            settings.rpc = test_rpc;
-            $("#settings-rpc").css("color", "#2a71f8");
-        }
-        else{
-            settings.rpc = "";
-            $("#settings-rpc").css("color", "#b63d3d");
+        if(test_rpc!=""){
+            if(await pingRPC(test_rpc)){
+                settings.rpc = test_rpc;
+                $("#settings-rpc").css("color", "#f9df95");
+            }
+            else{
+                settings.rpc = "";
+                $("#settings-rpc").css("color", "#b63d3d");
+            }
         }
         localStorage.setItem("settings", JSON.stringify(settings));
         return true;
