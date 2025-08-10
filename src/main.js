@@ -27,17 +27,18 @@ const groups = [
         slug: "xstocks"
     },
     {
-        name: "ShiftStocks",
-        slug: "shiftstocks"
-    },
-    {
         name: "PreStocks",
         slug: "prestocks"
-    },
-    {
-        name: "Genesis",
-        slug: "genesis"
     }
+    // ,
+    // {
+    //     name: "ShiftStocks",
+    //     slug: "shiftstocks"
+    // },
+    // {
+    //     name: "Genesis",
+    //     slug: "genesis"
+    // }
 ]
 
 
