@@ -10,7 +10,9 @@ import Toastify from 'toastify-js';
 import "toastify-js/src/toastify.css";
 import "@fontsource/ubuntu";
 import {transact} from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
-import mcswap from 'mcswap-sdk';
+// import mcswap from 'mcswap-sdk';
+import xtrader from './js/xtrader-sdk.js';
+// import xtrader from 'xtrader-sdk';
 import { getMultiplePrimaryDomains } from '@bonfida/spl-name-service'; // Or similar
 import EventEmitter from 'events';
 import mcswapConnector from "mcswap-connector";
@@ -318,7 +320,7 @@ async function loadUsers(ele,array){
         }
     }
 }
-// backchecking displayed escrows
+// backchecking displayed offers
 async function backcheck(ele,array){
     const list = $("#"+ele+"-view .panel-list").find("ul");
     const count = list.length;
@@ -354,7 +356,7 @@ async function load_sent(){
         $("#sent-refresh").addClass("spin");
         let _rpc_ = $("#settings-rpc").val().trim();
         if(_rpc_==""){_rpc_=rpc;}
-        const splSent = await mcswap.splSent({
+        const splSent = await xtrader.Sent({
             rpc: _rpc_,
             display: true,
             private: true,
@@ -449,10 +451,9 @@ async function load_received(){
         $("#received-refresh").addClass("spin");
         let _rpc_ = $("#settings-rpc").val().trim();
         if(_rpc_==""){_rpc_=rpc;}
-        const splReceived = await mcswap.splReceived({
+        const splReceived = await xtrader.Received({
             rpc: _rpc_,
             display: true,
-            private: true,
             wallet: window.mcswap.publicKey.toString()
         });
         splReceived.data.sort((a,b) => (a.utime > b.utime) ? 1 : ((b.utime > a.utime) ? -1 : 0));
@@ -511,7 +512,7 @@ async function load_received(){
                     const minutesStr = minutes < 10 ? '0' + minutes : minutes;
                     const display_time = hours + ':' + minutesStr + ' ' + ampm + ' ' + month + '/' + day + '/' + year;
                     ele += '<li class="item-time">'+display_time+'</li>';
-                    ele += '<li class="item-action"><button class="item-hide">hide</button><button class="item-action item-authorize">Authorize</button></li>';
+                    ele += '<li class="item-action"><button class="item-hide">hide</button><button class="item-action item-authorize">Accept</button></li>';
                     ele += '</ul></div>';
                     $("#received-view .panel-list").prepend(ele);
                     positioner();
@@ -549,7 +550,7 @@ async function load_public(){
         else{
             $("#market-refresh").addClass("spin");
             const user = window.mcswap.publicKey.toString();
-            const splSent = await mcswap.splSent({
+            const splSent = await xtrader.Sent({
                 rpc: _rpc_,
                 display: true,
                 private: false,
@@ -620,7 +621,7 @@ async function load_public(){
                             ele += '<li class="item-action"><button class="item-action item-cancel">Cancel</button></li>';
                         }
                         else{
-                            ele += '<li class="item-action"><button class="item-hide">hide</button><button class="item-action item-public-authorize">Authorize</button></li>';
+                            ele += '<li class="item-action"><button class="item-hide">hide</button><button class="item-action item-public-authorize">Accept</button></li>';
                         }
                         ele += '</ul></div>';
                         $("#market-view .panel-list").prepend(ele);
@@ -682,14 +683,14 @@ $("#market-refresh, #sent-refresh, #received-refresh").on("click", async functio
 });
 
 
-// get ref for a given escrow
+// get ref for a given offer
 async function verifyProgram(ixs,signature){
     try{
         let verified = false;
         let i = 0;
         while(i < ixs.length){
             const programId = ixs[i].programId;
-            if(programId.toString() == mcswap.SPL_MCSWAP_PROGRAM){
+            if(programId.toString() == xtrader.PROGRAM){
                 let parts = signature.memo.split("] ");
                 parts.shift();
                 verified = parts.join('] ');
@@ -703,9 +704,9 @@ async function verifyProgram(ixs,signature){
         return;
     }
 }
-async function getMemo(escrow){
+async function getMemo(offer){
     try{
-        const address = new PublicKey(escrow);
+        const address = new PublicKey(offer);
         let _rpc_ = $("#settings-rpc").val();
         if(_rpc_==""){_rpc_ = rpc;}
         const connection = new Connection(_rpc_,'confirmed');
@@ -872,15 +873,15 @@ $(document).delegate(".item-hide", "click", async function(){
     parent.addClass("hidden").hide();
     const id = $(this).parent().parent().parent().attr("id");
     const view = id.split("-")[1];
-    const escrow = id.split("-")[2];
+    const offer = id.split("-")[2];
     const hidden = localStorage.getItem("hidden-"+view);
     if(hidden){
         const array = JSON.parse(hidden);
-        if(!array.includes(escrow)){array.push(escrow);}
+        if(!array.includes(offer)){array.push(offer);}
         localStorage.setItem("hidden-"+view, JSON.stringify(array));
     }
     else{
-        localStorage.setItem("hidden-"+view, JSON.stringify([escrow]));
+        localStorage.setItem("hidden-"+view, JSON.stringify([offer]));
     }
     toast("Hidden", 2000);
     positioner();
@@ -894,14 +895,14 @@ $(document).delegate(".item-cancel", "click", async function(){
     const item = $(this).parent().parent().attr("id");
     const parts = item.split("-");
     const view = parts[0];
-    const escrow = parts[1];
+    const offer = parts[1];
     const seller = window.mcswap.publicKey.toString();
     const priority = $("#settings-priority").val();
-    const tx = await mcswap.splCancel({
+    const tx = await xtrader.Cancel({
         "rpc": rpc,
         "blink": false,
         "seller": seller,
-        "escrow": escrow,
+        "offer": offer,
         "priority": priority
     });
     if(tx){
@@ -946,10 +947,10 @@ $(document).delegate(".item-cancel", "click", async function(){
                 return;
             }
             $("#main-message").html("Canceling offer...");
-            const signature = await mcswap.send(rpc,signed);
+            const signature = await xtrader.Send(rpc,signed);
             // console.log("signature", signature);
             // console.log("awaiting status...");
-            const status = await mcswap.status(rpc,signature);
+            const status = await xtrader.Status(rpc,signature);
             if(status!="finalized"){
                 $("#main-message").html("");
                 $("#main-cover").fadeOut(300);
@@ -958,8 +959,8 @@ $(document).delegate(".item-cancel", "click", async function(){
             else{
                 $("#main-message").html("");
                 $("#main-cover").fadeOut(300);
-                toast("Offer closed",4000);
-                $("#"+view+"-"+escrow).parent().remove();
+                toast("Offer Canceled",4000);
+                $("#"+view+"-"+offer).parent().remove();
                 positioner();
                 const ele = $("#"+view+"-view .qty-center");
                 const count = parseInt(ele.html());
@@ -985,15 +986,15 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
     const ref = $(this).parent().parent().find(".item-title").html();
     const parts = item.split("-");
     const view = parts[0];
-    const escrow = parts[1];
+    const offer = parts[1];
     const buyer = window.mcswap.publicKey.toString();
     const priority = $("#settings-priority").val();
     const symbol = $(this).parent().prev().prev().prev().prev().prev().find(".item-symbol").html();
-    const tx = await mcswap.splExecute({
+    const tx = await xtrader.Execute({
         "rpc": rpc,
         "blink": false,
         "buyer": buyer,
-        "escrow": escrow,
+        "offer": offer,
         "priority": priority,
         "memo": ref
     });
@@ -1039,10 +1040,10 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
                 return;
             }
             $("#main-message").html("Processing...");
-            const signature = await mcswap.send(rpc,signed);
+            const signature = await xtrader.Send(rpc,signed);
             // console.log("signature", signature);
             // console.log("awaiting status...");
-            const status = await mcswap.status(rpc,signature);
+            const status = await xtrader.Status(rpc,signature);
             if(status!="finalized"){
                 $("#main-message").html("");
                 $("#main-cover").fadeOut(300);
@@ -1052,7 +1053,7 @@ $(document).delegate(".item-public-authorize, .item-authorize", "click", async f
                 $("#main-message").html("");
                 $("#main-cover").fadeOut(300);
                 toast("Transaction complete",4000);
-                $("#"+view+"-"+escrow).parent().remove();
+                $("#"+view+"-"+offer).parent().remove();
                 positioner();
                 const ele = $("#"+view+"-view .qty-center");
                 const count = parseInt(ele.html());
@@ -1224,7 +1225,7 @@ $("#settings-rpc").on("keyup change input",function(e){
 });
 
 
-// create escrow
+// create offer
 function commas(_amount_){
     return _amount_.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
 }
@@ -1482,7 +1483,7 @@ $("#payment-pay").on("click", async function(){
         "token4Amount": false,
         "memo": memo
     }
-    const tx = await mcswap.splCreate(config);
+    const tx = await xtrader.Create(config);
     if(tx.tx){
         try{
             $("#main-message").html("Requesting approval...");
@@ -1525,10 +1526,10 @@ $("#payment-pay").on("click", async function(){
                 return;
             }
             $("#main-message").html("Creating offer...");
-            const signature = await mcswap.send(rpc,signed);
+            const signature = await xtrader.Send(rpc,signed);
             // console.log("signature", signature);
             // console.log("awaiting status...");
-            const status = await mcswap.status(rpc,signature);
+            const status = await xtrader.Status(rpc,signature);
             if(status!="finalized"){
                 $("#main-message").html("");
                 $("#main-cover").fadeOut(300);
@@ -1685,7 +1686,7 @@ $("button#buyer-asset").on("click", async function(e){
     $("#asset-list-box").attr("data-chooser","buyer-asset").removeClass("animate__slideOutLeft").addClass("animate__slideInLeft").show();
     $("#asset_filter").focus();
 });
-// escrow type
+// offer type
 $("#buyer-type").on("change",function(){
     if($(this).val()=="Public Market"){
         $("#buyer-wallet").val("Any").prop("disabled",true);
@@ -2222,15 +2223,15 @@ function handleSwipe(event){
             parent.addClass("hidden");
             const id = parent.attr("id");
             const view = id.split("-")[1];
-            const escrow = id.split("-")[2];
+            const offer = id.split("-")[2];
             const hidden = localStorage.getItem("hidden-"+view);
             if(hidden){
                 const array = JSON.parse(hidden);
-                if(!array.includes(escrow)){array.push(escrow);}
+                if(!array.includes(offer)){array.push(offer);}
                 localStorage.setItem("hidden-"+view, JSON.stringify(array));
             }
             else{
-                localStorage.setItem("hidden-"+view, JSON.stringify([escrow]));
+                localStorage.setItem("hidden-"+view, JSON.stringify([offer]));
             }
             await new Promise(_=>setTimeout(_,500));
             parent.hide();
