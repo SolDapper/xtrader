@@ -40,13 +40,13 @@
                     <div class="row"><span class="label-category">Offer</span><span id="creator-value">$0.00</span><span class="estimated-value">(usd estimate)</span></div>
                     <input disabled id="creator-wallet" form="create-form" type="hidden" />
                     <div class="row"><label for="creator-asset">Asset</label><img id="creator-icon" class="little-icon" src="#" /><button id="creator-asset">Choose</button><input required id="creator-mint" form="create-form" type="hidden" /></div>
-                    <div class="row"><label for="creator-amount">Amount</label><input disabled required placeholder="0.00000" id="creator-amount" type="numeric" /></div>
+                    <div class="row"><label for="creator-amount">Amount</label><input disabled required placeholder="0.00000" id="creator-amount" type="text" inputmode="numeric" /></div>
                     <div class="row"><label for="create-memo">Ref</label><input disabled required placeholder="(optional identifiers)" id="create-memo" form="create-form" type="text" /></div>
                     <div class="row"><span class="label-category">For</span><span id="buyer-value">$0.00</span><span class="estimated-value">(usd estimate)</span></div>
                     <div class="row"><label for="buyer-asset">Asset</label><img id="buyer-icon" class="little-icon" src="#" /><button disabled id="buyer-asset">Choose</button><input required id="buyer-mint" form="create-form" type="hidden" /></div>
-                    <div class="row"><label for="buyer-amount">Amount</label><input disabled required placeholder="0.00000" id="buyer-amount" type="numeric" /></div>
+                    <div class="row"><label for="buyer-amount">Amount</label><input disabled required placeholder="0.00000" id="buyer-amount" type="text" inputmode="numeric" /></div>
                     <div class="row">
-                        <label for="plus-minus">Match</label><button disabled id="plus-minus" >+</button><input disabled id="set-percent" type="numeric" placeholder="%" /><span id="set-symbol">%</span><button disabled id="set-button" >Calculate</button>
+                        <label for="plus-minus">Match</label><button disabled id="plus-minus" >+</button><input disabled id="set-percent" type="text" inputmode="numeric" placeholder="%" /><span id="set-symbol">%</span><button disabled id="set-button" >Calculate</button>
                     </div>
                     <div class="row"><span class="label-category">To</span></div>
                     <div class="row"><label for="buyer-type">Type</label><select disabled id="buyer-type" form="create-form">
