@@ -1,9 +1,9 @@
 {
     "name": "xtrader",
     "version": "0.0.1",
-    "description": "xStocks Trader",
+    "description": "ICM OTC Service",
     "scripts": {
-        "build": "parcel build ./src/index.html && cp -r ./wallet_icon.png ./dist/wallet_icon.png && cp -r ./store_icon.png ./dist/store_icon.png",
+        "build": "parcel build ./src/index.html && cp -r ./wallet_icon.png ./dist/wallet_icon.png && cp -r ./icon-clear.png ./dist/icon-clear.png && cp -r ./icon-dark.png ./dist/icon-dark.png",
         "start": "parcel ./src/index.html"
     },
     "dependencies": {
