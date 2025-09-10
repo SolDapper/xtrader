@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "description": "ICM OTC Service",
     "scripts": {
-        "build": "parcel build ./src/index.html && cp -r ./wallet_icon.png ./dist/wallet_icon.png && cp -r ./icon-clear.png ./dist/icon-clear.png && cp -r ./icon-dark.png ./dist/icon-dark.png",
+        "build": "parcel build ./src/index.html && cp -r ./wallet_icon.png ./dist/wallet_icon.png && cp -r ./icon-clear.png ./dist/icon-clear.png && cp -r ./icon-dark.png ./dist/icon-dark.png && cp -r ./icon-mono.png ./dist/icon-mono.png",
         "start": "parcel ./src/index.html"
     },
     "dependencies": {
