@@ -4,7 +4,7 @@
 "id": "xtrader",
 "start_url": "/",
 "display": "standalone",
-"description": "Peer-to-Peer xStocks Trader",
+"description": "ICM OTC Service",
 "lang": "en",
 "dir": "auto",
 "theme_color": "#111",
@@ -464,7 +464,7 @@
     {
         "name":"xTrader",
         "url":"/",
-        "description":"Peer-to-Peer xStocks Trader"
+        "description":"ICM OTC Service"
     }
 ],
 "screenshots" : [
