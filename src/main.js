@@ -1928,11 +1928,17 @@ async function inAppBrowse(){
   }
 }
 // load the asset list
+$("#introduction").css({"display":"block"}).show();
 const agreement = localStorage.getItem("agreement");
 if(agreement){
     $("#connect, #cog").prop("disabled", false);
     $("#agreement").prop("checked", true);
     $("#introduction").hide();
+    $("#logo-home").show();
+}
+else{
+    $("#logo-home").show();
+    $("#introduction").css({"display":"block"}).show();
 }
 $(window).on("load", async function(){
     let wakeLock = null;

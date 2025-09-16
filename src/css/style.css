@@ -59,7 +59,7 @@ main{
 }
 #logo-home{
     width: 360px;
-    display: block;
+    display: none;
     position: fixed;
     float: left;
     left: calc(50% - 180px);
@@ -90,6 +90,7 @@ button{
     font-size: 16px;
     transition: all .3s;
     display: block;
+    display: none;
     font-weight: bold;
     font-family: "Ubuntu";
     color: #fff;
