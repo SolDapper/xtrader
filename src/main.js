@@ -194,7 +194,9 @@ async function isConnected(){
 }
 async function isDisconnected(){
     $("#settings-user").val("");
-    $("#introduction").show();
+    if($("#agreement").prop("checked")!=true){
+        $("#introduction").show();
+    }
     const inWalletApp = await inAppBrowse();
     if(isMobile() && inWalletApp==false){
         $('.mobile_disconnect_button').hide();
@@ -1926,6 +1928,12 @@ async function inAppBrowse(){
   }
 }
 // load the asset list
+const agreement = localStorage.getItem("agreement");
+if(agreement){
+    $("#connect, #cog").prop("disabled", false);
+    $("#agreement").prop("checked", true);
+    $("#introduction").hide();
+}
 $(window).on("load", async function(){
     let wakeLock = null;
     if("wakeLock" in navigator){
@@ -2023,11 +2031,6 @@ $(window).on("load", async function(){
         $("#settings-screensaver").val(settings.screensaver);
         $("#settings-rpc").val(settings.rpc);
     }
-    const agreement = localStorage.getItem("agreement");
-    if(agreement){
-        $("#connect, #cog").prop("disabled", false);
-        $("#agreement").prop("checked", true);
-    }
     if(isMobile() && !inAppBrowse()){
         $("#import-blackbook").hide();
         $("#import-contact").show();
@@ -2093,10 +2096,17 @@ $("#agreement").on("click", async function(){
         $(".views").hide();
         $("#home-view").show();
         $("#connect, #cog").prop("disabled", false);
+        $("#introduction").hide();
         toast("Connect your wallet");
     }
     else{
+        const confirm = window.confirm("Are you sure? This will clear all stored data.");
+        if(!confirm){
+            $(this).prop("checked", true);
+            return;
+        }
         $("#connect, #cog").prop("disabled", true);
+        $("#introduction").show();
         if($("#disconnect").is(":visible")){
             $("#disconnect").click();
         }
@@ -2109,6 +2119,10 @@ $("#agreement").on("click", async function(){
         $("#settings-screensaver").val("120");
         $("#settings-priority").val("Low");
     }
+});
+$("#open-intro").on("click", async function(){
+    $("#introduction").click();
+    $("#cog").removeClass("active-view").removeClass("active-cog");
 });
 
 

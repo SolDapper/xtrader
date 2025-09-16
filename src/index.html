@@ -32,7 +32,7 @@
             <div class="views" id="home-view">
                 <div class="animate__animated animate__zoomIn" id="logo-home">
                     <img id="logo-home-img" src="./img/logo.png" />
-                    <button id="introduction">Get Started</button>
+                    <button id="introduction">Continue</button>
                 </div>
             </div>
             <div class="views" id="compose-view"><h1>Compose</h1><h2>Compose New Offer</h2><div id="compose-panel" class="panel"><div class="panel-box">
@@ -104,6 +104,11 @@
                     <input id="settings-rpc" class="settings-input" type="text" placeholder="https://mainnet.helius-rpc.com/?api-key=<your-key>" />
                 </div>
 
+                <div class="row"><span class="label-category">User Agreement</span></div>
+                <div class="row">
+                    <button id="open-intro" class="danger">View</button>
+                </div>
+
                 <div style="display: none">
 
                 <div class="row"><span class="label-category">Refresh</span></div>
@@ -147,22 +152,20 @@
                 </div>
 
             </div></div></div>
-            <div class="views" id="introduction-view"><h1>Intro</h1><h2>Getting Started</h2><div class="panel"><div class="panel-box">
+            <div class="views" id="introduction-view"><h1>User Agreement</h1><h2>xTrader Services</h2><div class="panel"><div class="panel-box">
                 
                 <div class="row"><span class="label-category">Disclaimer</span></div>
                 <div class="row">
-                    This application is still in beta as an experimental model albeit we strive to bring a premium and trusted OTC/P2P application mainstream in support of tokenized capital markets.   
+                    This application is in beta.   
                     Using xTrader on a public computer or device shared with others is highly discouraged. 
                     The information provided by xTrader below (or otherwise) should never be considered as financial advice. 
-                    All liability of its use falls solely on the individual user according to the regulatory requirements of their jurisdiction. 
-                    xTrader is simply an interface tool that provides a peer-to-peer trustless escrow service through a smart contract. 
-                    The xTrader app never takes custody of anyones assets, for any reason. 
-                    Absolutely no personal data, app settings, preferences, or private contacts are databased by xTrader. 
-                    In fact, xTrader currently uses no databases at all. 
-                    All of your private Blackbook contacts, app settings, and preferences are stored locally on your device's browser and can be cleared by you at any time. 
+                    xTrader is an app that interacts with the trustless xTrader smart contract on the Solana network. 
+                    The xTrader app never takes custody of your assets for any reason. 
+                    No personal data, app settings, preferences, or private contacts are databased by xTrader. 
+                    All of your private Blackbook contacts, app settings, and preferences are stored locally on your device's browser and can be cleared by you at any time by removing your "Consent" below.
                 </div>
 
-                <div class="row"><span class="label-category">Let's begin</span></div>
+                <!-- <div class="row"><span class="label-category">Let's begin</span></div>
                 <div class="row">
                     The following guide makes the assumption you have no experience with crypto currencies or tokenized stocks. 
                     It is geared towards helping traditional stock traders begin their journey into tokenized capital markets.
@@ -198,7 +201,7 @@
                     We highly suggest holding only what you immediately need in your personal wallet to limit risk.
                 </div>
 
-                <div class="row"><span class="label-category">4. Buying xStocks</span></div>
+                <div class="row"><span class="label-category">4. Buying Stock</span></div>
                 <div class="row">
                     While centralized exchanges like Coinbase and Kraken currently block U.S. (and other regions) users from directly purchasing xStocks, you can aquire them from decentralized exchanges like Jupiter or even in swap tools included in your personal wallet. 
                     For example you can connect your personal wallet to the Jupiter website to browse and buy xStocks for major U.S. based companies using your USDC here: <a class="inline-link" target="_blank" href="https://jup.ag/pro?tab=stocks">Jupiter</a>. 
@@ -218,20 +221,21 @@
                 <div class="row">
                      For help getting started with anything above or to contact xTrader you can join our community at X: <a class="inline-link" target="_blank" href="https://x.com/i/communities/1945987627322417389">xTrader Community</a>. 
                      And kindly support our efforts by giving our main page a follow: <a class="inline-link" target="_blank" href="https://x.com/xtraderme">xTrader Page</a>
-                </div>
+                </div> -->
 
                 <!-- <div class="row"><span class="label-category">Power Users</span></div>
                 <div class="row">
                     Solana Mobile
                 </div> -->
 
-                <div class="row"><span class="label-category">User Agreement</span></div>
+                <div class="row"><span class="label-category">Consent</span></div>
                 <div class="row">
                     By checking the box below you agree: <br /><br />
-                    a. That you have read and understand the provided information.<br /><br />
-                    b. That you understand the risks associated with using any crypto product.<br /><br />
-                    c. Unchecking this box at any time will remove all data associated with this app.<br /><br />
-                    <input id="agreement" type="checkbox" /> I agree, please continue.<br /><br />
+                    a. That you have read and understand the provided information above.<br /><br />
+                    b. That you understand the risks associated with using this product.<br /><br />
+                    c. That you are solely responsible for your use of this product and any consequences that may arise.<br /><br />
+                    d. Unchecking this box at any time will remove your "Consent" and all data associated with this app.<br /><br />
+                    <input id="agreement" type="checkbox" /> I Consent, please continue.<br /><br />
                 </div>
 
             </div></div></div>
