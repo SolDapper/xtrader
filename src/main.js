@@ -2098,6 +2098,7 @@ $("#agreement").on("click", async function(){
         $("#connect, #cog").prop("disabled", false);
         $("#introduction").hide();
         toast("Connect your wallet");
+        $("#connect").click();
     }
     else{
         const confirm = window.confirm("Are you sure? This will clear all stored data.");
