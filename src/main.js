@@ -809,7 +809,7 @@ $(document).delegate(".item-amount", "click", async function(){
         }
         else if($(this).hasClass("buyer-amount")){
             toast("They send "+amount_b+" "+symbol_b, 5000);
-            toast("Value $"+amounts[mint_b].usd, 5000);
+            toast("Value $"+amounts[mint_b].usdPrice, 5000);
             if(amounts[mint_a].usdPrice < amounts[mint_b].usdPrice){
                 toast("Their PnL $-"+amounts[mint_b].dif, 5000);
             }
@@ -1307,6 +1307,7 @@ async function getValue(ele=false,issuers=false,mints,amounts){
                 data[mints[0]].dif = "0.00";
                 data[mints[1]].dif = "0.00";
             }
+            console.log("data", data);
             return data;
         }
         else{
@@ -1441,7 +1442,6 @@ $("#payment-pay").on("click", async function(){
         return;
     }
     $("#main-cover").fadeIn(300);
-    $("#main-message").html("Preparing transaction...");
     const amount = await balance(rpc,window.mcswap.publicKey.toString(),$("#creator-mint").val(),$("#creator-amount").attr("data-decimals"));    
     if(amount < $("#creator-amount").val()){
         $("#main-cover").fadeOut(300);
@@ -1483,85 +1483,105 @@ $("#payment-pay").on("click", async function(){
         "token4Amount": false,
         "memo": memo
     }
-    const tx = await xtrader.Create(config);
-    if(tx.tx){
-        try{
-            $("#main-message").html("Requesting approval...");
-            let signed=null;
-            const inWalletApp = await inAppBrowse();
-            if(isMobile() && inWalletApp==false){
-                try{
-                    signed = await transact(async(wallet)=>{
-                        const authToken = localStorage.getItem('authToken');
-                        const authorizationResult = await wallet.authorize({chain:"solana:mainnet-beta",identity:APP_IDENTITY,auth_token:authToken});
-                        const _signedTxs_ = await wallet.signTransactions({transactions:[tx.tx],auth_token:authorizationResult.auth_token});
-                        return _signedTxs_[0];
-                    });
-                }
-                catch(err){
-                    if(err=="SolanaMobileWalletAdapterProtocolError: sign request declined"){
-                        toast("User Declined", 5000);
-                        signed=null;
-                    }
-                    else if(err=="SolanaMobileWalletAdapterProtocolError: auth_token not valid for signing"){
-                        toast("Wrong Wallet", 5000);
-                        localStorage.removeItem('authToken');
-                        window.mcswap = false;
-                        signed=null;
-                        isDisconnected();
-                        return;
-                    }
-                    else{
-                        signed=null;
-                    }
-                }
-            }
-            else{
-                signed = await window.mcswap.signTransaction(tx.tx).catch(async function(err){});
-            }
-            if(!signed){
-                $("#main-message").html("");
-                $("#main-cover").fadeOut(300);
-                toast("Transaction canceled",2000);
-                return;
-            }
-            $("#main-message").html("Creating offer...");
-            const signature = await xtrader.Send(rpc,signed);
-            // console.log("signature", signature);
-            // console.log("awaiting status...");
-            const status = await xtrader.Status(rpc,signature);
-            if(status!="finalized"){
-                $("#main-message").html("");
-                $("#main-cover").fadeOut(300);
-                toast("Transaction failed",2000);
-            }
-            else{
-                $("#main-message").html("");
-                $("#main-cover").fadeOut(300);
-                toast("Offer created",4000);
-                if(buyer==false){
-                    $("#market").click();
-                    $("#market-refresh").click();
-                }
-                else{
-                    $("#sent").click();
-                    $("#sent-refresh").click();
-                }
-            }
+    if($("#drafting").is(":checked")){
+        $("#main-message").html("Saving draft...");
+        config.rpc = false;
+        const drafts = localStorage.getItem("drafts");
+        if(drafts){
+            const array = JSON.parse(drafts);
+            array.push(config);
+            localStorage.setItem("drafts", JSON.stringify(array));
         }
-        catch(err){
-            $("#main-message").html("");
-            $("#main-cover").fadeOut(300);
-            toast("Transaction error",2000);
+        else{
+            localStorage.setItem("drafts", JSON.stringify([config]));
         }
-    }
-    else{
+        toast("Draft saved",2000);
         $("#main-message").html("");
         $("#main-cover").fadeOut(300);
-        toast("Transaction canceled",2000);
-        if(tx.details){
-            // check for low sol balance from simulation
+        return;
+    }
+    else{
+        $("#main-message").html("Preparing transaction...");
+        const tx = await xtrader.Create(config);
+        if(tx.tx){
+            try{
+                $("#main-message").html("Requesting approval...");
+                let signed=null;
+                const inWalletApp = await inAppBrowse();
+                if(isMobile() && inWalletApp==false){
+                    try{
+                        signed = await transact(async(wallet)=>{
+                            const authToken = localStorage.getItem('authToken');
+                            const authorizationResult = await wallet.authorize({chain:"solana:mainnet-beta",identity:APP_IDENTITY,auth_token:authToken});
+                            const _signedTxs_ = await wallet.signTransactions({transactions:[tx.tx],auth_token:authorizationResult.auth_token});
+                            return _signedTxs_[0];
+                        });
+                    }
+                    catch(err){
+                        if(err=="SolanaMobileWalletAdapterProtocolError: sign request declined"){
+                            toast("User Declined", 5000);
+                            signed=null;
+                        }
+                        else if(err=="SolanaMobileWalletAdapterProtocolError: auth_token not valid for signing"){
+                            toast("Wrong Wallet", 5000);
+                            localStorage.removeItem('authToken');
+                            window.mcswap = false;
+                            signed=null;
+                            isDisconnected();
+                            return;
+                        }
+                        else{
+                            signed=null;
+                        }
+                    }
+                }
+                else{
+                    signed = await window.mcswap.signTransaction(tx.tx).catch(async function(err){});
+                }
+                if(!signed){
+                    $("#main-message").html("");
+                    $("#main-cover").fadeOut(300);
+                    toast("Transaction canceled",2000);
+                    return;
+                }
+                $("#main-message").html("Creating offer...");
+                const signature = await xtrader.Send(rpc,signed);
+                // console.log("signature", signature);
+                // console.log("awaiting status...");
+                const status = await xtrader.Status(rpc,signature);
+                if(status!="finalized"){
+                    $("#main-message").html("");
+                    $("#main-cover").fadeOut(300);
+                    toast("Transaction failed",2000);
+                }
+                else{
+                    $("#main-message").html("");
+                    $("#main-cover").fadeOut(300);
+                    toast("Offer created",4000);
+                    if(buyer==false){
+                        $("#market").click();
+                        $("#market-refresh").click();
+                    }
+                    else{
+                        $("#sent").click();
+                        $("#sent-refresh").click();
+                    }
+                }
+            }
+            catch(err){
+                $("#main-message").html("");
+                $("#main-cover").fadeOut(300);
+                toast("Transaction error",2000);
+            }
+        }
+        else{
+            $("#main-message").html("");
+            $("#main-cover").fadeOut(300);
+            toast("Transaction canceled",2000);
+            if(tx.details){
+                // check for low sol balance from simulation
 
+            }
         }
     }
 });
@@ -1622,6 +1642,18 @@ $("#set-button").on("click", async function(){
         toast("Calculation failed");
     }
 });
+$("#drafting").on("click", async function(){
+    if($("#drafting").is(":checked")){
+        $("#payment-pay").html("Save");
+        $("#payment-pay").addClass("drafting");
+    }
+    else{
+        $("#payment-pay").html("Send");
+        $("#payment-pay").removeClass("drafting");
+    }
+});
+
+
 
 
 // filter asset list

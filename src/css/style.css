@@ -411,6 +411,37 @@ label.form-error{
     font-weight: bold;
 }
 
+
+input#drafting{
+    border-radius: 8px;
+    border: 0;
+    outline: none;
+    transform: scale(1.75);
+    margin-right: 10px;
+    margin-left: 15px;
+    accent-color: #fff;
+    cursor: pointer;
+    width: auto;
+    display: inline-block;
+    vertical-align: top;
+}
+input#drafting:disabled{
+    cursor: default;
+    opacity: .2;
+}
+#drafting_title{
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 15px;
+    margin-left: 3px;
+    font-size: 14px;
+    font-weight: bold;
+}
+#drafting_title.disabled{
+    cursor: default;
+    opacity: .2;
+}
+
 /* asset list */
 .little-icon{
     background: #000;

@@ -24,7 +24,8 @@
 </head>
 <body>
     <div id="vanta"></div>
-    <div id="nav"><div id="nav-contain"><button disabled class="view" id="received">Inbox</button><button disabled class="view" id="sent">Sent</button><button disabled class="view" id="compose">Compose</button><button disabled class="view" id="blackbook">Blackbook</button>
+    <div id="nav"><div id="nav-contain"><button disabled class="view" id="received">Inbox</button><button disabled class="view" id="sent">Sent</button><button disabled class="view" id="compose">Compose</button><button disabled class="view" id="drafts">Feed</button>
+        <!-- <button disabled class="view" id="blackbook">Blackbook</button> -->
         <!-- <button disabled class="view" id="market">Market</button> -->
         <button disabled id="connect" class="mcswap_connect_button">Connect</button><button id="disconnect" class="mcswap_disconnect_button">Disconnect</button><button disabled id="cog" class="cog" ><img src="./img/cog.png" /></button></div></div>
     <main>
@@ -42,27 +43,28 @@
                     <div class="row"><label for="creator-asset">Asset</label><img id="creator-icon" class="little-icon" src="#" /><button id="creator-asset">Choose</button><input required id="creator-mint" form="create-form" type="hidden" /></div>
                     <div class="row"><label for="creator-amount">Amount</label><input disabled required placeholder="0.00000" id="creator-amount" type="text" inputmode="numeric" /></div>
                     <div class="row"><label for="create-memo">Ref</label><input disabled required placeholder="(optional identifiers)" id="create-memo" form="create-form" type="text" /></div>
-                    <div class="row"><span class="label-category">For</span><span id="buyer-value">$0.00</span><span class="estimated-value">(usd estimate)</span></div>
+                    <div class="row"><span class="label-category">Ask</span><span id="buyer-value">$0.00</span><span class="estimated-value">(usd estimate)</span></div>
                     <div class="row"><label for="buyer-asset">Asset</label><img id="buyer-icon" class="little-icon" src="#" /><button disabled id="buyer-asset">Choose</button><input required id="buyer-mint" form="create-form" type="hidden" /></div>
                     <div class="row"><label for="buyer-amount">Amount</label><input disabled required placeholder="0.00000" id="buyer-amount" type="text" inputmode="numeric" /></div>
                     <div class="row">
                         <label for="plus-minus">Match</label><button disabled id="plus-minus" >+</button><input disabled id="set-percent" type="text" inputmode="numeric" placeholder="%" /><span id="set-symbol">%</span><button disabled id="set-button" >Calculate</button>
                     </div>
-                    <div class="row"><span class="label-category">To</span></div>
+                    <div class="row"><span class="label-category">From</span></div>
                     <div class="row"><label for="buyer-type">Type</label><select disabled id="buyer-type" form="create-form">
                         <option>Wallet Address</option>
                         <option disabled>Public Market</option>
                     </select></div>
                     <div class="row"><label for="buyer-wallet">Wallet</label><input disabled required placeholder="Address" id="buyer-wallet" form="create-form" type="text" /></div>
-                    <button id="payment-pay" class="submit" form="create-form">Create</button>
+                    <div class="row"><input disabled type="checkbox" id="drafting" /> <div id="drafting_title" class="disabled">Feed Item</div></div>
+                    <button id="payment-pay" class="submit" form="create-form">Send</button>
                 </div>
             </div></div></div>
-            <div class="views" id="received-view"><h1>Inbox</h1><h2>Manage Received Offers <span class="qty-left">(</span><span class="qty-center">0</span><span class="qty-right">)</span></h2><div class="panel"><div class="panel-box">
+            <div class="views" id="received-view"><h1>Inbox</h1><h2>Active Received Offers <span class="qty-left">(</span><span class="qty-center">0</span><span class="qty-right">)</span></h2><div class="panel"><div class="panel-box">
                 <button id="received-refresh" class="refresher"><img src="./img/refresh.png" /></button>
                 <div class="panel-options"><select id="received-filter"><option>All Assets</option></select><select id="received-sellers"><option>All Creators</option></select></div>
                 <div class="panel-list"></div>
             </div></div></div>
-            <div class="views" id="sent-view"><h1>Sent</h1><h2>Manage Sent Offers <span class="qty-left">(</span><span class="qty-center">0</span><span class="qty-right">)</span></h2><div class="panel"><div class="panel-box">
+            <div class="views" id="sent-view"><h1>Sent</h1><h2>Active Sent Offers <span class="qty-left">(</span><span class="qty-center">0</span><span class="qty-right">)</span></h2><div class="panel"><div class="panel-box">
                 <button id="sent-refresh" class="refresher"><img src="./img/refresh.png" /></button>
                 <div class="panel-options"><select id="sent-filter"><option>All Assets</option></select><select id="sent-buyers"><option>All Recipients</option></select></div>
                 <div class="panel-list"></div>
@@ -104,7 +106,7 @@
                     <input id="settings-rpc" class="settings-input" type="text" placeholder="https://mainnet.helius-rpc.com/?api-key=<your-key>" />
                 </div>
 
-                <div class="row"><span class="label-category">User Agreement</span></div>
+                <div class="row"><span class="label-category">Agreement</span></div>
                 <div class="row">
                     <button id="open-intro" class="danger">View</button>
                 </div>
@@ -246,6 +248,11 @@
                     <input id="agreement" type="checkbox" /> I Consent, please connect.<br /><br />
                 </div>
 
+            </div></div></div>
+            <div class="views" id="drafts-view"><h1>Feed</h1><h2>Compliance Pipeline</h2><div class="panel"><div class="panel-box">
+                <div class="row"><span class="label-category">Pending</span></div>
+                <div class="row">Coming Soon</div>
+                <div class="row"></div>
             </div></div></div>
             <div class="views" id="template-view"><h1>Title</h1><h2>Sub Title</h2><div class="panel"><div class="panel-box">
                 <div class="row"><span class="label-category">Priority</span></div>
