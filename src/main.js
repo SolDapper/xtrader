@@ -221,7 +221,7 @@ async function isDisconnected(){
     const inWalletApp = await inAppBrowse();
     if(!isMobile() || inWalletApp===true){
         const emitter = new EventEmitter();
-        new mcswapConnector(["phantom","solflare","backpack","metamask"],emitter).init();
+        new mcswapConnector(["phantom"],emitter).init();
         emitter.on('mcswap_connected',async()=>{isConnected();});
         emitter.on('mcswap_disconnected',async()=>{isDisconnected();});
     }
