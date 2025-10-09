@@ -24,7 +24,8 @@
 </head>
 <body>
     <div id="vanta"></div>
-    <div id="nav"><div id="nav-contain"><button disabled class="view" id="received">Inbox</button><button disabled class="view" id="sent">Sent</button><button disabled class="view" id="compose">Compose</button><button disabled class="view" id="drafts">Feed</button>
+    <div id="nav"><div id="nav-contain"><button disabled class="view" id="received">Inbox</button><button disabled class="view" id="sent">Sent</button><button disabled class="view" id="compose">Compose</button>
+        <!-- <button disabled class="view" id="drafts">Feed</button> -->
         <!-- <button disabled class="view" id="blackbook">Blackbook</button> -->
         <!-- <button disabled class="view" id="market">Market</button> -->
         <button disabled id="connect" class="mcswap_connect_button">Connect</button><button id="disconnect" class="mcswap_disconnect_button">Disconnect</button><button disabled id="cog" class="cog" ><img src="./img/cog.png" /></button></div></div>
@@ -42,7 +43,7 @@
                     <input disabled id="creator-wallet" form="create-form" type="hidden" />
                     <div class="row"><label for="creator-asset">Asset</label><img id="creator-icon" class="little-icon" src="#" /><button id="creator-asset">Choose</button><input required id="creator-mint" form="create-form" type="hidden" /></div>
                     <div class="row"><label for="creator-amount">Amount</label><input disabled required placeholder="0.00000" id="creator-amount" type="text" inputmode="numeric" /></div>
-                    <div class="row"><label for="create-memo">Ref</label><input disabled required placeholder="(optional identifiers)" id="create-memo" form="create-form" type="text" /></div>
+                    <div class="row"><label for="create-memo">Ref</label><input disabled required placeholder="(optional identifier)" id="create-memo" form="create-form" type="text" /></div>
                     <div class="row"><span class="label-category">Ask</span><span id="buyer-value">$0.00</span><span class="estimated-value">(usd estimate)</span></div>
                     <div class="row"><label for="buyer-asset">Asset</label><img id="buyer-icon" class="little-icon" src="#" /><button disabled id="buyer-asset">Choose</button><input required id="buyer-mint" form="create-form" type="hidden" /></div>
                     <div class="row"><label for="buyer-amount">Amount</label><input disabled required placeholder="0.00000" id="buyer-amount" type="text" inputmode="numeric" /></div>

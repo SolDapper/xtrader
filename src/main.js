@@ -20,8 +20,13 @@ import "./css/mobile.css";
 import tokens_list from './js/list/tokens.js';
 import xstocks_list from './js/list/xstocks.js';
 import prestocks_list from './js/list/prestocks.js';
+import shiftstocks_list from './js/list/shiftstocks.js';
 import genesis_list from './js/list/genesis.js';
 const groups = [
+    {
+        name: "ShiftStocks",
+        slug: "shiftstocks"
+    },
     {
         name: "xStocks",
         slug: "xstocks"
@@ -30,11 +35,6 @@ const groups = [
         name: "PreStocks",
         slug: "prestocks"
     }
-    // ,
-    // {
-    //     name: "ShiftStocks",
-    //     slug: "shiftstocks"
-    // },
     // {
     //     name: "Genesis",
     //     slug: "genesis"
@@ -1312,7 +1312,7 @@ async function getValue(ele=false,issuers=false,mints,amounts){
         }
         else{
             let _amount_ = "0.00";
-            if(data[mints].usdPrice){
+            if(data && data[mints] && data[mints].usdPrice){
                 _amount_ = data[mints].usdPrice * amounts;
                 _amount_ = _amount_.toFixed(2);
             }
@@ -1321,6 +1321,9 @@ async function getValue(ele=false,issuers=false,mints,amounts){
             }
             else if(ele=="buyer-amount"){
                 $("#buyer-value").html("$"+commas(_amount_));
+            }
+            if(_amount_=="0.00"){
+                toast("No value!");
             }
         }
     }
@@ -2006,7 +2009,7 @@ $(window).on("load", async function(){
         all_mints.push(asset.mint);
         i++;
     }
-    const master_list = [...xstocks_list, ...prestocks_list, ...genesis_list];
+    const master_list = [...xstocks_list, ...prestocks_list, ...shiftstocks_list, ...genesis_list];
     master_list.sort((a,b) => (a.symbol > b.symbol) ? 1 : ((b.symbol > a.symbol) ? -1 : 0));
     i=0;
     while (i < master_list.length) {
