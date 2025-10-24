@@ -11,7 +11,7 @@ import "toastify-js/src/toastify.css";
 import "@fontsource/ubuntu";
 import {transact} from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
 import xtrader from 'xtrader-sdk';
-import { getMultiplePrimaryDomains } from '@bonfida/spl-name-service'; // Or similar
+import { getMultiplePrimaryDomains } from '@bonfida/spl-name-service';
 import EventEmitter from 'events';
 import mcswapConnector from "mcswap-connector";
 import "mcswap-connector/src/colors/xtrader-connector.css";
@@ -380,7 +380,7 @@ async function load_sent(){
             const asset = splSent.data[i];
             if(!hidden.includes(asset.acct) && all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#sent-'+asset.acct).length){
-                    const merged = [...tokens_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
+                    const merged = [...tokens_list, ...shiftstocks_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
                     asset.token_1_details = await asset_map(merged,asset.token_1_mint);
                     asset.token_3_details = await asset_map(merged,asset.token_3_mint);
                     let ele = '<div class="drag-box" id="box-sent-'+asset.acct+'"><ul id="sent-'+asset.acct+'" class="row">';
@@ -474,8 +474,12 @@ async function load_received(){
             const asset = splReceived.data[i];
             if(!hidden.includes(asset.acct) && all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#received-'+asset.acct).length){
-                    const merged = [...tokens_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
+                    const merged = [...tokens_list, ...shiftstocks_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
+
+                    console.log(asset.token_1_mint);
                     asset.token_1_details = await asset_map(merged,asset.token_1_mint);
+                    console.log(asset.token_1_details);
+                    
                     asset.token_3_details = await asset_map(merged,asset.token_3_mint);
                     let ele = '<div class="drag-box" id="box-received-'+asset.acct+'"><ul id="received-'+asset.acct+'" class="row">';
                     let memo = "Offer";
@@ -521,6 +525,7 @@ async function load_received(){
                 if(!users.includes(asset.seller)){users.push(asset.seller);}
             }
             i++;
+            // console.log(i+" -- "+splReceived.data.length);
             if(i==splReceived.data.length){
                 await loadUsers("received", users);
                 await backcheck("received", displayed);
@@ -579,7 +584,7 @@ async function load_public(){
                 const asset = splSent.data[i];
                 if(!hidden.includes(asset.acct) && all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                     if(!$('#market-'+asset.acct).length){
-                        const merged = [...tokens_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
+                        const merged = [...tokens_list, ...shiftstocks_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
                         asset.token_1_details = await asset_map(merged,asset.token_1_mint);
                         asset.token_3_details = await asset_map(merged,asset.token_3_mint);
                         let ele = '<div class="drag-box" id="box-market-'+asset.acct+'"><ul id="market-'+asset.acct+'" class="row">';
@@ -1612,7 +1617,7 @@ $("#set-button").on("click", async function(){
         let creator_value = $("#creator-value").html();
         creator_value = creator_value.replace(regex,'');
         let result;
-        const merged = [...tokens_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
+        const merged = [...tokens_list, ...shiftstocks_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
         const mint = $("#buyer-mint").val();
         const token = await asset_map(merged,mint);
         if(token.issuer=="usdc" || token.issuer=="tether"){
@@ -2000,6 +2005,7 @@ $(window).on("load", async function(){
         i++;
     }
     i=0;
+
     while (i < tokens_list.length) {
         const asset = tokens_list[i];
         const item = '<option value="'+asset.mint+'">'+asset.symbol+'</option>';
@@ -2009,6 +2015,7 @@ $(window).on("load", async function(){
         all_mints.push(asset.mint);
         i++;
     }
+
     const master_list = [...xstocks_list, ...prestocks_list, ...shiftstocks_list, ...genesis_list];
     master_list.sort((a,b) => (a.symbol > b.symbol) ? 1 : ((b.symbol > a.symbol) ? -1 : 0));
     i=0;
@@ -2021,6 +2028,7 @@ $(window).on("load", async function(){
         all_mints.push(asset.mint);
         i++;
     }
+
     const filter_sent = localStorage.getItem("filter-sent"); 
     const filter_received = localStorage.getItem("filter-received"); 
     const filter_market = localStorage.getItem("filter-market"); 
