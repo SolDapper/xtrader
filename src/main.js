@@ -31,10 +31,10 @@ const groups = [
         name: "xStocks",
         slug: "xstocks"
     },
-    {
-        name: "PreStocks",
-        slug: "prestocks"
-    }
+    // {
+    //     name: "PreStocks",
+    //     slug: "prestocks"
+    // }
     // {
     //     name: "Genesis",
     //     slug: "genesis"
