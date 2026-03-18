@@ -547,6 +547,168 @@ const xstocks_list = [
         pdf: "https://documents.backed.fi/backed-assets-factsheet-WMTx.pdf",
         decimals: 8,
         issuer: "xstocks"
+    },
+    {
+        name: "AMD xStock",
+        symbol: "AMDx",
+        mint: "XsXcJ6GZ9kVnjqGsjBnktRcuwMBmvKWh8S93RefZ1rF",
+        icon: "./.well-known/tokens/xstocks/AMDx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-AMDx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "Bitmine xStock",
+        symbol: "BMNRx",
+        mint: "XsrBCwaH8c46xiqXBChzobgufRKxQxAWUWbndgBNzFn",
+        icon: "./.well-known/tokens/xstocks/BMNRx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-BMNRx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "Bit Digital xStock",
+        symbol: "BTBTx",
+        mint: "XsPLBFy59Q3hY59KLAJur8QyvziMF4xUxGTxXqXE7cT",
+        icon: "./.well-known/tokens/xstocks/BTBTx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-BTBTx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "Bitgo xStock",
+        symbol: "BTGOx",
+        mint: "XsvHMmbDcd14DHHW16PkxPGW7ks77ehxUv1E9Zmxgj4",
+        icon: "./.well-known/tokens/xstocks/BTGOx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-BTGOx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "Global X Copper Miners xStock",
+        symbol: "COPXx",
+        mint: "XsybfiKkD4UmjkAGT2uR8X2sq9AWFtvGJM2KTffoALZ",
+        icon: "./.well-known/tokens/xstocks/COPXx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-COPXx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "Core MSCI Emerging Markets xStock",
+        symbol: "IEMGx",
+        mint: "XsFnZawJdLdXfBSEt5Vw29K5vdBiHotdPLjUPafpfHs",
+        icon: "./.well-known/tokens/xstocks/IEMGx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-IEMGx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "S&P Small Cap xStock",
+        symbol: "IJRx",
+        mint: "XsyZcb97BzETAqi9BoP2C9D196MiMNBisGMVNje2Thz",
+        icon: "./.well-known/tokens/xstocks/IJRx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-IJRx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "Russell 2000 xStock",
+        symbol: "IWMx",
+        mint: "XsbELVbLGBkn7xfMfyYuUipKGt1iRUc2B7pYRvFTFu3",
+        icon: "./.well-known/tokens/xstocks/IWMx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-IWMx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "KRAQ xStock",
+        symbol: "KRAQx",
+        mint: "XsAiRejKuvLAdq9KtedrMSrabz7SWdzKoVK6Qgac1Ki",
+        icon: "./.well-known/tokens/xstocks/KRAQx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-KRAQx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "OPEN xStock",
+        symbol: "OPENx",
+        mint: "XsGtpmjhmC8kyjVSWL4VicGu36ceq9u55PTgF8bhGv6",
+        icon: "./.well-known/tokens/xstocks/OPENx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-OPENx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "abrdn Physical Palladium Shares xStock",
+        symbol: "PALLx",
+        mint: "XsTTtPA5V19YwHKDv4xeVXNM6kdsQNJvg3MyWkRUckt",
+        icon: "./.well-known/tokens/xstocks/PALLx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-PALLx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "abrdn Physical Platinum Shares xStock",
+        symbol: "PPLTx",
+        mint: "Xst6eFD4YT6sz9RLMysN9SyvaZWtraSdVJQGu5ZkAme",
+        icon: "./.well-known/tokens/xstocks/PPLTx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-PPLTx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "Schwab International Equity xStock",
+        symbol: "SCHFx",
+        mint: "XsWAnFM77x6YvpdaZoos79R12o4Yj4r7EVkaTWddzhU",
+        icon: "./.well-known/tokens/xstocks/SCHFx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-SCHFx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "iShares Silver Trust xStock",
+        symbol: "SLVx",
+        mint: "XsxAd6okt8y1RRK6gNg7iJaqiWNiq5Md5EDf3ZrF2dm",
+        icon: "./.well-known/tokens/xstocks/SLVx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-SLVx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "Strategy PP Variable xStock",
+        symbol: "STRCx",
+        mint: "Xs78JED6PFZxWc2wCEPspZW9kL3Se5J7L5TChKgsidH",
+        icon: "./.well-known/tokens/xstocks/STRCx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-STRCx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "TBLL xStock",
+        symbol: "TBLLx",
+        mint: "XsqBC5tcVQLYt8wqGCHRnAUUecbRYXoJCReD6w7QEKp",
+        icon: "./.well-known/tokens/xstocks/TBLLx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-TBLLx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "TON xStock",
+        symbol: "TONXx",
+        mint: "XscE4GUcsYhcyZu5ATiGUMmhxYa1D5fwbpJw4K6K4dp",
+        icon: "./.well-known/tokens/xstocks/TONXx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-TONXx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
+    },
+    {
+        name: "Vanguard Total World xStock",
+        symbol: "VTx",
+        mint: "XsEdDDTcVGJU6nvdRdVnj53eKTrsCkvtrVfXGmUK68V",
+        icon: "./.well-known/tokens/xstocks/VTx.svg",
+        pdf: "https://documents.backed.fi/backed-assets-factsheet-VTx.pdf",
+        decimals: 8,
+        issuer: "xstocks"
     }
 ];
 export default xstocks_list;

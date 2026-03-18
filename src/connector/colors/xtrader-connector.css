@@ -1,0 +1,16 @@
+#mcswap_chooser button {
+    -webkit-box-shadow: 0px 0px 3px 0px #2a95f8;
+    -moz-box-shadow: 0px 0px 3px 0px #2a95f8;
+    box-shadow: 0px 0px 3px 0px #2a95f8;
+}
+#mcswap_chooser button.mcswap_choice:hover {
+    -webkit-box-shadow: 0 0 10px 3px #1dd2bd;
+    -moz-box-shadow: 0 0 10px 3px #1dd2bd;
+    box-shadow: 0 0 10px 3px #1dd2bd;
+}
+#mcswap_chooser button.mcswap_choice:disabled:hover {
+    text-shadow: none;
+    -webkit-box-shadow: 0px 0px 3px 0px #2a95f8;
+    -moz-box-shadow: 0px 0px 3px 0px #2a95f8;
+    box-shadow: 0px 0px 3px 0px #2a95f8;
+}

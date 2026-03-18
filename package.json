@@ -1,6 +1,6 @@
 {
     "name": "xtrader",
-    "version": "0.0.1",
+    "version": "0.0.31",
     "description": "ICM OTC Service",
     "scripts": {
         "build": "parcel build ./src/index.html && cp -r ./wallet_icon.png ./dist/wallet_icon.png && cp -r ./icon-clear.png ./dist/icon-clear.png && cp -r ./icon-dark.png ./dist/icon-dark.png && cp -r ./icon-mono.png ./dist/icon-mono.png",
@@ -23,7 +23,6 @@
         "events": "^3.3.0",
         "jquery": "^3.7.1",
         "jquery.nicescroll": "^3.7.6",
-        "mcswap-connector": "^0.4.3",
         "os-browserify": "^0.3.0",
         "parcel": "^2.15.0",
         "parcel-reporter-static-files-copy": "^1.5.3",
@@ -31,7 +30,7 @@
         "process": "^0.11.10",
         "stream-browserify": "^3.0.0",
         "string_decoder": "^1.3.0",
-        "svgo": "^3.3.2",
+        "svgo": "^3.3.3",
         "toastify-js": "^1.12.0",
         "vm-browserify": "^1.1.2",
         "xtrader-sdk": "^0.0.4-dev"

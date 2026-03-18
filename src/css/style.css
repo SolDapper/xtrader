@@ -526,6 +526,9 @@ input#drafting:disabled{
     width: 60px;
     height: 60px;
     border-radius: 100%;
+    border: none;
+    outline: none;
+    box-shadow: none;
 }
 #asset-list ul li.list-symbol{
     display: inline-block;
@@ -713,6 +716,9 @@ select#sent-buyers{
     border-radius: 6px;
     cursor: pointer;
     transition: .3s;
+    border: none;
+    outline: none;
+    box-shadow: none;
 }
 .item-img:hover{
     filter: none;

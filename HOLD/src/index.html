@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>xTrader (beta)</title>
+    <link rel="manifest" href="../manifest.json" />
+    <meta name="color-scheme" content="dark"/>
+    <meta name="theme-color" content="#111">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="Peer-to-Peer xStocks Trader" />
+    <link rel="apple-touch-icon" href="favicon.png" type="image/png" />
+    <meta property="og:image" content="./favicon.png" />
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+    <meta property="og:title" content="xTrader" />
+    <meta property="og:description" content="Peer-to-Peer xStocks Trader" />
+    <meta property="og:url" content="https://www.xtrader.me" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="https://www.xtrader.me" />
+    <meta name="twitter:creator" content="@xtraderme" />
+    <meta name="twitter:title" content="xTrader" />
+    <meta name="twitter:description" content="Peer-to-Peer xStocks Trader" />
+    <meta name="twitter:image" content="https://tqiklroomboehk2oupqthm3ijdansohq6ulanmdub2xzw7p6yiwa.arweave.net/nBClxc5gXEOrTqPhM7NoSMDZOPD1FgawdA6vm33-wiw" />
+</head>
+<body>
+    <div id="vanta"></div>
+    <div id="nav"><div id="nav-contain"><button disabled class="view" id="received">Inbox</button><button disabled class="view" id="sent">Sent</button><button disabled class="view" id="compose">Compose</button>
+        <!-- <button disabled class="view" id="drafts">Feed</button> -->
+        <!-- <button disabled class="view" id="blackbook">Blackbook</button> -->
+        <!-- <button disabled class="view" id="market">Market</button> -->
+        <button disabled id="connect" class="mcswap_connect_button">Connect</button><button id="disconnect" class="mcswap_disconnect_button">Disconnect</button><button disabled id="cog" class="cog" ><img src="./img/cog.png" /></button></div></div>
+    <main>
+        <div id="views">
+            <div class="views" id="home-view">
+                <div class="animate__animated animate__zoomIn" id="logo-home">
+                    <img id="logo-home-img" src="./img/logo.png" />
+                    <button id="introduction">Continue</button>
+                </div>
+            </div>
+            <div class="views" id="compose-view"><h1>Compose</h1><h2>Compose New Offer</h2><div id="compose-panel" class="panel"><div class="panel-box">
+                <div id="create-form">
+                    <div class="row"><span class="label-category">Offer</span><span id="creator-value">$0.00</span><span class="estimated-value">(usd estimate)</span></div>
+                    <input disabled id="creator-wallet" form="create-form" type="hidden" />
+                    <div class="row"><label for="creator-asset">Asset</label><img id="creator-icon" class="little-icon" src="#" /><button id="creator-asset">Choose</button><input required id="creator-mint" form="create-form" type="hidden" /></div>
+                    <div class="row"><label for="creator-amount">Amount</label><input disabled required placeholder="0.00000" id="creator-amount" type="text" inputmode="numeric" /></div>
+                    <div class="row"><label for="create-memo">Ref</label><input disabled required placeholder="(optional identifier)" id="create-memo" form="create-form" type="text" /></div>
+                    <div class="row"><span class="label-category">Ask</span><span id="buyer-value">$0.00</span><span class="estimated-value">(usd estimate)</span></div>
+                    <div class="row"><label for="buyer-asset">Asset</label><img id="buyer-icon" class="little-icon" src="#" /><button disabled id="buyer-asset">Choose</button><input required id="buyer-mint" form="create-form" type="hidden" /></div>
+                    <div class="row"><label for="buyer-amount">Amount</label><input disabled required placeholder="0.00000" id="buyer-amount" type="text" inputmode="numeric" /></div>
+                    <div class="row">
+                        <label for="plus-minus">Match</label><button disabled id="plus-minus" >+</button><input disabled id="set-percent" type="text" inputmode="numeric" placeholder="%" /><span id="set-symbol">%</span><button disabled id="set-button" >Calculate</button>
+                    </div>
+                    <div class="row"><span class="label-category">From</span></div>
+                    <div class="row"><label for="buyer-type">Type</label><select disabled id="buyer-type" form="create-form">
+                        <option>Wallet Address</option>
+                        <option disabled>Public Market</option>
+                    </select></div>
+                    <div class="row"><label for="buyer-wallet">Wallet</label><input disabled required placeholder="Address" id="buyer-wallet" form="create-form" type="text" /></div>
+                    <div class="row"><input disabled type="checkbox" id="drafting" /> <div id="drafting_title" class="disabled">Feed Item</div></div>
+                    <button id="payment-pay" class="submit" form="create-form">Send</button>
+                </div>
+            </div></div></div>
+            <div class="views" id="received-view"><h1>Inbox</h1><h2>Active Received Offers <span class="qty-left">(</span><span class="qty-center">0</span><span class="qty-right">)</span></h2><div class="panel"><div class="panel-box">
+                <button id="received-refresh" class="refresher"><img src="./img/refresh.png" /></button>
+                <div class="panel-options"><select id="received-filter"><option>All Assets</option></select><select id="received-sellers"><option>All Creators</option></select></div>
+                <div class="panel-list"></div>
+            </div></div></div>
+            <div class="views" id="sent-view"><h1>Sent</h1><h2>Active Sent Offers <span class="qty-left">(</span><span class="qty-center">0</span><span class="qty-right">)</span></h2><div class="panel"><div class="panel-box">
+                <button id="sent-refresh" class="refresher"><img src="./img/refresh.png" /></button>
+                <div class="panel-options"><select id="sent-filter"><option>All Assets</option></select><select id="sent-buyers"><option>All Recipients</option></select></div>
+                <div class="panel-list"></div>
+            </div></div></div>
+            <div class="views" id="market-view"><h1>Market</h1><h2>Browse Public Offers <span class="qty-left">(</span><span class="qty-center">0</span><span class="qty-right">)</span></h2><div class="panel"><div class="panel-box">
+                <button id="market-refresh" class="refresher"><img src="./img/refresh.png" /></button>
+                <div class="panel-options"><select id="market-filter"><option>All Assets</option></select><select id="market-sellers"><option>All Creators</option></select></div>
+                <div class="panel-list"><div class="list-clear"></div></div>
+            </div><div class="list-clear"></div></div></div>
+            <div class="views" id="settings-view"><h1>xTrader</h1><h2>Settings &amp; Preferences</h2><div class="panel"><div class="panel-box">
+
+                <div class="row"><span class="label-category">User</span></div>
+                <div class="row">Wallet</div>
+                <div class="row">
+                    <input disabled id="settings-user" placeholder="Not Connected" />
+                </div>
+
+                <div class="row"><span class="label-category">Priority</span></div>
+                <div class="row">Priority fee level</div>
+                <div class="row">
+                    <select id="settings-priority">
+                        <option value="Min">Min</option>
+                        <option value="Low" selected>Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Extreme">Extreme</option>
+                    </select>
+                </div>
+
+                <div class="row"><span class="label-category">Screensaver</span></div>
+                <div class="row">Timeout</div>
+                <div class="row">
+                    <input id="settings-screensaver" type="number" value="120" /> seconds (min 30)
+                </div>
+                
+                <div class="row"><span class="label-category">Endpoint</span></div>
+                <div class="row">Add a custom <a target="_blank" class="inline-link" href="https://www.helius.dev/solana-rpc-nodes">Helius</a> RPC endpoint</div>
+                <div class="row">
+                    <input id="settings-rpc" class="settings-input" type="text" placeholder="https://mainnet.helius-rpc.com/?api-key=<your-key>" />
+                </div>
+
+                <div class="row"><span class="label-category">Agreement</span></div>
+                <div class="row">
+                    <button id="open-intro" class="danger">View</button>
+                </div>
+
+                <div style="display: none">
+
+                <div class="row"><span class="label-category">Refresh</span></div>
+                <div class="row">Auto refresh enabled</div>
+                <div class="row">
+                    <select disabled id="settings-refresh">
+                        <option value="Yes">Yes</option>
+                        <option value="No" selected>No</option>
+                    </select>
+                </div>
+
+                <div class="row"><span class="label-category">Rate</span></div>
+                <div class="row">Auto refresh rate</div>
+                <div class="row">
+                    <input disabled id="settings-rate" type="number" min="15" value="60" /> seconds
+                </div>
+
+                <div class="row"><span class="label-category">Notifications</span></div>
+                <div class="row">Market &amp; Inbox</div>
+                <div class="row">
+                    <select disabled id="settings-notis">
+                        <option value="Yes">Yes</option>
+                        <option value="No" selected>No</option>
+                    </select>
+                </div>
+
+                </div>
+
+            </div></div></div>
+            <div class="views" id="blackbook-view"><h1>Blackbook</h1><h2>Manage Private Contacts <span class="qty-left">(</span><span class="qty-center">0</span><span class="qty-right">)</span></h2><div class="panel"><div class="panel-box">
+
+                <div class="panel-options">
+                    <!-- <form id="blackbook-form">
+                        <input placeholder="Search" id="search-blackbook" />
+                        <input type="file" accept=".vcf" id="import-blackbook" />
+                        <button id="import-contact">Import Contact</button>
+                    </form> -->
+                </div>
+                <div class="panel-list">
+                    <div class="coming-soon">Coming Soon!</div>
+                </div>
+
+            </div></div></div>
+            <div class="views" id="introduction-view"><h1>Agreement</h1><h2>xTrader Services</h2><div class="panel"><div class="panel-box">
+                
+                <div class="row"><span class="label-category">Disclaimer</span></div>
+                <div class="row">
+                    This application is in beta.   
+                    Using xTrader on a public computer or device shared with others is highly discouraged. 
+                    The information provided by xTrader below (or otherwise) should never be considered as financial advice. 
+                </div>
+
+                <div class="row"><span class="label-category">Intended Use</span></div>
+                <div class="row">
+                    xTrader is an app that interacts with the trustless xTrader smart contract on the Solana network to safely facilitate OTC P2P trades of tokenized equities. 
+                </div>
+
+                <div class="row"><span class="label-category">Custody</span></div>
+                <div class="row">
+                    The xTrader app never takes custody of your assets for any reason.
+                </div>
+ 
+                <div class="row"><span class="label-category">Data Privacy</span></div>
+                <div class="row">
+                    We take your privacy seriously. 
+                    No personal data, app settings, preferences, or private contacts are stored by xTrader servers. 
+                    All data is stored in your local browser's storage and can be cleared by you at any time by removing your "Consent" below.
+                </div>
+
+                <!-- <div class="row"><span class="label-category">Let's begin</span></div>
+                <div class="row">
+                    The following guide makes the assumption you have no experience with crypto currencies or tokenized stocks. 
+                    It is geared towards helping traditional stock traders begin their journey into tokenized capital markets.
+                </div>
+
+                <div class="row"><span class="label-category">1. U.S. Dollars to USDC</span></div>
+                <div class="row">
+                    USDC is a crypto version of the U.S. dollar. 
+                    You can convert your U.S. dollars to USDC through a crypto exchange or another on-ramp app like Moonshot. 
+                    In some cases this step can take some time due to variable waiting periods for I.D. verification and holding times before your USDC is available to be freely used outside of the exchange. 
+                    For example, after verifying your ID and connecting your bank account to Coinbase, you can convert funds from a bank account to USDC. However you will have to wait roughly 1 week for your bank to settle payment before you can use the USDC outside of the Coinbase platform.
+                </div> -->
+
+                <div class="row"><span class="label-category">Compatible Wallets</span></div>
+                <div class="row">
+                    You will need a wallet that is compatible with the Solana network. Here are a few to choose from:
+                </div>
+                <div class="row">
+                    <img class="intro-wallet" src="./img/wallets/phantom.png" /> <span class="wallet-name">Phantom</span> <div class="wallet-options"><a target="_blank" href="https://play.google.com/store/apps/details?id=app.phantom" class="wallet-link">Android</a> <span class="link-sep">/</span> <a target="_blank" href="https://apps.apple.com/us/app/phantom-crypto-wallet/id1598432977" class="wallet-link">IOS</a> <span class="link-sep">/</span> <a target="_blank" href="https://chromewebstore.google.com/detail/phantom/bfnaelmomeimhlpmgjnjophhpkkoljpa" class="wallet-link">Extension</a></div> <br />
+                    <img class="intro-wallet" src="./img/wallets/solflare.png" /> <span class="wallet-name">Solflare</span> <div class="wallet-options"><a target="_blank" href="https://play.google.com/store/apps/details?id=com.solflare.mobile" class="wallet-link">Android</a> <span class="link-sep">/</span> <a target="_blank" href="https://apps.apple.com/us/app/solflare-solana-wallet/id1580902717" class="wallet-link">IOS</a> <span class="link-sep">/</span> <a target="_blank" href="https://chromewebstore.google.com/detail/solflare-wallet/bhhhlbepdkbapadjdnnojkbgioiodbic" class="wallet-link">Extension</a></div> <br />
+                    <img class="intro-wallet" src="./img/wallets/backpack.png" /> <span class="wallet-name">Backpack</span> <div class="wallet-options"><a target="_blank" href="https://play.google.com/store/apps/details?id=app.backpack.mobile" class="wallet-link">Android</a> <span class="link-sep">/</span> <a target="_blank" href="https://apps.apple.com/us/app/backpack-buy-trade-crypto/id6445964121" class="wallet-link">IOS</a> <span class="link-sep">/</span> <a target="_blank" href="https://chromewebstore.google.com/detail/backpack/aflkmfhebedbjioipglgcbcmnbpgliof" class="wallet-link">Extension</a></div> <br />
+                </div>
+                
+                <!-- 
+                <div class="row"><span class="label-category">3. Transferring USDC</span></div>
+                <div class="row">
+                    You will need to transfer your preferred amount of USDC from your exchange account to your non-custodial wallet's public address. 
+                    We highly suggest holding only what you immediately need in your personal wallet to limit risk.
+                </div>
+
+                <div class="row"><span class="label-category">4. Buying Stock</span></div>
+                <div class="row">
+                    While centralized exchanges like Coinbase and Kraken currently block U.S. (and other regions) users from directly purchasing xStocks, you can aquire them from decentralized exchanges like Jupiter or even in swap tools included in your personal wallet. 
+                    For example you can connect your personal wallet to the Jupiter website to browse and buy xStocks for major U.S. based companies using your USDC here: <a class="inline-link" target="_blank" href="https://jup.ag/pro?tab=stocks">Jupiter</a>. 
+                    We highly recommend using Jupiter for your day to day xStocks trading as they are the largest decentralized exchange on the Solana network. 
+                </div>
+
+                <div class="row"><span class="label-category">5. Using xTrader</span></div>
+                <div class="row">
+                    Now that you or your institution holds xStocks, you can use xTrader to send or sell your holdings directly to another person or institution 
+                    by creating a new "Offer" and defining the receiving party's public wallet address. The receiving party must then Authorize the transfer which provides proof of acceptance. 
+                    The "Ref" field when composing an offer can be used for one or more custom identifiers to conform with regulatory compliance for institutional OTC trades. 
+                    The party creating the "Offer" can cancel the offer at any time prior to a recipient authorizing the trade. 
+                    Once a recipient authorizes a trade it is executed immediately and with finality. 
+                </div>
+                
+                <div class="row"><span class="label-category">Community Support</span></div>
+                <div class="row">
+                     For help getting started with anything above or to contact xTrader you can join our community at X: <a class="inline-link" target="_blank" href="https://x.com/i/communities/1945987627322417389">xTrader Community</a>. 
+                     And kindly support our efforts by giving our main page a follow: <a class="inline-link" target="_blank" href="https://x.com/xtraderme">xTrader Page</a>
+                </div> -->
+
+                <!-- <div class="row"><span class="label-category">Power Users</span></div>
+                <div class="row">
+                    Solana Mobile
+                </div> -->
+
+                <div class="row"><span class="label-category">Consent</span></div>
+                <div class="row">
+                    By checking the box below you agree: <br /><br />
+                    a. That you have read and understand the provided information above.<br /><br />
+                    b. That you understand the risks associated with using this product.<br /><br />
+                    c. That you are solely responsible for your use of this product and any consequences that may arise.<br /><br />
+                    d. Unchecking this box at any time will remove your "Consent" and all data associated with this app.<br /><br />
+                    <input id="agreement" type="checkbox" /> I Consent, please connect.<br /><br />
+                </div>
+
+            </div></div></div>
+            <div class="views" id="drafts-view"><h1>Feed</h1><h2>Compliance Pipeline</h2><div class="panel"><div class="panel-box">
+                <div class="row"><span class="label-category">Pending</span></div>
+                <div class="row">Coming Soon</div>
+                <div class="row"></div>
+            </div></div></div>
+            <div class="views" id="template-view"><h1>Title</h1><h2>Sub Title</h2><div class="panel"><div class="panel-box">
+                <div class="row"><span class="label-category">Priority</span></div>
+                <div class="row">Priority fee level</div>
+                <div class="row"></div>
+            </div></div></div>
+        </div>
+        <a href="https://x.com/xtraderme" target="_blank"><img id="x-logo" src="./img/x-logo.png" /></a>
+    </main>
+    <div id="asset-list-box" class="animate__animated"><select id="asset_group" type="text"><option value="all">All Providers</option></select><button id="asset-list-close"><img src="./img/close.png" /></button>
+        <input placeholder="Search" id="asset_filter" type="text" />
+        <div id="asset-list"></div>
+    </div>
+    <div id="main-cover"><div id="main-message"></div></div>
+    <script src="./js/three.min.js"></script>
+    <script src="./js/vanta.cells.min.js"></script>
+    <script type="module" src="./main.js"></script>
+</body>
+</html>

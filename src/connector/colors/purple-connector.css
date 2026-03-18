@@ -1,0 +1,12 @@
+#mcswap_chooser button {
+    -webkit-box-shadow: 0px 0px 3px 0px #3b27ba;
+    -moz-box-shadow: 0px 0px 3px 0px #3b27ba;
+    box-shadow: 0px 0px 3px 0px #3b27ba;
+}
+#mcswap_chooser button.mcswap_choice:hover {
+    box-shadow: 0 0 10px 3px #3b27ba;
+}
+#mcswap_chooser button.mcswap_choice:disabled:hover {
+    text-shadow: none;
+    box-shadow: 0 0 3px #3b27ba;
+}

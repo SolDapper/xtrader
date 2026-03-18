@@ -3,7 +3,7 @@ import {Connection,PublicKey,TransactionMessage,AddressLookupTableAccount} from 
 import 'dotenv/config';
 import { createQR } from '@solana/pay';
 import bs58 from 'bs58';
-import $, { css } from "jquery";
+import $ from "jquery";
 import "jquery.nicescroll";
 import 'animate.css';
 import Toastify from 'toastify-js';
@@ -13,13 +13,12 @@ import {transact} from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
 import xtrader from 'xtrader-sdk';
 import { getMultiplePrimaryDomains } from '@bonfida/spl-name-service';
 import EventEmitter from 'events';
-import mcswapConnector from "mcswap-connector";
-import "mcswap-connector/src/colors/xtrader-connector.css";
+import mcswapConnector from "./connector/xtrader-connector.js";
+import "./connector/colors/xtrader-connector.css";
 import "./css/style.css";
 import "./css/mobile.css";
 import tokens_list from './js/list/tokens.js';
 import xstocks_list from './js/list/xstocks.js';
-import prestocks_list from './js/list/prestocks.js';
 import shiftstocks_list from './js/list/shiftstocks.js';
 import genesis_list from './js/list/genesis.js';
 const groups = [
@@ -31,10 +30,6 @@ const groups = [
         name: "xStocks",
         slug: "xstocks"
     },
-    // {
-    //     name: "PreStocks",
-    //     slug: "prestocks"
-    // }
     // {
     //     name: "Genesis",
     //     slug: "genesis"
@@ -221,7 +216,7 @@ async function isDisconnected(){
     const inWalletApp = await inAppBrowse();
     if(!isMobile() || inWalletApp===true){
         const emitter = new EventEmitter();
-        new mcswapConnector(["phantom"],emitter).init();
+        new mcswapConnector(["phantom","solflare","jupiter","backpack"],emitter).init();
         emitter.on('mcswap_connected',async()=>{isConnected();});
         emitter.on('mcswap_disconnected',async()=>{isDisconnected();});
     }
@@ -345,8 +340,6 @@ async function backcheck(ele,array){
     }
 }
 // load sent
-const store_sent = [];
-let init_sent = false;
 async function load_sent(){
     try{
         if(!window.mcswap || !window.mcswap.publicKey){
@@ -380,7 +373,7 @@ async function load_sent(){
             const asset = splSent.data[i];
             if(!hidden.includes(asset.acct) && all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#sent-'+asset.acct).length){
-                    const merged = [...tokens_list, ...shiftstocks_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
+                    const merged = [...tokens_list, ...shiftstocks_list, ...xstocks_list, ...genesis_list];
                     asset.token_1_details = await asset_map(merged,asset.token_1_mint);
                     asset.token_3_details = await asset_map(merged,asset.token_3_mint);
                     let ele = '<div class="drag-box" id="box-sent-'+asset.acct+'"><ul id="sent-'+asset.acct+'" class="row">';
@@ -440,8 +433,6 @@ async function load_sent(){
     }
 }
 // load received
-const store_received = [];
-let init_received = false;
 async function load_received(){
     try{
         if(!window.mcswap || !window.mcswap.publicKey){
@@ -474,11 +465,9 @@ async function load_received(){
             const asset = splReceived.data[i];
             if(!hidden.includes(asset.acct) && all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                 if(!$('#received-'+asset.acct).length){
-                    const merged = [...tokens_list, ...shiftstocks_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
+                    const merged = [...tokens_list, ...shiftstocks_list, ...xstocks_list, ...genesis_list];
 
-                    console.log(asset.token_1_mint);
                     asset.token_1_details = await asset_map(merged,asset.token_1_mint);
-                    console.log(asset.token_1_details);
                     
                     asset.token_3_details = await asset_map(merged,asset.token_3_mint);
                     let ele = '<div class="drag-box" id="box-received-'+asset.acct+'"><ul id="received-'+asset.acct+'" class="row">';
@@ -540,8 +529,6 @@ async function load_received(){
     }
 }
 // load received
-const store_public = [];
-let init_public = false;
 async function load_public(){
     try{
         if(!window.mcswap || !window.mcswap.publicKey){
@@ -584,7 +571,7 @@ async function load_public(){
                 const asset = splSent.data[i];
                 if(!hidden.includes(asset.acct) && all_mints.includes(asset.token_1_mint) && all_mints.includes(asset.token_3_mint)){
                     if(!$('#market-'+asset.acct).length){
-                        const merged = [...tokens_list, ...shiftstocks_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
+                        const merged = [...tokens_list, ...shiftstocks_list, ...xstocks_list, ...genesis_list];
                         asset.token_1_details = await asset_map(merged,asset.token_1_mint);
                         asset.token_3_details = await asset_map(merged,asset.token_3_mint);
                         let ele = '<div class="drag-box" id="box-market-'+asset.acct+'"><ul id="market-'+asset.acct+'" class="row">';
@@ -751,8 +738,6 @@ $(document).delegate(".item-acct", "click", async function(){
 $(document).delegate("img.item-img", "click", async function(){
     const item = $(this).parent().parent().attr("id");
     const parts = item.split("-");
-    const view = parts[0];
-    const id = parts[1];
     const pdf = $(this).attr("data-pdf");
     if(!pdf){
         toast("No docs available",3000);
@@ -850,7 +835,6 @@ $(document).delegate(".item-buyer", "click", async function(){
     const item = $(this).parent().attr("id");
     const parts = item.split("-");
     const view = parts[0];
-    const id = parts[1];
     const symbol = $(this).prev().prev().find(".item-symbol").html();
     const wallet = $(this).attr("data-wallet");
     const first_part = wallet.slice(0,5);
@@ -1312,7 +1296,6 @@ async function getValue(ele=false,issuers=false,mints,amounts){
                 data[mints[0]].dif = "0.00";
                 data[mints[1]].dif = "0.00";
             }
-            console.log("data", data);
             return data;
         }
         else{
@@ -1333,7 +1316,6 @@ async function getValue(ele=false,issuers=false,mints,amounts){
         }
     }
     catch(error){
-        console.log("pricing error", error);
     }
 }
 const debounceValue = debounce(getValue, 1500);
@@ -1617,7 +1599,7 @@ $("#set-button").on("click", async function(){
         let creator_value = $("#creator-value").html();
         creator_value = creator_value.replace(regex,'');
         let result;
-        const merged = [...tokens_list, ...shiftstocks_list, ...xstocks_list, ...prestocks_list, ...genesis_list];
+        const merged = [...tokens_list, ...shiftstocks_list, ...xstocks_list, ...genesis_list];
         const mint = $("#buyer-mint").val();
         const token = await asset_map(merged,mint);
         if(token.issuer=="usdc" || token.issuer=="tether"){
@@ -1646,7 +1628,6 @@ $("#set-button").on("click", async function(){
         $("#buyer-wallet").focus();
     }
     catch(err){
-        console.log("err", err);
         toast("Calculation failed");
     }
 });
@@ -2016,7 +1997,7 @@ $(window).on("load", async function(){
         i++;
     }
 
-    const master_list = [...xstocks_list, ...prestocks_list, ...shiftstocks_list, ...genesis_list];
+    const master_list = [...xstocks_list, ...shiftstocks_list, ...genesis_list];
     master_list.sort((a,b) => (a.symbol > b.symbol) ? 1 : ((b.symbol > a.symbol) ? -1 : 0));
     i=0;
     while (i < master_list.length) {
@@ -2118,15 +2099,11 @@ async function getContact(){
         const contacts = await navigator.contacts.select(props, opts);
         if(contacts.length > 0){
             const selectedContact = contacts[0];
-            console.log('Selected Contact Name:', selectedContact.name);
-            console.log('Selected Contact Email:', selectedContact.email);
         } 
         else {
-            console.log('No contact selected.');
         }
     } 
     catch(ex){
-        console.error('Error accessing contacts:', ex);
     }
 }
 $("#import-contact").on("click", async function(e){
