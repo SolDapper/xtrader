@@ -1,5 +1,6 @@
 import $ from "jquery";
 import "./xtrader-connector.css";
+import { PublicKey } from "@solana/web3.js";
 
 // Jupiter Wallet uses the Wallet Standard — it does NOT inject window.jupiter.
 // The app must dispatch "wallet-standard:app-ready" to prompt extensions to register,
@@ -49,7 +50,6 @@ function wrapWalletStandard(wallet) {
       const accounts = result.accounts || [];
       if (accounts.length > 0) {
         _account = accounts[0];
-        const { PublicKey } = await import("@solana/web3.js");
         provider.publicKey = new PublicKey(_account.address);
         provider.isConnected = true;
       }

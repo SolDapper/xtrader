@@ -1,6 +1,6 @@
 {
     "name": "xtrader",
-    "version": "0.0.34",
+    "version": "0.0.35",
     "description": "ICM OTC Service",
     "scripts": {
         "build": "parcel build ./src/index.html && cp -r ./wallet_icon.png ./dist/wallet_icon.png && cp -r ./icon-clear.png ./dist/icon-clear.png && cp -r ./icon-dark.png ./dist/icon-dark.png && cp -r ./icon-mono.png ./dist/icon-mono.png",
