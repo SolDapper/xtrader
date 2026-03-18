@@ -10,7 +10,7 @@ import Toastify from 'toastify-js';
 import "toastify-js/src/toastify.css";
 import "@fontsource/ubuntu";
 import {transact} from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
-import xtrader from 'xtrader-sdk';
+import xtrader from './js/xtrader-sdk.js';
 import { getMultiplePrimaryDomains } from '@bonfida/spl-name-service';
 import EventEmitter from 'events';
 import mcswapConnector from "./connector/xtrader-connector.js";
