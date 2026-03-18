@@ -2153,6 +2153,45 @@ $("#open-intro").on("click", async function(){
 });
 
 
+// hamburger mobile menu
+function openMobileMenu() {
+    $("#nav-mobile-menu, #nav-mobile-overlay").addClass("open");
+}
+function closeMobileMenu() {
+    $("#nav-mobile-menu, #nav-mobile-overlay").removeClass("open");
+}
+$("#hamburger").on("click", function() {
+    if ($("#nav-mobile-menu").hasClass("open")) {
+        closeMobileMenu();
+    } else {
+        openMobileMenu();
+    }
+});
+$("#nav-mobile-overlay").on("click", function() {
+    closeMobileMenu();
+});
+// mirror disabled state from real nav buttons to mobile menu buttons
+function syncMobileMenu() {
+    ["received","sent","compose"].forEach(function(id) {
+        const disabled = $("#" + id).prop("disabled");
+        const active = $("#" + id).hasClass("active-view");
+        $("#mob-" + id).prop("disabled", disabled);
+        $("#mob-" + id).toggleClass("active-view", active);
+    });
+}
+// mobile menu button clicks — trigger the real nav buttons and close menu
+$("#mob-received, #mob-sent, #mob-compose").on("click", function() {
+    const id = $(this).attr("id").replace("mob-", "");
+    closeMobileMenu();
+    $("#" + id).click();
+});
+// keep mobile menu in sync whenever nav buttons change
+const navObserver = new MutationObserver(syncMobileMenu);
+["received","sent","compose"].forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) navObserver.observe(el, { attributes: true, attributeFilter: ["disabled", "class"] });
+});
+
 // swipe events
 class TouchEvent {
 
