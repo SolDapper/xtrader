@@ -75,8 +75,8 @@ router.post('/register', async (req, res) => {
 // ── POST /api/auth/invite ────────────────────────────────────────────────────
 // Compliance officer invites a desk trader to their org
 router.post('/invite', require('./middleware'), async (req, res) => {
-    if (req.user.role !== 'compliance_officer') {
-        return res.status(403).json({ error: 'Only compliance officers can invite users' });
+    if (!req.user.is_owner) {
+        return res.status(403).json({ error: 'Only the org owner can invite users' });
     }
     const { email, display_name, role } = req.body;
     if (!email || !role) {

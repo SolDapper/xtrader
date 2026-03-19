@@ -45,7 +45,34 @@ router.put('/me/password', requireAuth, async (req, res) => {
     }
 });
 
-// ── PUT /api/users/:id/active ────────────────────────────────────────────────
+// ── PUT /api/users/:id/role ───────────────────────────────────────────────────
+// Only the org owner can promote or demote users
+router.put('/:id/role', requireAuth, async (req, res) => {
+    if (!req.user.is_owner) {
+        return res.status(403).json({ error: 'Only the org owner can change user roles' });
+    }
+    const targetId = parseInt(req.params.id);
+    const { role } = req.body;
+    if (!['compliance_officer','desk_trader'].includes(role)) {
+        return res.status(400).json({ error: 'Invalid role' });
+    }
+    if (targetId === req.user.id) {
+        return res.status(403).json({ error: 'You cannot change your own role' });
+    }
+    try {
+        const result = await pool.query(
+            `UPDATE users SET role=$1 WHERE id=$2 AND org_id=$3 AND is_owner=false
+             RETURNING id, email, role`,
+            [role, targetId, req.user.org_id]
+        );
+        if (result.rows.length === 0) return res.status(404).json({ error: 'User not found or cannot change owner role' });
+        res.json({ user: result.rows[0] });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to update role' });
+    }
+});
+
+// ── PUT /api/users/:id/active ─────────────────────────────────────────────────
 // Permission rules:
 // - Nobody can deactivate themselves
 // - Only owner can deactivate compliance officers

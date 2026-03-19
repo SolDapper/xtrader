@@ -514,6 +514,8 @@ window.deskAssignWallet = async (id) => {
 // ── Team ──────────────────────────────────────────────────────────────────────
 async function loadTeam() {
     document.getElementById('team-table-wrap').innerHTML = '<div class="empty-state"><span class="spinner"></span></div>';
+    // Only show invite button for owner
+    document.getElementById('invite-btn').style.display = user.is_owner ? '' : 'none';
     const { ok, data } = await api('GET', '/users');
     if (!ok) { document.getElementById('team-table-wrap').innerHTML = '<div class="empty-state">Failed to load team</div>'; return; }
     renderTeamTable(data.users || []);
@@ -522,33 +524,39 @@ async function loadTeam() {
 function renderTeamTable(users) {
     const wrap = document.getElementById('team-table-wrap');
     if (users.length === 0) { wrap.innerHTML = '<div class="empty-state">No team members yet</div>'; return; }
+    const showRoleCol = user.is_owner;
     let html = `<table class="desk-table"><thead><tr>
-        <th>Name</th><th>Email</th><th>Role</th><th>2FA</th><th>Status</th><th></th>
+        <th>Name</th><th>Email</th><th>Role</th><th>2FA</th><th>Status</th>
+        ${showRoleCol ? '<th>Promote / Demote</th>' : ''}<th></th>
     </tr></thead><tbody>`;
     users.forEach(u => {
-        // Role label
         let roleLabel;
         if (u.is_owner)                          roleLabel = 'Owner';
         else if (u.role === 'compliance_officer') roleLabel = 'Compliance Officer';
         else                                      roleLabel = 'Desk Trader';
 
-        // Toggle button — enforce permission rules
-        let toggle = '';
-        const isSelf      = u.id === user.id;
-        const targetOwner = u.is_owner;
+        const isSelf        = u.id === user.id;
+        const targetOwner   = u.is_owner;
         const targetOfficer = u.role === 'compliance_officer' && !u.is_owner;
-        const currentIsOwner = user.is_owner;
 
-        if (isSelf || targetOwner) {
-            // Can never deactivate yourself or the owner
-            toggle = '';
-        } else if (targetOfficer && !currentIsOwner) {
-            // Non-owner officers cannot deactivate other officers
-            toggle = '';
-        } else {
-            toggle = u.active
-                ? `<button class="btn btn-ghost btn-small" onclick="window.deskToggleUser(${u.id},false)">Deactivate</button>`
-                : `<button class="btn btn-approve btn-small" onclick="window.deskToggleUser(${u.id},true)">Activate</button>`;
+        // Activate/deactivate
+        let toggle = '';
+        if (!isSelf && !targetOwner) {
+            if (!targetOfficer || user.is_owner) {
+                toggle = u.active
+                    ? `<button class="btn btn-ghost btn-small" onclick="window.deskToggleUser(${u.id},false)">Deactivate</button>`
+                    : `<button class="btn btn-approve btn-small" onclick="window.deskToggleUser(${u.id},true)">Activate</button>`;
+            }
+        }
+
+        // Promote/demote — owner only, not self, not other owners
+        let roleBtn = '';
+        if (showRoleCol && !isSelf && !targetOwner) {
+            if (u.role === 'desk_trader') {
+                roleBtn = `<button class="btn btn-approve btn-small" onclick="window.deskChangeRole(${u.id},'compliance_officer')">↑ Promote</button>`;
+            } else {
+                roleBtn = `<button class="btn btn-ghost btn-small" onclick="window.deskChangeRole(${u.id},'desk_trader')">↓ Demote</button>`;
+            }
         }
 
         html += `<tr>
@@ -557,11 +565,26 @@ function renderTeamTable(users) {
             <td>${roleLabel}</td>
             <td>${u.totp_enabled ? '<span class="badge badge-approved">On</span>' : '<span class="badge badge-pending">Off</span>'}</td>
             <td>${u.active ? '<span class="badge badge-approved">Active</span>' : '<span class="badge badge-rejected">Inactive</span>'}</td>
+            ${showRoleCol ? `<td>${roleBtn}</td>` : ''}
             <td>${toggle}</td>
         </tr>`;
     });
     wrap.innerHTML = html + '</tbody></table>';
 }
+
+window.deskChangeRole = (id, role) => {
+    const label = role === 'compliance_officer' ? 'Promote to Compliance Officer' : 'Demote to Desk Trader';
+    openModal(label, `<p style="color:var(--text-dim);font-size:13px">Are you sure you want to change this user's role?</p>`, [
+        { label: 'Cancel', cls: 'btn-ghost', onClick: closeModal },
+        { label: 'Confirm', cls: 'btn-primary', onClick: async () => {
+            closeModal();
+            const { ok, data } = await api('PUT', `/users/${id}/role`, { role });
+            if (!ok) return toast(data.error || 'Failed');
+            toast('Role updated');
+            loadTeam();
+        }}
+    ]);
+};
 
 window.deskToggleUser = async (id, active) => {
     const { ok, data } = await api('PUT', `/users/${id}/active`, { active });
@@ -700,6 +723,7 @@ function selectAsset(asset) {
 
 document.getElementById('compose-submit-btn').addEventListener('click', async () => {
     const wallet_id      = document.getElementById('compose-wallet').value;
+    const trade_type     = document.getElementById('compose-trade-type').value;
     const token1_mint    = document.getElementById('compose-mint1').value;
     const token1_amount  = document.getElementById('compose-amount1').value;
     const token1_symbol  = document.getElementById('compose-amount1').dataset.symbol || '';
@@ -720,6 +744,7 @@ document.getElementById('compose-submit-btn').addEventListener('click', async ()
     btn.disabled = true; btn.textContent = 'Submitting...';
     const { ok, data } = await api('POST', '/trades', {
         wallet_id: parseInt(wallet_id),
+        trade_type,
         token1_mint, token1_symbol, token1_amount,
         token3_mint, token3_symbol, token3_amount,
         buyer_wallet, memo
@@ -727,6 +752,7 @@ document.getElementById('compose-submit-btn').addEventListener('click', async ()
     btn.disabled = false; btn.textContent = 'Submit for Review';
     if (!ok) return showErr(data.error || 'Submission failed');
     toast('Trade submitted for review');
+    document.getElementById('compose-trade-type').value = 'otc_direct';
     ['1','3'].forEach(n => {
         document.getElementById(`compose-asset${n}-btn`).innerHTML = '<span class="asset-btn-placeholder">Choose asset</span>';
         document.getElementById(`compose-mint${n}`).value = '';
