@@ -241,7 +241,7 @@ function renderTradesTable() {
             <td>${t.token3_amount} ${t.token3_symbol || ''}</td>
             <td><span class="badge badge-${t.status}">${t.status}</span></td>
             <td>${new Date(t.created_at).toLocaleDateString()}</td>
-            <td style="white-space:nowrap">${buildTradeActions(t)}</td>
+            <td style="white-space:nowrap;display:flex;gap:6px;align-items:center">${buildTradeActions(t)}</td>
         </tr>`;
     });
     wrap.innerHTML = html + '</tbody></table>';
@@ -249,9 +249,9 @@ function renderTradesTable() {
 
 function buildTradeActions(t) {
     const isOfficer = user.role === 'compliance_officer';
-    let btns = `<button class="btn btn-ghost btn-small" style="margin-right:4px" onclick="window.deskViewTrade(${t.id})">View</button>`;
+    let btns = `<button class="btn btn-ghost btn-small" onclick="window.deskViewTrade(${t.id})">View</button>`;
     if (isOfficer && t.status === 'pending') {
-        btns += `<button class="btn btn-approve btn-small" style="margin-right:4px" onclick="window.deskReviewTrade(${t.id},'approved')">Approve</button>`;
+        btns += `<button class="btn btn-approve btn-small" onclick="window.deskReviewTrade(${t.id},'approved')">Approve</button>`;
         btns += `<button class="btn btn-reject btn-small" onclick="window.deskReviewTrade(${t.id},'rejected')">Reject</button>`;
     }
     if (t.status === 'approved') {

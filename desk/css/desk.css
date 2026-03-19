@@ -568,3 +568,22 @@ html, body {
     text-align: left;
     justify-content: flex-start;
 }
+
+/* ── Dark scrollbars ──────────────────────────────────────────────────────── */
+:root {
+    color-scheme: dark;
+}
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg2);
+}
+::-webkit-scrollbar-thumb {
+    background: #333333;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #444444;
+}
