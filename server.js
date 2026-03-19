@@ -33,11 +33,11 @@ const apiLimiter = rateLimit({
 });
 
 // ── API routes ───────────────────────────────────────────────────────────────
-app.use('/api/auth',     authLimiter, require('./api/auth'));
-app.use('/api/orgs',     apiLimiter,  require('./api/orgs'));
-app.use('/api/users',    apiLimiter,  require('./api/users'));
-app.use('/api/wallets',  apiLimiter,  require('./api/wallets'));
-app.use('/api/trades',   apiLimiter,  require('./api/trades'));
+app.use('/api/auth',    authLimiter); app.use('/api/auth',    require('./api/auth'));
+app.use('/api/orgs',    apiLimiter);  app.use('/api/orgs',    require('./api/orgs'));
+app.use('/api/users',   apiLimiter);  app.use('/api/users',   require('./api/users'));
+app.use('/api/wallets', apiLimiter);  app.use('/api/wallets', require('./api/wallets'));
+app.use('/api/trades',  apiLimiter);  app.use('/api/trades',  require('./api/trades'));
 
 // ── Static paths ──────────────────────────────────────────────────────────────
 const fs         = require('fs');
