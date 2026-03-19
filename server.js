@@ -47,6 +47,8 @@ app.use(express.static(publicPath));
 app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
 
 // ── Static: desk app ─────────────────────────────────────────────────────────
+// Serve desk assets at root too — Parcel outputs root-relative asset paths
+app.use(express.static(deskPath));
 app.use('/desk', express.static(deskPath));
 app.get('/desk', (req, res) => {
     const f = path.join(deskPath, 'index.html');
