@@ -71,6 +71,7 @@
             <button id="nav-trades"   class="active">Trades</button>
             <button id="nav-compose">Compose</button>
             <button id="nav-wallets">Wallets</button>
+            <button id="nav-counterparties">Counterparties</button>
             <button id="nav-team"     class="officer-only">Team</button>
             <button id="nav-settings">Settings</button>
         </nav>
@@ -171,6 +172,18 @@
             <div style="margin-bottom:16px" id="wallets-actions"></div>
             <div class="card">
                 <div id="wallets-table-wrap">
+                    <div class="empty-state">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Counterparties -->
+        <div class="view" id="view-counterparties">
+            <div class="view-title">Counterparties</div>
+            <div class="view-sub">External organizations and individuals your org trades with</div>
+            <div style="margin-bottom:16px" id="counterparties-actions"></div>
+            <div class="card">
+                <div id="counterparties-table-wrap">
                     <div class="empty-state">Loading...</div>
                 </div>
             </div>

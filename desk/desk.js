@@ -190,10 +190,11 @@ function navTo(name) {
     const view   = document.getElementById('view-' + name);
     if (navBtn) navBtn.classList.add('active');
     if (view)   view.classList.add('active');
-    if (name === 'trades')  loadTrades();
-    if (name === 'wallets') loadWallets();
-    if (name === 'team')    loadTeam();
-    if (name === 'compose') loadComposeWallets();
+    if (name === 'trades')          loadTrades();
+    if (name === 'wallets')         loadWallets();
+    if (name === 'team')            loadTeam();
+    if (name === 'compose')         loadComposeWallets();
+    if (name === 'counterparties')  loadCounterparties();
 }
 
 // ── Logout ────────────────────────────────────────────────────────────────────
@@ -765,6 +766,180 @@ document.getElementById('compose-submit-btn').addEventListener('click', async ()
     document.getElementById('compose-memo').value   = '';
     navTo('trades');
 });
+
+// ── Counterparties ────────────────────────────────────────────────────────────
+async function loadCounterparties() {
+    const actionsEl = document.getElementById('counterparties-actions');
+    actionsEl.innerHTML = user.is_owner
+        ? `<button class="btn btn-ghost btn-small" id="add-cp-btn">+ Add Counterparty</button>`
+        : '';
+    if (user.is_owner) {
+        document.getElementById('add-cp-btn').addEventListener('click', showAddCounterparty);
+    }
+    document.getElementById('counterparties-table-wrap').innerHTML = '<div class="empty-state"><span class="spinner"></span></div>';
+    const { ok, data } = await api('GET', '/counterparties');
+    if (!ok) { document.getElementById('counterparties-table-wrap').innerHTML = '<div class="empty-state">Failed to load counterparties</div>'; return; }
+    renderCounterpartiesTable(data.counterparties || []);
+}
+
+function renderCounterpartiesTable(counterparties) {
+    const wrap = document.getElementById('counterparties-table-wrap');
+    if (counterparties.length === 0) { wrap.innerHTML = '<div class="empty-state">No counterparties yet</div>'; return; }
+    let html = `<table class="desk-table"><thead><tr>
+        <th>Name</th><th>Email</th><th>Wallets</th><th>Status</th><th>Added By</th><th></th>
+    </tr></thead><tbody>`;
+    counterparties.forEach(cp => {
+        const status = cp.active
+            ? '<span class="badge badge-approved">Active</span>'
+            : '<span class="badge badge-rejected">Inactive</span>';
+        let actions = `<button class="btn btn-ghost btn-small" onclick="window.deskViewCp(${cp.id})">View</button>`;
+        if (user.is_owner) {
+            actions += ` <button class="btn btn-ghost btn-small" onclick="window.deskEditCp(${cp.id})">Edit</button>`;
+            actions += cp.active
+                ? ` <button class="btn btn-ghost btn-small" onclick="window.deskToggleCp(${cp.id},false)">Deactivate</button>`
+                : ` <button class="btn btn-approve btn-small" onclick="window.deskToggleCp(${cp.id},true)">Activate</button>`;
+        }
+        html += `<tr>
+            <td><strong>${cp.name}</strong></td>
+            <td>${cp.email || '—'}</td>
+            <td>${cp.wallet_count}</td>
+            <td>${status}</td>
+            <td>${cp.created_by_name || '—'}</td>
+            <td style="white-space:nowrap;display:flex;gap:6px">${actions}</td>
+        </tr>`;
+    });
+    wrap.innerHTML = html + '</tbody></table>';
+}
+
+window.deskViewCp = async (id) => {
+    const { ok, data } = await api('GET', `/counterparties/${id}`);
+    if (!ok) return toast('Failed to load counterparty');
+    const cp = data.counterparty;
+    const wallets = data.wallets || [];
+    const walletRows = wallets.length
+        ? wallets.map(w => `<tr>
+            <td style="padding:4px 0;color:var(--text-dim);font-size:12px">${w.label || '—'}</td>
+            <td style="padding:4px 0"><span class="wallet-addr" onclick="window.deskCopy('${w.public_key}')">${shortAddr(w.public_key)}</span></td>
+            ${user.is_owner ? `<td style="padding:4px 0"><button class="btn btn-ghost btn-small" onclick="window.deskRemoveCpWallet(${id},${w.id})">Remove</button></td>` : ''}
+          </tr>`).join('')
+        : `<tr><td colspan="3" style="color:var(--text-dim);padding:8px 0;font-size:13px">No wallets added</td></tr>`;
+
+    const addWalletForm = user.is_owner ? `
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Add Wallet</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <input type="text" id="cp-wallet-label" placeholder="Label (optional)" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:Ubuntu,sans-serif;font-size:13px;padding:7px 10px;flex:1;min-width:120px;outline:none" />
+                <input type="text" id="cp-wallet-key" placeholder="Solana address" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:Ubuntu,sans-serif;font-size:13px;padding:7px 10px;flex:2;min-width:200px;outline:none" />
+                <button class="btn btn-approve btn-small" onclick="window.deskAddCpWallet(${id})">Add</button>
+            </div>
+        </div>` : '';
+
+    openModal(cp.name, `
+        <table style="width:100%;font-size:13px;border-collapse:collapse;margin-bottom:14px">
+            <tr><td style="color:var(--text-dim);padding:5px 0;width:100px">Email</td><td>${cp.email || '—'}</td></tr>
+            <tr><td style="color:var(--text-dim);padding:5px 0">Status</td><td>${cp.active ? '<span class="badge badge-approved">Active</span>' : '<span class="badge badge-rejected">Inactive</span>'}</td></tr>
+            ${cp.notes ? `<tr><td style="color:var(--text-dim);padding:5px 0">Notes</td><td>${cp.notes}</td></tr>` : ''}
+            <tr><td style="color:var(--text-dim);padding:5px 0">Added</td><td>${new Date(cp.created_at).toLocaleDateString()}</td></tr>
+        </table>
+        <div style="font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Wallets</div>
+        <table style="width:100%;border-collapse:collapse" id="cp-wallets-table">
+            ${walletRows}
+        </table>
+        ${addWalletForm}`,
+        [{ label: 'Close', cls: 'btn-ghost', onClick: closeModal }]
+    );
+};
+
+window.deskAddCpWallet = async (cpId) => {
+    const public_key = document.getElementById('cp-wallet-key')?.value?.trim();
+    const label      = document.getElementById('cp-wallet-label')?.value?.trim();
+    if (!public_key) return toast('Wallet address required');
+    const { ok, data } = await api('POST', `/counterparties/${cpId}/wallets`, { public_key, label });
+    if (!ok) return toast(data.error || 'Failed to add wallet');
+    toast('Wallet added');
+    closeModal();
+    window.deskViewCp(cpId);
+};
+
+window.deskRemoveCpWallet = async (cpId, wid) => {
+    const { ok, data } = await api('DELETE', `/counterparties/${cpId}/wallets/${wid}`);
+    if (!ok) return toast(data.error || 'Failed');
+    toast('Wallet removed');
+    closeModal();
+    window.deskViewCp(cpId);
+};
+
+window.deskToggleCp = async (id, active) => {
+    const { ok, data } = await api('PUT', `/counterparties/${id}`, { active });
+    if (!ok) return toast(data.error || 'Failed');
+    toast(active ? 'Counterparty activated' : 'Counterparty deactivated');
+    loadCounterparties();
+};
+
+window.deskEditCp = async (id) => {
+    const { ok, data } = await api('GET', `/counterparties/${id}`);
+    if (!ok) return toast('Failed to load');
+    const cp = data.counterparty;
+    openModal(`Edit ${cp.name}`, `
+        <div class="form-group" style="margin-bottom:12px">
+            <label>Name</label>
+            <input type="text" id="edit-cp-name" value="${cp.name}" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:Ubuntu,sans-serif;font-size:13px;padding:9px 11px;width:100%;outline:none" />
+        </div>
+        <div class="form-group" style="margin-bottom:12px">
+            <label>Email <span style="color:var(--text-dim)">(optional)</span></label>
+            <input type="email" id="edit-cp-email" value="${cp.email || ''}" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:Ubuntu,sans-serif;font-size:13px;padding:9px 11px;width:100%;outline:none" />
+        </div>
+        <div class="form-group">
+            <label>Notes <span style="color:var(--text-dim)">(optional)</span></label>
+            <textarea id="edit-cp-notes" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:Ubuntu,sans-serif;font-size:13px;padding:9px 11px;width:100%;resize:vertical;min-height:70px;outline:none">${cp.notes || ''}</textarea>
+        </div>`,
+        [
+            { label: 'Cancel', cls: 'btn-ghost', onClick: closeModal },
+            { label: 'Save', cls: 'btn-primary', onClick: async () => {
+                const name  = document.getElementById('edit-cp-name')?.value?.trim();
+                const email = document.getElementById('edit-cp-email')?.value?.trim();
+                const notes = document.getElementById('edit-cp-notes')?.value?.trim();
+                if (!name) return toast('Name required');
+                closeModal();
+                const { ok, data } = await api('PUT', `/counterparties/${id}`, { name, email, notes });
+                if (!ok) return toast(data.error || 'Failed');
+                toast('Counterparty updated');
+                loadCounterparties();
+            }}
+        ]
+    );
+};
+
+function showAddCounterparty() {
+    openModal('Add Counterparty', `
+        <div class="form-group" style="margin-bottom:12px">
+            <label>Name</label>
+            <input type="text" id="new-cp-name" placeholder="e.g. Acme Capital" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:Ubuntu,sans-serif;font-size:13px;padding:9px 11px;width:100%;outline:none" />
+        </div>
+        <div class="form-group" style="margin-bottom:12px">
+            <label>Email <span style="color:var(--text-dim)">(optional)</span></label>
+            <input type="email" id="new-cp-email" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:Ubuntu,sans-serif;font-size:13px;padding:9px 11px;width:100%;outline:none" />
+        </div>
+        <div class="form-group">
+            <label>Notes <span style="color:var(--text-dim)">(optional)</span></label>
+            <textarea id="new-cp-notes" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:Ubuntu,sans-serif;font-size:13px;padding:9px 11px;width:100%;resize:vertical;min-height:70px;outline:none"></textarea>
+        </div>`,
+        [
+            { label: 'Cancel', cls: 'btn-ghost', onClick: closeModal },
+            { label: 'Add', cls: 'btn-primary', onClick: async () => {
+                const name  = document.getElementById('new-cp-name')?.value?.trim();
+                const email = document.getElementById('new-cp-email')?.value?.trim();
+                const notes = document.getElementById('new-cp-notes')?.value?.trim();
+                if (!name) return toast('Name required');
+                closeModal();
+                const { ok, data } = await api('POST', '/counterparties', { name, email, notes });
+                if (!ok) return toast(data.error || 'Failed');
+                toast(`${name} added`);
+                loadCounterparties();
+            }}
+        ]
+    );
+}
 
 // ── Settings ──────────────────────────────────────────────────────────────────
 document.getElementById('pw-btn').addEventListener('click', async () => {

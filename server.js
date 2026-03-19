@@ -36,8 +36,9 @@ const apiLimiter = rateLimit({
 app.use('/api/auth',    authLimiter); app.use('/api/auth',    require('./api/auth'));
 app.use('/api/orgs',    apiLimiter);  app.use('/api/orgs',    require('./api/orgs'));
 app.use('/api/users',   apiLimiter);  app.use('/api/users',   require('./api/users'));
-app.use('/api/wallets', apiLimiter);  app.use('/api/wallets', require('./api/wallets'));
-app.use('/api/trades',  apiLimiter);  app.use('/api/trades',  require('./api/trades'));
+app.use('/api/wallets',         apiLimiter);  app.use('/api/wallets',         require('./api/wallets'));
+app.use('/api/trades',          apiLimiter);  app.use('/api/trades',          require('./api/trades'));
+app.use('/api/counterparties',  apiLimiter);  app.use('/api/counterparties',  require('./api/counterparties'));
 
 // ── Config endpoint (public) ──────────────────────────────────────────────────
 app.get('/api/config', (req, res) => {
