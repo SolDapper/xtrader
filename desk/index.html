@@ -8,6 +8,227 @@
     <script type="module" src="./desk.js"></script>
 </head>
 <body>
-    <div id="desk-root"></div>
+
+<!-- ── Auth screen ─────────────────────────────────────────────────────────── -->
+<div id="auth-screen">
+    <!-- Login -->
+    <div id="auth-login" class="auth-box">
+        <h1>xTrader Desk</h1>
+        <p class="auth-sub">Institutional trading &amp; compliance</p>
+        <div id="login-error" class="auth-error"></div>
+        <div class="field">
+            <label>Email</label>
+            <input type="email" id="login-email" placeholder="you@org.com" autocomplete="username" />
+        </div>
+        <div class="field">
+            <label>Password</label>
+            <input type="password" id="login-password" placeholder="••••••••••" autocomplete="current-password" />
+        </div>
+        <button class="btn btn-primary" id="login-btn">Sign In</button>
+    </div>
+
+    <!-- TOTP -->
+    <div id="auth-totp" class="auth-box" style="display:none">
+        <h1>xTrader Desk</h1>
+        <p class="auth-sub">Enter the code from your authenticator app</p>
+        <div id="totp-error" class="auth-error"></div>
+        <div class="field">
+            <label>Authenticator Code</label>
+            <input type="text" id="totp-code" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code" />
+        </div>
+        <button class="btn btn-primary" id="totp-btn">Verify</button>
+        <button class="btn btn-ghost" id="totp-back-btn" style="margin-top:10px;width:100%">Back</button>
+    </div>
+
+    <!-- TOTP Setup -->
+    <div id="auth-totp-setup" class="auth-box" style="display:none">
+        <h1>Set Up Authenticator</h1>
+        <p class="auth-sub">Scan this QR code with Google Authenticator or Authy</p>
+        <div id="totp-setup-error" class="auth-error"></div>
+        <div class="auth-info">Scan the QR code below, then enter the 6-digit code to confirm.</div>
+        <div class="qr-wrap">
+            <img id="totp-qr-img" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="QR Code" />
+        </div>
+        <div class="field">
+            <label>Confirm Code</label>
+            <input type="text" id="totp-setup-code" placeholder="000000" maxlength="6" inputmode="numeric" />
+        </div>
+        <button class="btn btn-primary" id="totp-setup-btn">Confirm &amp; Enable</button>
+    </div>
+</div>
+
+<!-- ── App shell ───────────────────────────────────────────────────────────── -->
+<div id="app-shell" style="display:none">
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div id="sidebar-logo">
+            <div class="logo-title">xTrader Desk</div>
+            <div class="logo-sub" id="sidebar-org"></div>
+        </div>
+        <nav id="sidebar-nav">
+            <button id="nav-trades"   class="active">Trades</button>
+            <button id="nav-compose"  class="desk-only">Compose</button>
+            <button id="nav-wallets">Wallets</button>
+            <button id="nav-team"     class="officer-only">Team</button>
+            <button id="nav-settings">Settings</button>
+        </nav>
+        <div id="sidebar-footer">
+            <div id="sidebar-user"></div>
+            <div id="sidebar-role"></div>
+            <button class="btn btn-ghost btn-small" id="logout-btn" style="width:100%">Sign Out</button>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div id="main-content">
+
+        <!-- Trades -->
+        <div class="view active" id="view-trades">
+            <div class="view-title">Trades</div>
+            <div class="view-sub" id="trades-sub"></div>
+            <div class="filter-bar" id="trades-filter-bar">
+                <button class="active" data-filter="all">All</button>
+                <button data-filter="pending">Pending</button>
+                <button data-filter="approved">Approved</button>
+                <button data-filter="rejected">Rejected</button>
+                <button data-filter="executed">Executed</button>
+            </div>
+            <div class="card">
+                <div id="trades-table-wrap">
+                    <div class="empty-state">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compose -->
+        <div class="view" id="view-compose">
+            <div class="view-title">Compose Trade</div>
+            <div class="view-sub">Propose a new trade for compliance review</div>
+            <div class="card" style="max-width:620px">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Wallet</label>
+                        <select id="compose-wallet"><option value="">Select wallet...</option></select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>You Offer</label>
+                        <button class="asset-btn" id="compose-asset1-btn"><span class="asset-btn-placeholder">Choose asset</span></button>
+                        <input type="hidden" id="compose-mint1" />
+                    </div>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" id="compose-amount1" placeholder="0.00" min="0" step="any" disabled />
+                        <div class="value-display" id="compose-value1"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>You Receive</label>
+                        <button class="asset-btn" id="compose-asset3-btn"><span class="asset-btn-placeholder">Choose asset</span></button>
+                        <input type="hidden" id="compose-mint3" />
+                    </div>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" id="compose-amount3" placeholder="0.00" min="0" step="any" disabled />
+                        <div class="value-display" id="compose-value3"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Counterparty Wallet <span style="color:var(--text-dim)">(optional)</span></label>
+                        <input type="text" id="compose-buyer" placeholder="Solana address or leave blank for open market" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Memo / Reference <span style="color:var(--text-dim)">(optional)</span></label>
+                        <textarea id="compose-memo" placeholder="Trade reference, notes for compliance..."></textarea>
+                    </div>
+                </div>
+                <div id="compose-error" class="auth-error"></div>
+                <button class="btn btn-primary" id="compose-submit-btn">Submit for Review</button>
+            </div>
+        </div>
+
+        <!-- Wallets -->
+        <div class="view" id="view-wallets">
+            <div class="view-title">Wallets</div>
+            <div class="view-sub" id="wallets-sub"></div>
+            <div style="margin-bottom:16px" id="wallets-actions"></div>
+            <div class="card">
+                <div id="wallets-table-wrap">
+                    <div class="empty-state">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team -->
+        <div class="view" id="view-team">
+            <div class="view-title">Team</div>
+            <div class="view-sub">Manage users in your organization</div>
+            <div style="margin-bottom:16px">
+                <button class="btn btn-ghost btn-small" id="invite-btn">+ Invite User</button>
+            </div>
+            <div class="card">
+                <div id="team-table-wrap">
+                    <div class="empty-state">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="view" id="view-settings">
+            <div class="view-title">Settings</div>
+            <div class="view-sub">Account and organization settings</div>
+            <div class="card" style="max-width:420px">
+                <div class="card-title" style="margin-bottom:16px">Change Password</div>
+                <div id="pw-error" class="auth-error"></div>
+                <div id="pw-success" class="auth-info" style="display:none"></div>
+                <div class="form-group" style="margin-bottom:12px">
+                    <label>Current Password</label>
+                    <input type="password" id="pw-current" />
+                </div>
+                <div class="form-group" style="margin-bottom:12px">
+                    <label>New Password</label>
+                    <input type="password" id="pw-new" />
+                </div>
+                <div class="form-group" style="margin-bottom:16px">
+                    <label>Confirm New Password</label>
+                    <input type="password" id="pw-confirm" />
+                </div>
+                <button class="btn btn-primary" id="pw-btn">Update Password</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Asset picker -->
+<div id="asset-picker-overlay">
+    <div id="asset-picker-box">
+        <div class="picker-header">
+            <span>Select Asset</span>
+            <button id="asset-picker-close">✕</button>
+        </div>
+        <input type="text" id="asset-picker-search" placeholder="Search symbol or name..." />
+        <div id="asset-picker-list"></div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="modal-overlay">
+    <div id="modal-box">
+        <h3 id="modal-title"></h3>
+        <div id="modal-body"></div>
+        <div class="modal-actions" id="modal-actions"></div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="desk-toast"></div>
+
 </body>
 </html>
