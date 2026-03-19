@@ -31,6 +31,7 @@ async function migrate() {
                 totp_secret     VARCHAR(255),
                 totp_enabled    BOOLEAN NOT NULL DEFAULT false,
                 email_verified  BOOLEAN NOT NULL DEFAULT false,
+                is_owner        BOOLEAN NOT NULL DEFAULT false,
                 verify_token    VARCHAR(255),
                 reset_token     VARCHAR(255),
                 reset_expires   TIMESTAMPTZ,

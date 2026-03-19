@@ -46,8 +46,8 @@ router.post('/register', async (req, res) => {
         const password_hash = await bcrypt.hash(password, SALT_ROUNDS);
         const verify_token = crypto.randomBytes(32).toString('hex');
         const userRes = await client.query(
-            `INSERT INTO users (org_id, email, password_hash, role, display_name, verify_token)
-             VALUES ($1, $2, $3, 'compliance_officer', $4, $5) RETURNING id`,
+            `INSERT INTO users (org_id, email, password_hash, role, display_name, verify_token, is_owner)
+             VALUES ($1, $2, $3, 'compliance_officer', $4, $5, true) RETURNING id`,
             [org_id, email.toLowerCase(), password_hash, display_name || null, verify_token]
         );
         const user_id = userRes.rows[0].id;
@@ -305,6 +305,7 @@ function issueToken(user) {
             org_id: user.org_id,
             email: user.email,
             role: user.role,
+            is_owner: user.is_owner || false,
             display_name: user.display_name,
             org_name: user.org_name
         },
@@ -320,6 +321,7 @@ function safeUser(user) {
         org_name: user.org_name,
         email: user.email,
         role: user.role,
+        is_owner: user.is_owner || false,
         display_name: user.display_name,
         totp_enabled: user.totp_enabled,
         totp_setup_required: !user.totp_enabled

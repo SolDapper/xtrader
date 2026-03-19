@@ -171,7 +171,8 @@ async function onAuthenticated(jwt, userData) {
 // ── Shell ─────────────────────────────────────────────────────────────────────
 function renderShell() {
     document.getElementById('sidebar-user').textContent = user.display_name || user.email;
-    document.getElementById('sidebar-role').textContent = user.role === 'compliance_officer' ? 'Compliance Officer' : 'Desk Trader';
+    const roleLabel = user.is_owner ? 'Owner' : user.role === 'compliance_officer' ? 'Compliance Officer' : 'Desk Trader';
+    document.getElementById('sidebar-role').textContent = roleLabel;
     document.getElementById('sidebar-org').textContent  = user.org_name || '';
     document.querySelectorAll('.officer-only').forEach(el => { el.style.display = user.role === 'compliance_officer' ? '' : 'none'; });
     document.querySelectorAll('.desk-only').forEach(el   => { el.style.display = user.role === 'desk_trader'         ? '' : 'none'; });
@@ -463,13 +464,35 @@ function renderTeamTable(users) {
         <th>Name</th><th>Email</th><th>Role</th><th>2FA</th><th>Status</th><th></th>
     </tr></thead><tbody>`;
     users.forEach(u => {
-        const toggle = u.active
-            ? `<button class="btn btn-ghost btn-small" onclick="window.deskToggleUser(${u.id},false)">Deactivate</button>`
-            : `<button class="btn btn-approve btn-small" onclick="window.deskToggleUser(${u.id},true)">Activate</button>`;
+        // Role label
+        let roleLabel;
+        if (u.is_owner)                          roleLabel = 'Owner';
+        else if (u.role === 'compliance_officer') roleLabel = 'Compliance Officer';
+        else                                      roleLabel = 'Desk Trader';
+
+        // Toggle button — enforce permission rules
+        let toggle = '';
+        const isSelf      = u.id === user.id;
+        const targetOwner = u.is_owner;
+        const targetOfficer = u.role === 'compliance_officer' && !u.is_owner;
+        const currentIsOwner = user.is_owner;
+
+        if (isSelf || targetOwner) {
+            // Can never deactivate yourself or the owner
+            toggle = '';
+        } else if (targetOfficer && !currentIsOwner) {
+            // Non-owner officers cannot deactivate other officers
+            toggle = '';
+        } else {
+            toggle = u.active
+                ? `<button class="btn btn-ghost btn-small" onclick="window.deskToggleUser(${u.id},false)">Deactivate</button>`
+                : `<button class="btn btn-approve btn-small" onclick="window.deskToggleUser(${u.id},true)">Activate</button>`;
+        }
+
         html += `<tr>
             <td>${u.display_name || '—'}</td>
             <td>${u.email}</td>
-            <td>${u.role === 'compliance_officer' ? 'Compliance Officer' : 'Desk Trader'}</td>
+            <td>${roleLabel}</td>
             <td>${u.totp_enabled ? '<span class="badge badge-approved">On</span>' : '<span class="badge badge-pending">Off</span>'}</td>
             <td>${u.active ? '<span class="badge badge-approved">Active</span>' : '<span class="badge badge-rejected">Inactive</span>'}</td>
             <td>${toggle}</td>
