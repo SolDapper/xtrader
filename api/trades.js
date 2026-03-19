@@ -1,5 +1,6 @@
 'use strict';
 const router = require('express').Router();
+router.use(require('express').json());
 const pool = require('../db/pool');
 const requireAuth = require('./middleware');
 const { decryptKey } = require('./wallets');

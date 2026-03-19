@@ -1,5 +1,7 @@
 'use strict';
 const router = require('express').Router();
+const express = require('express');
+router.use(express.json());
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const speakeasy = require('speakeasy');

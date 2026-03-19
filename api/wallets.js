@@ -1,5 +1,6 @@
 'use strict';
 const router = require('express').Router();
+router.use(require('express').json());
 const crypto = require('crypto');
 const { Keypair } = require('@solana/web3.js');
 const bs58 = require('bs58');
