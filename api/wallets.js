@@ -60,7 +60,7 @@ router.get('/', requireAuth, async (req, res) => {
         if (req.user.role === 'compliance_officer') {
             // Officers see all wallets in their org
             query = `SELECT w.id, w.label, w.public_key, w.approved, w.active,
-                            w.created_at, w.approved_at,
+                            w.created_at, w.approved_at, w.assigned_to,
                             u.display_name as assigned_to_name, u.id as assigned_to_id
                      FROM wallets w
                      LEFT JOIN users u ON u.id = w.assigned_to
@@ -76,7 +76,10 @@ router.get('/', requireAuth, async (req, res) => {
             params = [req.user.org_id, req.user.id];
         }
         const result = await pool.query(query, params);
-        res.json({ wallets: result.rows });
+        // Fetch org name for unassigned label
+        const orgRes = await pool.query('SELECT name FROM orgs WHERE id=$1', [req.user.org_id]);
+        const org_name = orgRes.rows[0]?.name || 'Org Treasury';
+        res.json({ wallets: result.rows, org_name });
     } catch (err) {
         console.error('Get wallets error:', err);
         res.status(500).json({ error: 'Failed to fetch wallets' });

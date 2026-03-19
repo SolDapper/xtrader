@@ -339,10 +339,10 @@ async function loadWallets() {
     document.getElementById('wallets-table-wrap').innerHTML = '<div class="empty-state"><span class="spinner"></span></div>';
     const { ok, data } = await api('GET', '/wallets');
     if (!ok) { document.getElementById('wallets-table-wrap').innerHTML = '<div class="empty-state">Failed to load wallets</div>'; return; }
-    renderWalletsTable(data.wallets || []);
+    renderWalletsTable(data.wallets || [], data.org_name || user.org_name);
 }
 
-function renderWalletsTable(wallets) {
+function renderWalletsTable(wallets, org_name) {
     const isOfficer = user.role === 'compliance_officer';
     const wrap = document.getElementById('wallets-table-wrap');
     if (wallets.length === 0) { wrap.innerHTML = '<div class="empty-state">No wallets yet</div>'; return; }
@@ -353,16 +353,22 @@ function renderWalletsTable(wallets) {
         ${isOfficer ? '<th></th>' : ''}
     </tr></thead><tbody>`;
     wallets.forEach(w => {
+        // Unassigned wallets belong to the org (treasury)
+        const assignedLabel = w.assigned_to_name
+            ? w.assigned_to_name
+            : `<span style="color:var(--teal);font-size:12px">⬡ ${org_name}</span>`;
         html += `<tr>
             <td>${w.label}</td>
             <td><span class="wallet-addr" onclick="window.deskCopy('${w.public_key}')">${shortAddr(w.public_key)}</span></td>
-            ${isOfficer ? `<td>${w.assigned_to_name || '—'}</td>` : ''}
+            ${isOfficer ? `<td>${assignedLabel}</td>` : ''}
             <td>${w.approved ? '<span class="badge badge-approved">Approved</span>' : '<span class="badge badge-pending">Pending</span>'}</td>
             <td>${new Date(w.created_at).toLocaleDateString()}</td>
             ${isOfficer ? `<td style="white-space:nowrap">${buildWalletActions(w)}</td>` : ''}
         </tr>`;
     });
     wrap.innerHTML = html + '</tbody></table>';
+    // Store org_name for use in assign modal
+    window._walletOrgName = org_name;
 }
 
 function buildWalletActions(w) {
@@ -426,12 +432,13 @@ window.deskAssignWallet = async (id) => {
     const teamRes = await api('GET', '/users');
     if (!teamRes.ok) return toast('Failed to load users');
     const traders = (teamRes.data.users || []).filter(u => u.role === 'desk_trader' && u.active);
+    const orgName = window._walletOrgName || user.org_name || 'Org Treasury';
     const options = traders.map(u => `<option value="${u.id}">${u.display_name || u.email}</option>`).join('');
     openModal('Assign Wallet', `
         <div class="form-group">
             <label>Assign To</label>
             <select id="assign-user" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:Ubuntu,sans-serif;font-size:13px;padding:9px 11px;width:100%;outline:none">
-                <option value="">— Unassign —</option>
+                <option value="">⬡ ${orgName} (Org Treasury)</option>
                 ${options}
             </select>
         </div>`,
