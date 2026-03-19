@@ -1,6 +1,7 @@
 # *package-lock.json
 *dev
 *test.js
+*HOLD
 *manifest-hold.json
 *mobile
 *dapp-store
