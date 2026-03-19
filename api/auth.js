@@ -109,6 +109,27 @@ router.post('/invite', require('./middleware'), async (req, res) => {
     }
 });
 
+// ── POST /api/auth/dev-verify ────────────────────────────────────────────────
+// DEV ONLY — instantly verifies an account by email, bypassing email token
+router.post('/dev-verify', async (req, res) => {
+    if (process.env.NODE_ENV === 'production') {
+        return res.status(404).json({ error: 'Not found' });
+    }
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'email required' });
+    try {
+        const result = await pool.query(
+            `UPDATE users SET email_verified=true, verify_token=NULL
+             WHERE email=$1 RETURNING id, email, role`,
+            [email.toLowerCase()]
+        );
+        if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
+        res.json({ message: 'Email verified', user: result.rows[0] });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed' });
+    }
+});
+
 // ── POST /api/auth/verify-email ──────────────────────────────────────────────
 router.post('/verify-email', async (req, res) => {
     const { token } = req.body;
