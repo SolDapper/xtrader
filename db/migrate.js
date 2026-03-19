@@ -66,6 +66,8 @@ async function migrate() {
                 wallet_id       INTEGER NOT NULL REFERENCES wallets(id),
                 status          VARCHAR(50) NOT NULL DEFAULT 'pending'
                                     CHECK (status IN ('pending','approved','rejected','executed','failed')),
+                trade_type      VARCHAR(20) NOT NULL DEFAULT 'otc'
+                                    CHECK (trade_type IN ('otc','market')),
                 token1_mint     VARCHAR(64) NOT NULL,
                 token1_symbol   VARCHAR(50),
                 token1_amount   VARCHAR(50) NOT NULL,

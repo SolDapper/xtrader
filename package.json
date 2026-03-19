@@ -1,13 +1,14 @@
 {
     "name": "xtrader",
-    "version": "0.0.73",
+    "version": "0.0.74",
     "description": "ICM OTC Service",
     "scripts": {
         "build": "parcel build ./src/index.html --dist-dir dist/public && parcel build ./desk/index.html --dist-dir dist/desk && cp -r ./wallet_icon.png ./dist/public/wallet_icon.png && cp -r ./icon-clear.png ./dist/public/icon-clear.png && cp -r ./icon-dark.png ./dist/public/icon-dark.png && cp -r ./icon-mono.png ./dist/public/icon-mono.png",
         "start": "node server.js",
         "dev": "parcel ./src/index.html",
         "migrate": "node db/migrate.js",
-        "migrate:owner": "node db/migrate_owner.js"
+        "migrate:owner": "node db/migrate_owner.js",
+        "migrate:trade-type": "node db/migrate_trade_type.js"
     },
     "dependencies": {
         "@bonfida/spl-name-service": "^3.0.12",

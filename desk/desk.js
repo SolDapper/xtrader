@@ -229,13 +229,15 @@ function renderTradesTable() {
     if (trades.length === 0) { wrap.innerHTML = '<div class="empty-state">No trades found</div>'; return; }
     const isOfficer = user.role === 'compliance_officer';
     let html = `<table class="desk-table"><thead><tr>
-        <th>ID</th>${isOfficer ? '<th>Trader</th>' : ''}<th>Wallet</th>
+        <th>ID</th>${isOfficer ? '<th>Trader</th>' : ''}<th>Type</th><th>Wallet</th>
         <th>Offer</th><th>Receive</th><th>Status</th><th>Date</th><th></th>
     </tr></thead><tbody>`;
     trades.forEach(t => {
+        const typeBadge = `<span class="badge" style="background:#2a2a2a;border:1px solid #333;color:var(--text-dim);font-size:10px">${(t.trade_type || 'otc').toUpperCase()}</span>`;
         html += `<tr>
             <td><span class="wallet-addr" onclick="window.deskCopy('${t.id}')">#${t.id}</span></td>
             ${isOfficer ? `<td>${t.trader_name || t.trader_email || '—'}</td>` : ''}
+            <td>${typeBadge}</td>
             <td><span class="wallet-addr" title="${t.wallet_pubkey}" onclick="window.deskCopy('${t.wallet_pubkey}')">${t.wallet_label || shortAddr(t.wallet_pubkey)}</span></td>
             <td>${t.token1_amount} ${t.token1_symbol || ''}</td>
             <td>${t.token3_amount} ${t.token3_symbol || ''}</td>
@@ -267,7 +269,8 @@ window.deskViewTrade = (id) => {
     if (!t) return;
     openModal(`Trade #${t.id}`, `
         <table style="width:100%;font-size:13px;border-collapse:collapse">
-            <tr><td style="color:var(--text-dim);padding:5px 0;width:120px">Status</td><td><span class="badge badge-${t.status}">${t.status}</span></td></tr>
+            <tr><td style="color:var(--text-dim);padding:5px 0;width:120px">Type</td><td><span style="text-transform:uppercase;font-size:11px;color:var(--text-dim)">${t.trade_type || 'otc'}</span></td></tr>
+            <tr><td style="color:var(--text-dim);padding:5px 0">Status</td><td><span class="badge badge-${t.status}">${t.status}</span></td></tr>
             <tr><td style="color:var(--text-dim);padding:5px 0">Wallet</td><td><span class="wallet-addr" onclick="window.deskCopy('${t.wallet_pubkey}')">${t.wallet_label} — ${shortAddr(t.wallet_pubkey)}</span></td></tr>
             <tr><td style="color:var(--text-dim);padding:5px 0">Offering</td><td>${t.token1_amount} ${t.token1_symbol || t.token1_mint}</td></tr>
             <tr><td style="color:var(--text-dim);padding:5px 0">Receiving</td><td>${t.token3_amount} ${t.token3_symbol || t.token3_mint}</td></tr>

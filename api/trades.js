@@ -11,6 +11,7 @@ const { Connection, Keypair, VersionedTransaction } = require('@solana/web3.js')
 router.post('/', requireAuth, async (req, res) => {
     const {
         wallet_id,
+        trade_type,
         token1_mint, token1_symbol, token1_amount,
         token2_mint, token2_symbol, token2_amount,
         token3_mint, token3_symbol, token3_amount,
@@ -35,16 +36,17 @@ router.post('/', requireAuth, async (req, res) => {
 
         const result = await pool.query(
             `INSERT INTO trades (
-                org_id, proposed_by, wallet_id,
+                org_id, proposed_by, wallet_id, trade_type,
                 token1_mint, token1_symbol, token1_amount,
                 token2_mint, token2_symbol, token2_amount,
                 token3_mint, token3_symbol, token3_amount,
                 token4_mint, token4_symbol, token4_amount,
                 buyer_wallet, memo
-            ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
+            ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
             RETURNING *`,
             [
                 req.user.org_id, req.user.id, wallet_id,
+                trade_type || 'otc',
                 token1_mint, token1_symbol || null, token1_amount,
                 token2_mint || null, token2_symbol || null, token2_amount || null,
                 token3_mint, token3_symbol || null, token3_amount,
