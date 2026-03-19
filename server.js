@@ -48,7 +48,7 @@ app.use('/desk', express.static(path.join(__dirname, 'dist/desk')));
 app.get('/desk', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/desk/index.html'));
 });
-app.get('/desk/*', (req, res) => {
+app.get('/desk/*path', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/desk/index.html'));
 });
 
