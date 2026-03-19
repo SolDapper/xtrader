@@ -62,7 +62,8 @@ app.get('/desk/*path', (req, res) => {
 });
 
 // Serve desk static assets (CSS/JS/fonts) — Parcel emits root-relative filenames
-app.use(express.static(deskPath));
+// index:false prevents desk/index.html from being served at root
+app.use(express.static(deskPath, { index: false }));
 
 // Main app static assets
 app.use(express.static(publicPath));
