@@ -40,21 +40,30 @@ app.use('/api/wallets',  apiLimiter,  require('./api/wallets'));
 app.use('/api/trades',   apiLimiter,  require('./api/trades'));
 
 // ── Static: main app ─────────────────────────────────────────────────────────
-app.use(express.static(path.join(__dirname, 'dist/public')));
+const publicPath = path.join(__dirname, 'dist/public');
+const deskPath = path.join(__dirname, 'dist/desk');
+
+app.use(express.static(publicPath));
 app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
 
 // ── Static: desk app ─────────────────────────────────────────────────────────
-app.use('/desk', express.static(path.join(__dirname, 'dist/desk')));
+app.use('/desk', express.static(deskPath));
 app.get('/desk', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/desk/index.html'));
+    const f = path.join(deskPath, 'index.html');
+    if (require('fs').existsSync(f)) return res.sendFile(f);
+    res.status(503).send('Desk not built yet. Run: npm run build');
 });
 app.get('/desk/*path', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/desk/index.html'));
+    const f = path.join(deskPath, 'index.html');
+    if (require('fs').existsSync(f)) return res.sendFile(f);
+    res.status(503).send('Desk not built yet. Run: npm run build');
 });
 
 // ── Fallback: main app ───────────────────────────────────────────────────────
 app.get('/*path', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/public/index.html'));
+    const f = path.join(publicPath, 'index.html');
+    if (require('fs').existsSync(f)) return res.sendFile(f);
+    res.status(503).send('App not built yet. Run: npm run build');
 });
 
 // ── Start ────────────────────────────────────────────────────────────────────
