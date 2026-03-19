@@ -39,6 +39,11 @@ app.use('/api/users',   apiLimiter);  app.use('/api/users',   require('./api/use
 app.use('/api/wallets', apiLimiter);  app.use('/api/wallets', require('./api/wallets'));
 app.use('/api/trades',  apiLimiter);  app.use('/api/trades',  require('./api/trades'));
 
+// ── Config endpoint (public) ──────────────────────────────────────────────────
+app.get('/api/config', (req, res) => {
+    res.json({ rpc: process.env.RPC || 'https://api.mainnet-beta.solana.com' });
+});
+
 // ── Static paths ──────────────────────────────────────────────────────────────
 const fs         = require('fs');
 const publicPath = path.join(__dirname, 'dist/public');

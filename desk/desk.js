@@ -349,26 +349,62 @@ function renderWalletsTable(wallets, org_name) {
     let html = `<table class="desk-table"><thead><tr>
         <th>Label</th><th>Public Key</th>
         ${isOfficer ? '<th>Assigned To</th>' : ''}
+        <th>Balance</th>
         <th>Approved</th><th>Created</th>
         ${isOfficer ? '<th></th>' : ''}
     </tr></thead><tbody>`;
     wallets.forEach(w => {
-        // Unassigned wallets belong to the org (treasury)
         const assignedLabel = w.assigned_to_name
             ? w.assigned_to_name
             : `<span style="color:var(--teal);font-size:12px">⬡ ${org_name}</span>`;
-        html += `<tr>
+        html += `<tr id="wallet-row-${w.id}">
             <td>${w.label}</td>
             <td><span class="wallet-addr" onclick="window.deskCopy('${w.public_key}')">${shortAddr(w.public_key)}</span></td>
             ${isOfficer ? `<td>${assignedLabel}</td>` : ''}
+            <td id="wallet-bal-${w.id}" style="color:var(--text-dim);font-size:13px"><span class="spinner"></span></td>
             <td>${w.approved ? '<span class="badge badge-approved">Approved</span>' : '<span class="badge badge-pending">Pending</span>'}</td>
             <td>${new Date(w.created_at).toLocaleDateString()}</td>
-            ${isOfficer ? `<td style="white-space:nowrap">${buildWalletActions(w)}</td>` : ''}
+            ${isOfficer ? `<td style="text-align:right">
+                <button class="btn btn-ghost btn-small" onclick="window.deskToggleWalletActions(${w.id})" title="Actions" style="padding:4px 8px">⚙</button>
+                <span id="wallet-actions-${w.id}" style="display:none;white-space:nowrap">&nbsp;${buildWalletActions(w)}</span>
+            </td>` : ''}
         </tr>`;
     });
     wrap.innerHTML = html + '</tbody></table>';
-    // Store org_name for use in assign modal
     window._walletOrgName = org_name;
+
+    // Fetch SOL balances async for each wallet
+    const rpc = '/api/rpc-proxy'; // we'll call Solana directly
+    wallets.forEach(w => fetchWalletBalance(w.public_key, w.id));
+}
+
+window.deskToggleWalletActions = (id) => {
+    const el = document.getElementById(`wallet-actions-${id}`);
+    if (!el) return;
+    el.style.display = el.style.display === 'none' ? 'inline' : 'none';
+};
+
+async function fetchWalletBalance(pubkey, walletId) {
+    const balEl = document.getElementById(`wallet-bal-${walletId}`);
+    if (!balEl) return;
+    try {
+        const rpc = window._deskRpc || 'https://api.mainnet-beta.solana.com';
+        const res = await fetch(rpc, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                jsonrpc: '2.0', id: 1,
+                method: 'getBalance',
+                params: [pubkey, { commitment: 'confirmed' }]
+            })
+        });
+        const json = await res.json();
+        const lamports = json?.result?.value ?? 0;
+        const sol = (lamports / 1e9).toFixed(4);
+        balEl.innerHTML = `<span style="color:var(--text)">${sol}</span> <span style="color:var(--text-dim);font-size:11px">SOL</span>`;
+    } catch {
+        balEl.innerHTML = '<span style="color:var(--text-dim)">—</span>';
+    }
 }
 
 function buildWalletActions(w) {
@@ -708,6 +744,13 @@ function shortAddr(addr) {
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 async function init() {
+    // Load RPC config
+    try {
+        const cfgRes = await fetch('/api/config');
+        const cfg = await cfgRes.json();
+        window._deskRpc = cfg.rpc;
+    } catch { window._deskRpc = 'https://api.mainnet-beta.solana.com'; }
+
     if (token) {
         const { ok, data } = await api('GET', '/auth/me');
         if (ok) {
