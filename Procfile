@@ -1,1 +1,1 @@
-web: parcel ./src/index.html
+web: node server.js
