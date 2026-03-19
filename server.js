@@ -39,32 +39,34 @@ app.use('/api/users',    apiLimiter,  require('./api/users'));
 app.use('/api/wallets',  apiLimiter,  require('./api/wallets'));
 app.use('/api/trades',   apiLimiter,  require('./api/trades'));
 
-// ── Static: main app ─────────────────────────────────────────────────────────
+// ── Static paths ──────────────────────────────────────────────────────────────
+const fs         = require('fs');
 const publicPath = path.join(__dirname, 'dist/public');
-const deskPath = path.join(__dirname, 'dist/desk');
+const deskPath   = path.join(__dirname, 'dist/desk');
 
-app.use(express.static(publicPath));
-app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
-
-// ── Static: desk app ─────────────────────────────────────────────────────────
-// Serve desk assets at root too — Parcel outputs root-relative asset paths
-app.use(express.static(deskPath));
-app.use('/desk', express.static(deskPath));
+// Desk — must come before main app static so /desk route is not swallowed
 app.get('/desk', (req, res) => {
     const f = path.join(deskPath, 'index.html');
-    if (require('fs').existsSync(f)) return res.sendFile(f);
+    if (fs.existsSync(f)) return res.sendFile(f);
     res.status(503).send('Desk not built yet. Run: npm run build');
 });
 app.get('/desk/*path', (req, res) => {
     const f = path.join(deskPath, 'index.html');
-    if (require('fs').existsSync(f)) return res.sendFile(f);
+    if (fs.existsSync(f)) return res.sendFile(f);
     res.status(503).send('Desk not built yet. Run: npm run build');
 });
 
-// ── Fallback: main app ───────────────────────────────────────────────────────
+// Serve desk static assets (CSS/JS/fonts) — Parcel emits root-relative filenames
+app.use(express.static(deskPath));
+
+// Main app static assets
+app.use(express.static(publicPath));
+app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
+
+// ── Fallback: main app ────────────────────────────────────────────────────────
 app.get('/*path', (req, res) => {
     const f = path.join(publicPath, 'index.html');
-    if (require('fs').existsSync(f)) return res.sendFile(f);
+    if (fs.existsSync(f)) return res.sendFile(f);
     res.status(503).send('App not built yet. Run: npm run build');
 });
 
