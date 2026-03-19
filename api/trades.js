@@ -9,9 +9,6 @@ const { Connection, Keypair, VersionedTransaction } = require('@solana/web3.js')
 // ── POST /api/trades ─────────────────────────────────────────────────────────
 // Desk trader proposes a trade
 router.post('/', requireAuth, async (req, res) => {
-    if (req.user.role !== 'desk_trader') {
-        return res.status(403).json({ error: 'Only desk traders can propose trades' });
-    }
     const {
         wallet_id,
         token1_mint, token1_symbol, token1_amount,
@@ -153,20 +150,25 @@ router.put('/:id/review', requireAuth, async (req, res) => {
 // ── POST /api/trades/:id/execute ─────────────────────────────────────────────
 // Desk trader executes an approved trade — server signs and broadcasts
 router.post('/:id/execute', requireAuth, async (req, res) => {
-    if (req.user.role !== 'desk_trader') {
-        return res.status(403).json({ error: 'Only desk traders can execute trades' });
-    }
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
 
         // Lock the row
+        // Officers can execute any approved trade in their org; traders only their own
+        const ownerClause = req.user.role === 'compliance_officer'
+            ? `t.org_id=$2`
+            : `t.org_id=$2 AND t.proposed_by=$3`;
+        const params = req.user.role === 'compliance_officer'
+            ? [req.params.id, req.user.org_id]
+            : [req.params.id, req.user.org_id, req.user.id];
+
         const tradeRes = await client.query(
             `SELECT t.*, w.encrypted_key FROM trades t
              JOIN wallets w ON w.id = t.wallet_id
-             WHERE t.id=$1 AND t.org_id=$2 AND t.proposed_by=$3 AND t.status='approved'
+             WHERE t.id=$1 AND ${ownerClause} AND t.status='approved'
              FOR UPDATE`,
-            [req.params.id, req.user.org_id, req.user.id]
+            params
         );
         if (tradeRes.rows.length === 0) {
             await client.query('ROLLBACK');

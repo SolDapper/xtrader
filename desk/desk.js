@@ -174,8 +174,8 @@ function renderShell() {
     const roleLabel = user.is_owner ? 'Owner' : user.role === 'compliance_officer' ? 'Compliance Officer' : 'Desk Trader';
     document.getElementById('sidebar-role').textContent = roleLabel;
     document.getElementById('sidebar-org').textContent  = user.org_name || '';
+    // Only hide officer-only items for non-officers; compose is visible to all
     document.querySelectorAll('.officer-only').forEach(el => { el.style.display = user.role === 'compliance_officer' ? '' : 'none'; });
-    document.querySelectorAll('.desk-only').forEach(el   => { el.style.display = user.role === 'desk_trader'         ? '' : 'none'; });
 }
 
 // ── Navigation ────────────────────────────────────────────────────────────────
@@ -254,7 +254,7 @@ function buildTradeActions(t) {
         btns += `<button class="btn btn-approve btn-small" style="margin-right:4px" onclick="window.deskReviewTrade(${t.id},'approved')">Approve</button>`;
         btns += `<button class="btn btn-reject btn-small" onclick="window.deskReviewTrade(${t.id},'rejected')">Reject</button>`;
     }
-    if (!isOfficer && t.status === 'approved') {
+    if (t.status === 'approved') {
         btns += `<button class="btn btn-primary btn-small" onclick="window.deskExecuteTrade(${t.id})">Execute</button>`;
     }
     return btns;
@@ -364,9 +364,11 @@ function renderWalletsTable(wallets, org_name) {
             <td id="wallet-bal-${w.id}" style="color:var(--text-dim);font-size:13px"><span class="spinner"></span></td>
             <td>${w.approved ? '<span class="badge badge-approved">Approved</span>' : '<span class="badge badge-pending">Pending</span>'}</td>
             <td>${new Date(w.created_at).toLocaleDateString()}</td>
-            ${isOfficer ? `<td style="text-align:right">
-                <button class="btn btn-ghost btn-small" onclick="window.deskToggleWalletActions(${w.id})" title="Actions" style="padding:4px 8px">⚙</button>
-                <span id="wallet-actions-${w.id}" style="display:none;white-space:nowrap">&nbsp;${buildWalletActions(w)}</span>
+            ${isOfficer ? `<td style="text-align:right;position:relative">
+                <button class="btn btn-ghost btn-small wallet-cog-btn" onclick="window.deskToggleWalletActions(${w.id})" title="Actions">⚙</button>
+                <div id="wallet-actions-${w.id}" class="wallet-actions-menu" style="display:none">
+                    ${buildWalletActions(w)}
+                </div>
             </td>` : ''}
         </tr>`;
     });
@@ -381,7 +383,21 @@ function renderWalletsTable(wallets, org_name) {
 window.deskToggleWalletActions = (id) => {
     const el = document.getElementById(`wallet-actions-${id}`);
     if (!el) return;
-    el.style.display = el.style.display === 'none' ? 'inline' : 'none';
+    const isOpen = el.style.display !== 'none';
+    // Close all other open menus first
+    document.querySelectorAll('.wallet-actions-menu').forEach(m => m.style.display = 'none');
+    el.style.display = isOpen ? 'none' : 'block';
+    // Close on outside click
+    if (!isOpen) {
+        setTimeout(() => {
+            document.addEventListener('click', function handler(e) {
+                if (!el.contains(e.target) && !e.target.classList.contains('wallet-cog-btn')) {
+                    el.style.display = 'none';
+                    document.removeEventListener('click', handler);
+                }
+            });
+        }, 0);
+    }
 };
 
 async function fetchWalletBalance(pubkey, walletId) {
@@ -408,8 +424,8 @@ async function fetchWalletBalance(pubkey, walletId) {
 }
 
 function buildWalletActions(w) {
-    let btns = `<button class="btn btn-ghost btn-small" style="margin-right:4px" onclick="window.deskRelabelWallet(${w.id},'${w.label.replace(/'/g,"\\'")}')">Rename</button>`;
-    btns += `<button class="btn btn-ghost btn-small" style="margin-right:4px" onclick="window.deskAssignWallet(${w.id})">Assign</button>`;
+    let btns = `<button class="btn btn-ghost btn-small" onclick="window.deskRelabelWallet(${w.id},'${w.label.replace(/'/g,"\\'")}')">Rename</button>`;
+    btns += `<button class="btn btn-ghost btn-small" onclick="window.deskAssignWallet(${w.id})">Assign</button>`;
     if (!w.approved) btns += `<button class="btn btn-approve btn-small" onclick="window.deskApproveWallet(${w.id})">Approve</button>`;
     return btns;
 }
@@ -592,13 +608,20 @@ async function loadComposeWallets() {
     const { ok, data } = await api('GET', '/wallets');
     sel.innerHTML = '<option value="">Select wallet...</option>';
     if (!ok || !data.wallets?.length) {
-        sel.innerHTML = '<option value="">No approved wallets assigned</option>';
+        sel.innerHTML = '<option value="">No approved wallets available</option>';
         return;
     }
-    data.wallets.forEach(w => {
+    // Officers see all approved wallets; traders see only their assigned ones
+    const available = data.wallets.filter(w => w.approved && w.active);
+    if (!available.length) {
+        sel.innerHTML = '<option value="">No approved wallets available</option>';
+        return;
+    }
+    available.forEach(w => {
         const opt = document.createElement('option');
         opt.value = w.id;
-        opt.textContent = `${w.label} — ${shortAddr(w.public_key)}`;
+        const assignedTo = w.assigned_to_name || data.org_name || 'Org Treasury';
+        opt.textContent = `${w.label} — ${shortAddr(w.public_key)} (${assignedTo})`;
         sel.appendChild(opt);
     });
 }
